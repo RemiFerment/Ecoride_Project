@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Écoride - S'inscrire
+{% endblock %}
+
+{% block body %}
+	<div class="oxanium mt-5 contain-effect p-5 container justify-content-center ">
+
+		<h3 class="text-center viga-regular">Inscription</h3>
+		<hr>
+		<div class="row px-5 mt-5 mb-3">
+			<div class="col px-2">
+				{{ form_start(form)}}
+				{{ form_row(form.firstName) }}
+				{{ form_row(form.lastname) }}
+				{{ form_row(form.email) }}
+				{{ form_row(form.username) }}
+			</div>
+			<div class="col px-2">
+				{{ form_row(form.phone) }}
+				{{ form_row(form.adress) }}
+				{{ form_row(form.birth_date) }}
+				{{ form_row(form.password) }}
+			</div>
+			<div class="text-center">
+				{{ form_row(form.save)}}
+			</div>
+			{{form_end(form)}}
+		</div>
+
+		<div class="form-text text-center">Déjà un compte ?
+			<a href="{{path(name = 'app_login')}}">Connectez-vous</a>
+			!</div>
+	</form>
+
+</div>{% endblock %}{# {% block body %}
+								
+									<form class="oxanium mt-5 contain-effect p-5 container justify-content-center ">
+										<h3 class="text-center viga-regular">Inscription</h3>
+										<hr>
+										<div class="row px-5 mt-5 mb-3">
+											<div class="col px-2">
+												<div class="mb-3">
+													<label for="firstNameField" class="form-label">Nom de famille:
+													</label>
+													<input type="text" class="form-control" id="firstNameField" required>
+												</div>
+												<div class="mb-3">
+													<label for="lastNameField" class="form-label">Prénom :
+													</label>
+													<input type="text" class="form-control" id="lastNameField" required>
+												</div>
+												<div class="mb-3">
+													<label for="emailField" class="form-label">Adresse E-mail :
+													</label>
+													<input type="email" class="form-control" id="emailField" required>
+												</div>
+												<div class="mb-3">
+													<label for="usernameField" class="form-label">Nom d'utilisateur :
+													</label>
+													<input type="text" class="form-control" id="usernameField" required>
+												</div>
+											</div>
+								
+											<div class="col px-2">
+												<div class="mb-3">
+													<label for="phoneNumberField" class="form-label">Numéro de téléphone :
+													</label>
+													<input type="text" class="form-control" id="phoneNumberField" required>
+												</div>
+												<div class="mb-3">
+													<label for="birthDate" class="form-label">Date de naissance :
+													</label>
+													<input type="date" class="form-control" name="birthDate" min="1900-01-01" max="2025-12-31" id="birthDate" required>
+								
+												</div>
+												<div class="mb-3">
+													<label for="passwordField" class="form-label">Mot de passe :</label>
+													<input type="password" class="form-control" id="passwordField" required>
+												</div>
+												<div class="mb-3">
+													<label for="checkPasswordField" class="form-label">Saisir le mot de passe à nouveau :</label>
+													<input type="password" class="form-control" id="checkPasswordField" required>
+												</div>
+											</div>
+								
+										</div>
+								
+										<div class="text-center">
+											<button type="submit" class="btn btn-success">S'inscrire</button>
+										</div>
+								
+										<hr>
+								
+										<div class="form-text text-center">Déjà un compte ?
+											<a href="../connection.php">Connectez-vous</a>
+											!</div>
+									</form>
+								{% endblock %} #}

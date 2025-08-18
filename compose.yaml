@@ -20,4 +20,4 @@ services:
     depends_on: [ db ]
 
   volumes:
-    db-data:
+    db-data:  
