@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['uuid'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -18,7 +18,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    private ?string $uuid = null;
+    private ?string $email = null;
 
     /**
      * @var list<string> The user roles
@@ -33,16 +33,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $lastname = null;
+    private ?string $first_name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $firstName = null;
+    private ?string $last_name = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $phone = null;
+    private ?string $phone_number = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $adress = null;
+    private ?string $postal_adress = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $birth_date = null;
@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::BLOB, nullable: true)]
     private $photo = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
     private ?string $username = null;
 
     public function getId(): ?int
@@ -58,14 +58,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getUuid(): ?string
+    public function getEmail(): ?string
     {
-        return $this->uuid;
+        return $this->email;
     }
 
-    public function setUuid(string $uuid): static
+    public function setEmail(string $email): static
     {
-        $this->uuid = $uuid;
+        $this->email = $email;
 
         return $this;
     }
@@ -77,7 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->uuid;
+        return (string) $this->email;
     }
 
     /**
@@ -124,7 +124,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $data = (array) $this;
         $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
-        
+
         return $data;
     }
 
@@ -134,50 +134,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // @deprecated, to be removed when upgrading to Symfony 8
     }
 
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): static
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
     public function getFirstName(): ?string
     {
-        return $this->firstName;
+        return $this->first_name;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setFirstName(string $first_name): static
     {
-        $this->firstName = $firstName;
+        $this->first_name = $first_name;
 
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getLastName(): ?string
     {
-        return $this->phone;
+        return $this->last_name;
     }
 
-    public function setPhone(string $phone): static
+    public function setLastName(string $last_name): static
     {
-        $this->phone = $phone;
+        $this->last_name = $last_name;
 
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getPhoneNumber(): ?string
     {
-        return $this->adress;
+        return $this->phone_number;
     }
 
-    public function setAdress(string $adress): static
+    public function setPhoneNumber(string $phone_number): static
     {
-        $this->adress = $adress;
+        $this->phone_number = $phone_number;
+
+        return $this;
+    }
+
+    public function getPostalAdress(): ?string
+    {
+        return $this->postal_adress;
+    }
+
+    public function setPostalAdress(string $postal_adress): static
+    {
+        $this->postal_adress = $postal_adress;
 
         return $this;
     }
