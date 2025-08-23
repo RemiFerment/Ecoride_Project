@@ -18,6 +18,14 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        if ($this->getUser()) {
+            $this->addFlash(
+                'warning',
+                'Vous êtes déjà connecté, veuillez-vous déconnecter.'
+            );
+            return $this->redirectToRoute('home');
+        }
+
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
@@ -27,6 +35,7 @@ class SecurityController extends AbstractController
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
+        $this->addFlash('danger', 'Vous vous êtes déconnecté.');
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

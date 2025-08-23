@@ -16,12 +16,7 @@ main {
 
 a {
   text-decoration: none;
-  color: #437716;
-}
-
-a:hover {
-  text-decoration: underline;
-  color: #56961f;
+  color: inherit;
 }
 
 .hero-image {

@@ -4,6 +4,68 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Accueil</h1>
+	<main
+		class="text-color-primary mb-5">
+		<!--Image-->
+		<div class="hero-image w-100 img-fluid d-flex p-2 shadow p-3 mb-5 bg-body-tertiary mt-5">
+			<div class="container d-flex justify-content-center">
+				<h1 class="align-self-center permanent-marker-regular" style="color: white;">L'écologie au cœur de chaque trajet.</h1>
+			</div>
+		</div>
+		<!--SearchBar-->
+		<div class="container d-flex justify-content-center">
+			<form action="" method="POST" class="text-center" style="width: 100%; max-width: 600px;" id="index-search">
+				<label for="destination">
+					<h3 class="viga-regular">On va où ?</h3>
+				</label><br><br>
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" placeholder="Rechercher une destination..." name="destination" id="destination">
+					<button class="btn btn-secondary btn-ecoride" type="submit">
+						<i class="bi bi-search" style="font-size: 2rem;"></i>
+					</button>
+				</div>
+			</form>
+		</div>
 
+		<!--Content-->
+		<div class="container text-center mt-5 contain-effect p-5">
+			<div class="row align-item-center">
+				<div class="col-lg mb-3">
+					<img src="import/photo1.png" alt="" class="w-75 rounded shadow-l">
+				</div>
+				<div class="col text-start">
+					<h2 class="viga-regular">L'écologie roule avec vous.</h2>
+					<p class="fs-5 mt-5 oxanium">Simplifiez vos déplacements, rencontrez du monde et diminuez votre empreinte carbone. Chaque voyage est un pas vers un monde plus durable. Nos villes suffoquent sous le trafic et la pollution. Le covoiturage n’est pas seulement une alternative, c’est une solution concrète : chaque trajet partagé, c’est moins de bouchons, moins de CO₂ et plus de sérénité pour tous. En utilisant notre plateforme, vous contribuez activement à rendre vos trajets plus verts et vos villes plus respirables.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="container text-center mt-5 contain-effect p-5">
+			<div class="row align-item-center">
+				<div class="col-lg mb-3 d-lg-none">
+					<img src="import/photo2.png" alt="" class="w-75 rounded shadow">
+				</div>
+				<div class="col text-start text-lg-end">
+					<h2 class="viga-regular">Ensemble, faisons du covoiturage une évidence.</h2>
+					<p class="fs-5 mt-5 oxanium">Voyager autrement n'a jamais été aussi simple : trouvez ou proposez un trajet en quelques clics, optimisez vos dépenses et réduisez votre impact environnemental. Notre plateforme moderne met en relation des conducteurs et passagers engagés, pour que chaque kilomètre compte et que chaque voyage devienne une opportunité de créer du lien, tout en respectant la planète.</p>
+				</div>
+				<div class="col-lg mb-3 d-none d-lg-block">
+					<img src="import/photo2.png" alt="" class="w-75 rounded shadow">
+				</div>
+			</div>
+		</div>
+
+		<div class="container text-center mt-5 contain-effect p-5">
+			<div class="row align-item-center">
+				<div class="col-lg mb-3">
+					<img src="import/photo3.png" alt="" class="w-75 rounded shadow">
+				</div>
+				<div class="col text-start">
+					<h2 class="viga-regular">L'écologie au bout des doigts.</h2>
+					<p class="fs-5 mt-5 oxanium">Téléchargez, connectez-vous et partez : notre application vous simplifie la vie. En quelques secondes, partagez votre trajet, rencontrez d'autres voyageurs et contribuez à la réduction des émissions de CO₂. Plus besoin de compromis : voyager devient économique, pratique et respectueux de l'environnement.</p>
+				</div>
+			</div>
+		</div>
+
+	</main>
 {% endblock %}

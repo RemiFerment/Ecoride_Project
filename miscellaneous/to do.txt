@@ -1,4 +1,8 @@
 - https://symfony.com/doc/7.4/security/access_denied_handler.html#security-entry-point
 - https://symfony.com/doc/7.4/security.html#security-make-registration-form
-Mise en place du système register à faire et à tester + couplet au moteur twig
 https://trello.com/b/nw7Pv6vR/ecf
+
+Mise en plus du pre et du post submitted pour créer l'User
+Check si l'utilisateur reçoit bien un mail de confirmation
+Cliquer sur le lien de confirmation (que se passe-t-il ?)
+Essayer de se connecter à l'application

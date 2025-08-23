@@ -1,0 +1,27 @@
+# public/.htaccess
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Conserver l'en-tête Authorization pour Symfony
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Calcul du chemin de base
+    RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+    RewriteRule ^(.*) - [E=BASE:%1]
+
+    # Éviter l’accès direct à index.php dans l’URL (redirection propre)
+    RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
+
+    # Laisser passer les fichiers/directoires qui existent
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # Tout le reste va vers index.php
+    RewriteRule ^ %{ENV:BASE}/index.php [L]
+</IfModule>

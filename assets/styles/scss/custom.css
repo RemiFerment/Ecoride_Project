@@ -16,12 +16,7 @@ main {
 
 a {
   text-decoration: none;
-  color: #437716;
-}
-
-a:hover {
-  text-decoration: underline;
-  color: #56961f;
+  color: inherit;
 }
 
 .hero-image {
@@ -94,4 +89,6 @@ a:hover {
 .test {
   background-color: rgba(204, 204, 204, 0.2196078431);
   border-radius: 1rem;
-}/*# sourceMappingURL=custom.css.map */
+}
+
+/*# sourceMappingURL=custom.css.map */
