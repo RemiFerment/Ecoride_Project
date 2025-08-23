@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	{% for flash_error in app.flashes('verify_email_error') %}
+		<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+	{% endfor %}
+
+	{# <h1>Register</h1>
+								
+									{{ form_errors(registrationForm) }}
+								
+									{{ form_start(registrationForm) }}
+									{{ form_row(registrationForm.email) }}
+									{{ form_row(registrationForm.plainPassword, {
+								            label: 'Password'
+								        }) }} #}
+
+	{# {{ form_row(registrationForm.agreeTerms) }} #}
+	{# {{ form_rest(registrationForm) }} #}
+
+	{# <button type="submit" class="btn btn-success">S'inscrire</button> #}
+	{# {{ form_end(registrationForm) }} #}
+
+		<div class="oxanium mt-5 contain-effect p-5 container justify-content-center "> <h3 class="text-center viga-regular">Inscription</h3>
+		<hr>
+		<div class="row px-5 mt-5 mb-3">
+			<div class="col px-2">
+				{{ form_start(registrationForm)}}
+				{{ form_row(registrationForm.first_name) }}
+				{{ form_row(registrationForm.last_name) }}
+				{{ form_row(registrationForm.email) }}
+				{{ form_row(registrationForm.username) }}
+			</div>
+			<div class="col px-2">
+				{{ form_row(registrationForm.phone_number) }}
+				{{ form_row(registrationForm.postal_adress) }}
+				{{ form_row(registrationForm.birth_date) }}
+				{{ form_row(registrationForm.plainPassword) }}
+			</div>
+			{{ form_row(registrationForm.agreeTerms) }}
+			<div class="text-center">
+				{{ form_row(registrationForm.save) }}
+			</div>
+		</div>
+		{{form_end(registrationForm)}}
+
+		<div class="form-text text-center">Déjà un compte ?
+			<a href="{{path(name = 'app_login')}}">Connectez-vous</a>
+			!</div>
+	</form>
+
+</div>{% endblock %}
