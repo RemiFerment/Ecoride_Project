@@ -1,23 +1,75 @@
 services:
   db:
     image: mysql:8.4
-    restart: always
+    container_name: database_mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306" # <-- corrige 3306:80
     environment:
       MYSQL_USER: defaultUser
-      #%40 = @  
-      MYSQL_PASSWORD: MySq%40root170520
+      # %40 = @
+      MYSQL_PASSWORD: MySq@root170520
       MYSQL_DATABASE: ecoride_project
-      MYSQL_ROOT_PASSWORD: RoOt%40root170520
+      MYSQL_ROOT_PASSWORD: RoOt@root170520
     volumes:
-      - db-data:/var/lib/data
-  app:
-    image: php:8.2-apache
-    ports: -8000 -80
-    environment:
-      DATABASE_URL: "mysql://defaultUser:MySq%40root170520@db:3306/ecoride?serverVersion=8.4&charset=utf8mb4"
-      APP_ENV: dev
-      MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
-    depends_on: [ db ]
+      - db-data:/var/lib/mysql # <-- volume nommé (plus rapide/stable que bind)
 
-  volumes:
-    db-data:  
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - "8080:80"
+    environment:
+      # <-- corrige le nom de base + host + encodage de @
+      DATABASE_URL: "mysql://defaultUser:MySq%40root170520@db:3306/ecoride_project?serverVersion=8.4&charset=utf8mb4"
+      APP_ENV: dev
+      APP_DEBUG: 1
+      MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
+    volumes:
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+      - ./:/var/www/html:ro,delegated # <-- code en RO + delegated
+      - symfony-cache:/var/www/html/var/cache # <-- volumes rapides
+      - symfony-logs:/var/www/html/var/log
+      - symfony-sessions:/var/www/html/var/sessions
+    tmpfs:
+      - /tmp # <-- I/O temporaires en RAM
+    depends_on:
+      - db
+
+  phpma:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: RoOt@root170520
+    ports:
+      - "8899:80"
+    depends_on:
+      - db
+
+  # Service utilitaire pour installer les deps
+  composer:
+    image: composer:2
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - ./.docker/composer-cache:/tmp # (optionnel) cache composer
+    entrypoint: [ "composer" ]
+
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - 1025:1025 #SMTP
+      - 8025:8025 #BoiteMail
+
+volumes:
+  db-data:
+  symfony-cache:
+  symfony-logs:
+  symfony-sessions:

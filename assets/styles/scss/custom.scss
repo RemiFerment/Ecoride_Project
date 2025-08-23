@@ -16,13 +16,9 @@ main {
 
 a {
     text-decoration: none;
-    color: #437716;
+    color: inherit;
 }
 
-a:hover {
-    text-decoration: underline;
-    color: #56961f;
-}
 
 .hero-image {
     height: 300px;
