@@ -26,8 +26,14 @@ class Car
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $first_date_registration = null;
 
-    #[ORM\Column]
-    private ?int $marque_id = null;
+    // #[ORM\Column]
+    // private ?int $marque_id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $color = null;
+
+    #[ORM\ManyToOne(targetEntity: Marque::class)]
+    private ?Marque $marque = null;
 
     public function getId(): ?int
     {
@@ -82,14 +88,37 @@ class Car
         return $this;
     }
 
-    public function getMarqueId(): ?int
+    // public function getMarqueId(): ?int
+    // {
+    //     return $this->marque_id;
+    // }
+
+    // public function setMarqueId(int $marque_id): static
+    // {
+    //     $this->marque_id = $marque_id;
+
+    //     return $this;
+    // }
+    public function getMarque(): ?int
     {
-        return $this->marque_id;
+        return $this->marque;
     }
 
-    public function setMarqueId(int $marque_id): static
+    public function setMarque(Marque $marque): static
     {
-        $this->marque_id = $marque_id;
+        $this->marque = $marque;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }
