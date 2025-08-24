@@ -2,23 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\Carpooling;
+use App\Entity\Car;
 use App\Entity\User;
-use App\Form\CarpoolType;
+use App\Form\CarType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 
-class CarpoolController extends AbstractController
+class CarManagerController extends AbstractController
 {
-    //Recherche de covoiturage
 
-    //Pages Mes Trajet
-    //// Créer un nouveau trajet(create)
-    #[Route('/carpool', name: 'app_carpool_index')]
-    public function index(): Response
+    #[Route('/cars', name: 'app_car_index')]
+    public function index()
     {
         $user = $this->getUser();
         if ($user === null) {
@@ -29,17 +26,18 @@ class CarpoolController extends AbstractController
             return $this->redirectToRoute('home');
         }
         //Affiche la liste des covoiturages prévu et déjà effectué.
-        return $this->render('carpool/index.html.twig', [
+        return $this->render('cars/index.html.twig', [
             'user' => $user ?? null
         ]);
     }
 
-    #[Route('/carpool/create', name: 'app_carpool_create')]
+    #[Route('/car/add', name: 'app_car_add')]
     public function createCarpool(
         Request $request,
         EntityManagerInterface $em,
         User $user
-    ): Response {
+    ): ?Response {
+
         /** @var User $user  */
         $user = $this->getUser();
         if ($user === null) {
@@ -49,28 +47,19 @@ class CarpoolController extends AbstractController
             );
             return $this->redirectToRoute('home');
         }
-
-        if ($user->getCurrentCarId() === null) {
-            $this->addFlash(
-                'warning',
-                'Veuillez ajouter une voiture avant de proposer un trajet.'
-            );
-            return $this->redirectToRoute('app_carpool_index');
-        }
-
-        $carpooling = new Carpooling();
-        $form = $this->createForm(CarpoolType::class, $carpooling);
+        $car = new Car();
+        $form = $this->createForm(CarType::class, $car);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $carpooling->setCreateBy($user->getId());
-            $carpooling->setCarId($user->getCurrentCarId());
-            $em->persist($carpooling);
+            $em->persist($car);
             $em->flush();
-            $this->addFlash('success', 'Votre trajet à bien été mise en ligne !');
-            return $this->redirectToRoute('app_carpool_index');
+            $user->setCurrentCarId($car->getId());
+            $this->addFlash('success', 'Votre voiture à bien été ajouté !');
+            return $this->redirectToRoute('app_car_index');
         }
 
-        return $this->render('carpool/create.html.twig', [
+        return $this->render('cars/add.html.twig', [
             'user' => $user ?? null,
             'form' => $form
         ]);

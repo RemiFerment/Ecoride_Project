@@ -41,6 +41,12 @@ class Carpooling
     #[ORM\Column]
     private ?int $price_per_person = null;
 
+    #[ORM\Column]
+    private ?int $create_by = null;
+
+    #[ORM\Column]
+    private ?int $car_id = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -150,6 +156,30 @@ class Carpooling
     public function setPricePerPerson(int $price_per_person): static
     {
         $this->price_per_person = $price_per_person;
+
+        return $this;
+    }
+
+    public function getCreateBy(): ?int
+    {
+        return $this->create_by;
+    }
+
+    public function setCreateBy(int $user_id): static
+    {
+        $this->create_by = $user_id;
+
+        return $this;
+    }
+
+    public function getCarId(): ?int
+    {
+        return $this->car_id;
+    }
+
+    public function setCarId(int $car_id): static
+    {
+        $this->car_id = $car_id;
 
         return $this;
     }

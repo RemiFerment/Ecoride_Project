@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Écoride - Mes Trajet
+{% endblock %}
+
+{% block body %}
+	<h1>Mes Trajets :
+	</h1>
+	<a class="btn btn-success" href="{{path(name:'app_carpool_create')}}">Créer un nouveau trajet</a>
+{% endblock %}
