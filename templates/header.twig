@@ -5,7 +5,7 @@
 	<nav class="navbar">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="{{ path('home') }}">
-				<img href="index.php"><img src="./import/logo.png" class="navbar-brand" alt="logo" width="60">
+				<img href="index.php"><img src=" {{app.request.getBaseURL()}}/import/logo.png" class="navbar-brand" alt="logo" width="60">
 			</a>
 			<h1 class="permanent-marker-regular ms-0 mb-0 d-inline-block align-text-top" style="color: #449652;">ÉCORIDE</h1>
 			<div class="d-flex align-items-center">
@@ -23,10 +23,10 @@
 								</a>
 							</li>
 							<li>
-								<button class="dropdown-item" type="button">Mes trajets</button>
+								<a class="dropdown-item" type="button" href="{{path(name:'app_carpool_index')}}">Mes trajets</a>
 							</li>
 							<li>
-								<button class="dropdown-item" type="button">Mes véhicules</button>
+								<a class="dropdown-item" type="button " href="{{path(name:'app_car_index')}}">Mes véhicules</a>
 							</li>
 						</ul>
 					{% endif %}
