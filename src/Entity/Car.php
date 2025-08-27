@@ -35,6 +35,9 @@ class Car
     #[ORM\ManyToOne(targetEntity: Marque::class)]
     private ?Marque $marque = null;
 
+    #[ORM\Column]
+    private ?int $user_id = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -99,7 +102,7 @@ class Car
 
     //     return $this;
     // }
-    public function getMarque(): ?int
+    public function getMarque(): ?Marque
     {
         return $this->marque;
     }
@@ -119,6 +122,18 @@ class Car
     public function setColor(string $color): static
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(int $user_id): static
+    {
+        $this->user_id = $user_id;
 
         return $this;
     }

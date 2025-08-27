@@ -28,12 +28,16 @@ class CarType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Première date d\'immatriculation : '
             ])
-            ->add('marque_id', EntityType::class, [
-                'class' => Marque::class,
-                'autocomplete' => true,
-                'placeholder' => 'Insérer une marque',
-                'label' => 'Marque de voiture : '
-            ])
+            ->add(
+                'marque',
+                EntityType::class,
+                [
+                    'class' => Marque::class,
+                    'choice_label' => 'name',
+                    'placeholder' => 'Insérer une marque',
+                    'label' => 'Marque de voiture : '
+                ]
+            )
             ->add('color', options: [
                 'label' => 'Couleur : '
             ])
@@ -42,6 +46,7 @@ class CarType extends AbstractType
             ],)
         ;
     }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {
