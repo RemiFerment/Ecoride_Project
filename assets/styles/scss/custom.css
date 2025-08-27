@@ -21,7 +21,7 @@ a {
 
 .hero-image {
   height: 300px;
-  background-image: url("../import/paysage.png");
+  background-image: url("/import/paysage.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
