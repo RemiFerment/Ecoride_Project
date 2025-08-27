@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Car;
 use App\Entity\User;
 use App\Form\CarType;
+use App\Repository\CarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,8 +16,9 @@ class CarManagerController extends AbstractController
 {
 
     #[Route('/cars', name: 'app_car_index')]
-    public function index()
+    public function index(CarRepository $carRepository)
     {
+        /** @var User $user */
         $user = $this->getUser();
         if ($user === null) {
             $this->addFlash(
@@ -25,9 +27,12 @@ class CarManagerController extends AbstractController
             );
             return $this->redirectToRoute('home');
         }
+        $carArray = $carRepository->findAllByUserId($user->getId());
+        // dd($carArray);
         //Affiche la liste des covoiturages prévu et déjà effectué.
         return $this->render('cars/index.html.twig', [
-            'user' => $user ?? null
+            'user' => $user ?? null,
+            'cars' => $carArray ?? null
         ]);
     }
 
@@ -52,9 +57,14 @@ class CarManagerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Car $car */
+            $car = $form->getData();
+            $car->setUserId($user->getId());
             $em->persist($car);
             $em->flush();
             $user->setCurrentCarId($car->getId());
+            $em->persist($user);
+            $em->flush();
             $this->addFlash('success', 'Votre voiture à bien été ajouté !');
             return $this->redirectToRoute('app_car_index');
         }

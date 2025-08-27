@@ -1,8 +1,8 @@
-var
-vendor
-.git/
-# .env
-# .env.dev
-# .env.test
+/var
+/vendor
+/.git
+# /.env
+# /.env.dev
+# /.env.test
 .gitignore
 db-data

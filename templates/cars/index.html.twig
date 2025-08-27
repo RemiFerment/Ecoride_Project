@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{% set isCar = cars is not empty %}
 {% block title %}Écoride - Mes voitures
 {% endblock %}
 
@@ -7,4 +7,35 @@
 	<h1>Mes voitures :
 	</h1>
 	<a class="btn btn-success" href="{{path(name:'app_car_add')}}">Ajouter une nouvelle voiture</a>
+	<div>
+		{% if isCar %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Marque et model</th>
+						<th scope="col">Énergie</th>
+						<th scope="col">Plaque d'immatriculation</th>
+						<th scope="col">Première date d'immatriculation</th>
+						<th scope="col">Couleur</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for car in cars %}
+						<tr>
+							<td>{{car.marque.name}}
+								{{car.model}}
+							</td>
+							<td>{{car.powerEngine}}</td>
+							<td>{{car.registration}}</td>
+							<td>{{car.firstDateRegistration|date("d/m/Y")}}</td>
+							<td>{{car.color}}</td>
+							<td><a href=""></a></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+
+	</div>
 {% endblock %}
