@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\CarpoolingRepository;
+use App\Validator\CityCheck;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CarpoolingRepository::class)]
 class Carpooling
@@ -15,12 +18,19 @@ class Carpooling
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[Assert\NotBlank(message: "Veuillez sélectionner une date.")]
+    #[Assert\GreaterThanOrEqual(
+        value: "today",
+        message: "La date doit être aujourd'hui ou ultérieure."
+    )]
     private ?\DateTimeImmutable $start_date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?\DateTimeImmutable $start_hour = null;
 
     #[ORM\Column(length: 255)]
+    #[CityCheck()]
+    #[NotBlank()]
     private ?string $start_place = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
@@ -30,6 +40,8 @@ class Carpooling
     private ?\DateTimeImmutable $end_hour = null;
 
     #[ORM\Column(length: 255)]
+    #[CityCheck()]
+    #[NotBlank()]
     private ?string $end_place = null;
 
     #[ORM\Column(length: 255)]
@@ -44,8 +56,8 @@ class Carpooling
     #[ORM\Column]
     private ?int $create_by = null;
 
-    #[ORM\Column]
-    private ?int $car_id = null;
+    #[ORM\ManyToOne(targetEntity: Car::class)]
+    private ?Car $car = null;
 
     public function getId(): ?int
     {
@@ -172,14 +184,14 @@ class Carpooling
         return $this;
     }
 
-    public function getCarId(): ?int
+    public function getCar(): ?Car
     {
-        return $this->car_id;
+        return $this->car;
     }
 
-    public function setCarId(int $car_id): static
+    public function setCar(?Car $car): static
     {
-        $this->car_id = $car_id;
+        $this->car = $car;
 
         return $this;
     }

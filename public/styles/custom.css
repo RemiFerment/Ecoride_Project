@@ -1,13 +1,14 @@
+@charset "UTF-8";
 html,
 body {
   height: 100%;
   margin: 0;
-  background-color: #f6f6f6;
 }
 
 body {
   display: flex;
   flex-direction: column;
+  background-color: #f6f6f6;
 }
 
 main {
@@ -16,12 +17,7 @@ main {
 
 a {
   text-decoration: none;
-  color: #437716;
-}
-
-a:hover {
-  text-decoration: underline;
-  color: #56961f;
+  color: inherit;
 }
 
 .hero-image {
@@ -76,7 +72,7 @@ a:hover {
   font-family: "Permanent Marker", cursive;
   font-weight: 400;
   font-style: normal;
-  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.192);
+  text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.0823529412);
 }
 
 .blank {
@@ -96,4 +92,15 @@ a:hover {
   border-radius: 1rem;
 }
 
-/*# sourceMappingURL=custom.css.map */
+.profile-img {
+  width: 128px;
+  /* largeur fixe */
+  height: 128px;
+  /* hauteur fixe => carré */
+  -o-object-fit: cover;
+     object-fit: cover;
+  /* recadre sans déformer */
+  border-radius: 50%;
+  /* rond */
+  display: block;
+}/*# sourceMappingURL=custom.css.map */
