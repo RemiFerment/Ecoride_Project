@@ -74,7 +74,7 @@ a {
     font-family: "Permanent Marker", cursive;
     font-weight: 400;
     font-style: normal;
-    text-shadow: 5px 5px 0px #00000083;
+    text-shadow: 5px 5px 0px #00000015;
 }
 
 .blank {
@@ -92,6 +92,18 @@ a {
 .test {
     background-color: #cccccc38;
     border-radius: 1rem;
+}
+
+.profile-img {
+    width: 128px;
+    /* largeur fixe */
+    height: 128px;
+    /* hauteur fixe => carré */
+    object-fit: cover;
+    /* recadre sans déformer */
+    border-radius: 50%;
+    /* rond */
+    display: block;
 }
 
 // Example: Style from medium breakpoint and down

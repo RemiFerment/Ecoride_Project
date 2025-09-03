@@ -4,7 +4,48 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Mes Trajets :
-	</h1>
-	<a class="btn btn-success" href="{{path(name:'app_carpool_create')}}">Créer un nouveau trajet</a>
+	<div class="d-flex justify-content-between oxanium justify-content-center ">
+		<div>
+			<h1>Mes Trajets :</h1>
+		</div>
+		<div>
+			<a class="btn btn-success" href="{{path(name:'app_carpool_create')}}">Créer un nouveau trajet</a>
+		</div>
+	</div>
+	<hr>
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+		<li class="nav-item" role="presentation">
+			<button class="nav-link active" id="current-carpool-tab" data-bs-toggle="tab" data-bs-target="#current-carpool-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">A venir</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="previous-carpool-tab" data-bs-toggle="tab" data-bs-target="#previous-carpool-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Passé</button>
+		</li>
+	</ul>
+	<div class="tab-content" id="myTabContent">
+		<div class="tab-pane fade show active" id="current-carpool-tab-pane" role="tabpanel" aria-labelledby="current-carpool-tab" tabindex="0">
+			<div class="d-flex justify-content-center gap-2 my-4 flex-wrap">
+				{% if currentCarpools is empty %}
+					<h5>Aucun trajet n'est prévu</h5>
+				{% else %}
+					{% for carpool in currentCarpools %}
+						{% include "partials/card.carpool.html.twig" %}
+					{% endfor %}
+				{% endif %}
+
+			</div>
+
+		</div>
+		<div class="tab-pane fade" id="previous-carpool-tab-pane" role="tabpanel" aria-labelledby="previous-carpool-tab" tabindex="0">
+			<div class="d-flex justify-content-center gap-2 my-4 flex-wrap">
+				{% if previousCarpools is empty %}
+					<h5>Il n'y a pas de trajet à afficher</h5>
+				{% else %}
+					{% for carpool in previousCarpools %}
+						{% set previous = true %}
+						{% include "partials/card.carpool.html.twig" %}
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
 {% endblock %}
