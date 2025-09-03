@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% set isCar = cars is not empty %}
+{% block title %}Écoride - Mes voitures
+{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between oxanium mt-5 p-lg-5">
+	<div>
+		<h1>Mes voitures :</h1>
+	</div>
+	<div>
+		<a class="btn btn-success" href="{{path(name:'app_car_add')}}">Ajouter une nouvelle voiture</a>
+	</div>
+</div>
+<div>
+	{% if isCar %}
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Marque et model</th>
+					<th scope="col">Énergie</th>
+					<th scope="col">Plaque d'immatriculation</th>
+					<th scope="col">Première date d'immatriculation</th>
+					<th scope="col">Couleur</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for car in cars %}
+					<tr class="{{user.currentCarId == car.id ? "table-success" : "" }}">
+						<td>
+							{% if user.currentCarId == car.id %}
+								<i class="bi bi-car-front-fill" data-bs-toggle="tooltip" data-bs-placement="top" title="Voiture principal"></i>
+							{% endif %}
+							{{car.marque.name}}
+							{{car.model}}
+						</td>
+						<td>{{car.powerEngine}}</td>
+						<td>{{car.registration}}</td>
+						<td>{{car.firstDateRegistration|date("d/m/Y")}}</td>
+						<td>{{car.color}}</td>
+						<td>
+							<div>
+								<a href="" class="btn btn-primary">Modifier</a>
+								<a href="{{ path(name = 'app_car_setDefault', parameters = {id: car.id} ) }} " class="btn btn-success {{ user.currentCarId == car.id ? " d-none" : " " }}">Utiliser</a>
+								<a href="{{ path(name = 'app_car_delete', parameters = {id: car.id} ) }}" class="btn btn-danger">Supprimer</a>
+							</td>
+						</td>
+					</tr>
+				</div>
+			</tbody>
+		</tr>
+	{% endfor %}
+</tbody></table>{% endif %}</div>{% endblock %}

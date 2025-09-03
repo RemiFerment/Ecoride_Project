@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil -
+	{{user.username}}
+{% endblock %}
+
+{% block body %}
+	<div class="oxanium mt-5 contain-effect p-lg-5 justify-content-center ">
+		<h1 class="my-3 text-center viga-regular">Mon profil :
+		</h1>
+		<div class="row row-cols-2">
+			<div class="col-lg-2">
+				{% if base64 is not empty %}
+					<img src="data:image/png;base64,{{ base64 }}" class="profile-img" alt="Image de profil">
+				{% else %}
+					<img src="../import/blank-profile.png" class="profile-img" alt="Image par défaut">
+				{% endif %}
+			</div>
+			<div class="col">
+				{{ form_start(form) }}
+				<div class="d-flex-lg align-items-center justify-content-between">
+					<div>
+						{{ form_row(form.photo) }}
+					</div>
+					<div>
+						{{ form_row(form.save) }}
+					</div>
+
+				</div>
+			</div>
+			{{ form_end(form) }}
+
+		</div>
+
+		<table class="table justify-content-center">
+			<tbody>
+				<tr>
+					<th class="col-lg-4">Nom d'utilisateur :
+					</th>
+					<td class="col-auto">
+						<input type="text" value="{{user.username}}" readonly>
+					</td>
+					<td>
+						<a href="" id="">
+							<i class="bi bi-pencil"></i>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<th class="col">Nom de famille :
+					</th>
+					<td class="col">
+						<input type="text" value="{{user.firstname}}" readonly>
+					</td>
+					<td>
+						<a href="" id="">
+							<i class="bi bi-pencil"></i>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<th class="col">Prénom :
+					</th>
+					<td>
+						<input type="text" value="{{user.lastname}}" readonly>
+					</td>
+					<td>
+						<a href="" id="">
+							<i class="bi bi-pencil"></i>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<th class="col">Numéro de téléphone :
+					</th>
+					<td>
+						<input type="text" value="{{user.phonenumber}}" readonly>
+					</td>
+					<td>
+						<a href="" id="">
+							<i class="bi bi-pencil"></i>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<th class="col">Adresse postale :
+					</th>
+					<td>
+						<input type="text" value="{{user.postaladress}}" readonly>
+					</td>
+					<td>
+						<a href="" id="">
+							<i class="bi bi-pencil"></i>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<th class="col">Date de naissance :
+					</th>
+					<td>
+						<input type="date" value="{{user.birthdate | date('Y-m-d')}}" readonly>
+					</td>
+					<td>
+						<a href="" id="">
+							<i class="bi bi-pencil"></i>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<th class="col">Password :
+					</th>
+					<td>
+						<input type="password" value="password" readonly>
+					</td>
+					<td>
+						<a href="" id="">
+							<i class="bi bi-pencil"></i>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
