@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html,
 body {
   height: 100%;
@@ -91,4 +92,15 @@ a {
   border-radius: 1rem;
 }
 
-/*# sourceMappingURL=custom.css.map */
+.profile-img {
+  width: 128px;
+  /* largeur fixe */
+  height: 128px;
+  /* hauteur fixe => carré */
+  -o-object-fit: cover;
+     object-fit: cover;
+  /* recadre sans déformer */
+  border-radius: 50%;
+  /* rond */
+  display: block;
+}/*# sourceMappingURL=custom.css.map */

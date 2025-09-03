@@ -8,23 +8,9 @@
 		<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
 	{% endfor %}
 
-	{# <h1>Register</h1>
-								
-									{{ form_errors(registrationForm) }}
-								
-									{{ form_start(registrationForm) }}
-									{{ form_row(registrationForm.email) }}
-									{{ form_row(registrationForm.plainPassword, {
-								            label: 'Password'
-								        }) }} #}
 
-	{# {{ form_row(registrationForm.agreeTerms) }} #}
-	{# {{ form_rest(registrationForm) }} #}
-
-	{# <button type="submit" class="btn btn-success">S'inscrire</button> #}
-	{# {{ form_end(registrationForm) }} #}
-
-		<div class="oxanium mt-5 contain-effect p-5 container justify-content-center "> <h3 class="text-center viga-regular">Inscription</h3>
+	<form class="oxanium mt-5 contain-effect p-5 container justify-content-center ">
+		<h3 class="text-center viga-regular">Inscription</h3>
 		<hr>
 		<div class="row px-5 mt-5 mb-3">
 			<div class="col px-2">
@@ -51,5 +37,4 @@
 			<a href="{{path(name = 'app_login')}}">Connectez-vous</a>
 			!</div>
 	</form>
-
-</div>{% endblock %}
+{% endblock %}
