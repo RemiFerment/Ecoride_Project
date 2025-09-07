@@ -7,6 +7,13 @@
 	<div class="oxanium mt-5 contain-effect p-5 container justify-content-center ">
 		<h3 class="text-center viga-regular">Créer un trajet :</h3>
 		<hr>
+		<div class="text-center">
+			<h5 class="viga-regular">Véhicule utilisé :{{userCar.marque.name}}
+				{{userCar.model}}
+			</h5>
+			<a href=" {{ path('app_car_index') }} " class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Changer de véhicule</a>
+		</div>
+		<hr>
 		<div class="row px-5 mt-5 mb-1">
 			<div class="col px-2">
 				{{ form_start(form)}}
@@ -20,13 +27,10 @@
 			<div class="col px-2">
 				{{ form_row(form.start_date) }}
 			</div>
-			<div class="col px-2">
-				{{ form_row(form.start_hour) }}
-			</div>
 		</div>
 		<div class="row px-5 mt-1 mb-3">
 			<div class="col px-2">
-				{{ form_row(form.avaible_seat) }}
+				{{ form_row(form.available_seat) }}
 			</div>
 			<div class="col px-2">
 				{{ form_row(form.price_per_person) }}
