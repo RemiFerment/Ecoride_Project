@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Carpooling;
+use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,30 +21,48 @@ class CarpoolingRepository extends ServiceEntityRepository
     /**
      * @return Carpooling[] Returns an array of Carpooling objects
      */
-    public function findAllByUserId(int $user_id): array
+    public function findAllByUserId(User $user): array
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.create_by = :user_id')
+            ->andWhere('c.created_by = :user')
             ->andWhere('c.statut = :statut')
-            ->setParameter('user_id', $user_id)
+            ->setParameter('user', $user)
             ->setParameter('statut', "Online")
             ->setMaxResults(50)
             ->getQuery()
             ->getResult()
         ;
     }
-    public function findAllByUserAndDate(int $user_id, bool $past = false): array
+    public function findAllByUserAndDate(User $user, bool $past = false): array
     {
         $date = new DateTimeImmutable();
 
         return $this->createQueryBuilder('c')
-            ->andWhere('c.create_by = :user_id')
+            ->andWhere('c.created_by = :user_id')
             ->andWhere('c.statut = :statut')
             ->andWhere($past ? 'c.start_date < :now' : 'c.start_date >= :now')
-            ->setParameter('user_id', $user_id)
+            ->setParameter('user_id', $user)
             ->setParameter('statut', "Online")
             ->setParameter('now', $date)
             ->setMaxResults(50)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findBySearchCarpool(
+        string $startPlace,
+        string $endPlace,
+        DateTimeImmutable $date,
+    ): array {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.start_place = :startPlace')
+            ->andWhere('c.end_place = :endPlace')
+            ->andWhere('c.start_date > :date')
+            ->setParameter('startPlace', $startPlace)
+            ->setParameter('endPlace', $endPlace)
+            ->setParameter('date', $date)
+            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
