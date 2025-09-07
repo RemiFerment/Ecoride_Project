@@ -19,10 +19,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class CarpoolController extends AbstractController
 {
     #[Route('/carpool', name: 'app_carpool_index')]
-    public function index(CarpoolingRepository $carpoolRep): Response
+    public function index(CarpoolingRepository $carpoolRep, CarRepository $carRep): Response
     {
         /** @var User $user */
         $user = $this->getUser();
+
         if ($user === null) {
             $this->addFlash(
                 'danger',
@@ -30,9 +31,8 @@ class CarpoolController extends AbstractController
             );
             return $this->redirectToRoute('app_login');
         }
-        $user_id = $user->getId();
-        $currentCarpools = $carpoolRep->findAllByUserAndDate($user_id);
-        $previousCarpools = $carpoolRep->findAllByUserAndDate($user_id, true);
+        $currentCarpools = $carpoolRep->findAllByUserAndDate($user);
+        $previousCarpools = $carpoolRep->findAllByUserAndDate($user, true);
         return $this->render('carpool/index.html.twig', [
             'user' => $user ?? null,
             'currentCarpools' => $currentCarpools,
@@ -50,6 +50,8 @@ class CarpoolController extends AbstractController
     ): Response {
         /** @var User $user  */
         $user = $this->getUser();
+        /** @var Car $userCar */
+        $userCar = $carRep->find($user->getCurrentCarId());
         if ($user === null) {
             $this->addFlash(
                 'danger',
@@ -71,22 +73,19 @@ class CarpoolController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $carpooling->setCreateBy($user->getId());
+            $carpooling->setCreatedBy($user);
             $carpooling->setCar($carRep->find($user->getCurrentCarId()));
             $carpooling->setStartPlace($gs->getOfficialCityName($carpooling->getStartPlace()));
             $carpooling->setEndPlace($gs->getOfficialCityName($carpooling->getEndPlace()));
 
             //calcul de la durée
             $duration = $gs->routeTimeCalcul($carpooling->getStartPlace(), $carpooling->getEndPlace());
-            $date = $carpooling->getStartDate()->format('Y-m-d');
-            $hour = $carpooling->getStartHour()->format('H:i:s');
-            $newdate = new DateTimeImmutable("$date $hour");
+            $newdate = $carpooling->getStartDate();
 
             $interval = new DateInterval('PT' . $duration . 'M');
             $newdate = $newdate->add($interval);
 
-            $carpooling->setEndDate(new DateTimeImmutable($newdate->format('Y-m-d')));
-            $carpooling->setEndHour(new DateTimeImmutable($newdate->format('H:i:s')));
+            $carpooling->setEndDate(new DateTimeImmutable($newdate->format('Y-m-d H:i')));
 
             $carpooling->setStatut('Online');
 
@@ -98,7 +97,8 @@ class CarpoolController extends AbstractController
 
         return $this->render('carpool/create.html.twig', [
             'user' => $user ?? null,
-            'form' => $form
+            'form' => $form->createView(),
+            'userCar' => $userCar
         ]);
     }
 
@@ -115,7 +115,7 @@ class CarpoolController extends AbstractController
             );
             return $this->redirectToRoute('app_carpool_index');
         }
-        if ($carpooling->getCreateBy() !== $user->getId()) {
+        if ($carpooling->getCreatedBy() !== $user) {
             $this->addFlash(
                 'danger',
                 'Le trajet ne peut pas être supprimé, si le problème persiste, contactez l\'administrateur réseau.'

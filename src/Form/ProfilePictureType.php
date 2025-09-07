@@ -16,16 +16,14 @@ class ProfilePictureType extends AbstractType
     {
         $builder->add('photo', FileType::class, [
             'required' => true,
+            'label' => false,
             'constraints' => [
                 new File([
                     'maxSize' => '16M',
                     'mimeTypes' => ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
                 ])
             ],
-        ])
-            ->add('save', SubmitType::class, options: [
-                'label' => 'Ajouter la photo'
-            ]);
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

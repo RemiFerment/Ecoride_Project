@@ -63,6 +63,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $current_car_id = null;
 
+    /**
+     * @var Collection<int, UserCarpooling>
+     */
+    #[ORM\ManyToMany(targetEntity: UserCarpooling::class, mappedBy: 'user')]
+    private Collection $userCarpoolings;
+
+    /**
+     * @var Collection<int, Carpooling>
+     */
+    #[ORM\OneToMany(targetEntity: Carpooling::class, mappedBy: 'created_by')]
+    private Collection $carpoolings;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $grade = null;
+
+    public function __construct()
+    {
+        $this->userCarpoolings = new ArrayCollection();
+        $this->carpoolings = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -204,8 +225,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPhoto()
+    public function getPhoto(): ?string
     {
+        if (\is_resource($this->photo)) {
+            $data = stream_get_contents($this->photo);
+            $this->photo = ($data === false || $data === '') ? null : $data;
+        }
         return $this->photo;
     }
 
@@ -248,6 +273,75 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCurrentCarId(?int $current_car_id): static
     {
         $this->current_car_id = $current_car_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserCarpooling>
+     */
+    public function getUserCarpoolings(): Collection
+    {
+        return $this->userCarpoolings;
+    }
+
+    public function addUserCarpooling(UserCarpooling $userCarpooling): static
+    {
+        if (!$this->userCarpoolings->contains($userCarpooling)) {
+            $this->userCarpoolings->add($userCarpooling);
+            $userCarpooling->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserCarpooling(UserCarpooling $userCarpooling): static
+    {
+        if ($this->userCarpoolings->removeElement($userCarpooling)) {
+            $userCarpooling->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Carpooling>
+     */
+    public function getCarpoolings(): Collection
+    {
+        return $this->carpoolings;
+    }
+
+    public function addCarpooling(Carpooling $carpooling): static
+    {
+        if (!$this->carpoolings->contains($carpooling)) {
+            $this->carpoolings->add($carpooling);
+            $carpooling->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCarpooling(Carpooling $carpooling): static
+    {
+        if ($this->carpoolings->removeElement($carpooling)) {
+            // set the owning side to null (unless already changed)
+            if ($carpooling->getCreatedBy() === $this) {
+                $carpooling->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getGrade(): ?int
+    {
+        return $this->grade;
+    }
+
+    public function setGrade(?int $grade): static
+    {
+        $this->grade = $grade;
 
         return $this;
     }

@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\UserCarpoolling;
+use App\Entity\UserCarpooling;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<UserCarpoolling>
+ * @extends ServiceEntityRepository<UserCarpooling>
  */
-class UserCarpoollingRepository extends ServiceEntityRepository
+class UserCarpoolingRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, UserCarpoolling::class);
+        parent::__construct($registry, UserCarpooling::class);
     }
 
 //    /**
-//     * @return UserCarpoolling[] Returns an array of UserCarpoolling objects
+//     * @return UserCarpooling[] Returns an array of UserCarpooling objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -31,7 +31,7 @@ class UserCarpoollingRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?UserCarpoolling
+//    public function findOneBySomeField($value): ?UserCarpooling
 //    {
 //        return $this->createQueryBuilder('u')
 //            ->andWhere('u.exampleField = :val')

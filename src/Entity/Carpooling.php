@@ -17,27 +17,21 @@ class Carpooling
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Assert\NotBlank(message: "Veuillez sélectionner une date.")]
     #[Assert\GreaterThanOrEqual(
         value: "today",
         message: "La date doit être aujourd'hui ou ultérieure."
     )]
     private ?\DateTimeImmutable $start_date = null;
-
-    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $start_hour = null;
-
     #[ORM\Column(length: 255)]
     #[CityCheck()]
     #[NotBlank()]
     private ?string $start_place = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $end_date = null;
 
-    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $end_hour = null;
 
     #[ORM\Column(length: 255)]
     #[CityCheck()]
@@ -48,16 +42,20 @@ class Carpooling
     private ?string $statut = null;
 
     #[ORM\Column]
-    private ?int $avaible_seat = null;
+    private ?int $available_seat = null;
 
     #[ORM\Column]
     private ?int $price_per_person = null;
 
-    #[ORM\Column]
-    private ?int $create_by = null;
-
     #[ORM\ManyToOne(targetEntity: Car::class)]
     private ?Car $car = null;
+
+    #[ORM\ManyToOne(inversedBy: 'carpooling')]
+    private ?UserCarpooling $userCarpooling = null;
+
+    #[ORM\ManyToOne(inversedBy: 'carpoolings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $created_by = null;
 
     public function getId(): ?int
     {
@@ -72,18 +70,6 @@ class Carpooling
     public function setStartDate(\DateTimeImmutable $start_date): static
     {
         $this->start_date = $start_date;
-
-        return $this;
-    }
-
-    public function getStartHour(): ?\DateTimeImmutable
-    {
-        return $this->start_hour;
-    }
-
-    public function setStartHour(\DateTimeImmutable $start_hour): static
-    {
-        $this->start_hour = $start_hour;
 
         return $this;
     }
@@ -112,18 +98,6 @@ class Carpooling
         return $this;
     }
 
-    public function getEndHour(): ?\DateTimeImmutable
-    {
-        return $this->end_hour;
-    }
-
-    public function setEndHour(\DateTimeImmutable $end_hour): static
-    {
-        $this->end_hour = $end_hour;
-
-        return $this;
-    }
-
     public function getEndPlace(): ?string
     {
         return $this->end_place;
@@ -148,14 +122,14 @@ class Carpooling
         return $this;
     }
 
-    public function getAvaibleSeat(): ?int
+    public function getAvailableSeat(): ?int
     {
-        return $this->avaible_seat;
+        return $this->available_seat;
     }
 
-    public function setAvaibleSeat(int $avaible_seat): static
+    public function setAvailableSeat(int $available_seat): static
     {
-        $this->avaible_seat = $avaible_seat;
+        $this->available_seat = $available_seat;
 
         return $this;
     }
@@ -172,18 +146,6 @@ class Carpooling
         return $this;
     }
 
-    public function getCreateBy(): ?int
-    {
-        return $this->create_by;
-    }
-
-    public function setCreateBy(int $user_id): static
-    {
-        $this->create_by = $user_id;
-
-        return $this;
-    }
-
     public function getCar(): ?Car
     {
         return $this->car;
@@ -192,6 +154,30 @@ class Carpooling
     public function setCar(?Car $car): static
     {
         $this->car = $car;
+
+        return $this;
+    }
+
+    public function getUserCarpooling(): ?UserCarpooling
+    {
+        return $this->userCarpooling;
+    }
+
+    public function setUserCarpooling(?UserCarpooling $userCarpooling): static
+    {
+        $this->userCarpooling = $userCarpooling;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->created_by;
+    }
+
+    public function setCreatedBy(?User $created_by): static
+    {
+        $this->created_by = $created_by;
 
         return $this;
     }

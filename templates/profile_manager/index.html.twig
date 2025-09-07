@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{% set photoBase64 = user.photo|to_base64 %}
 {% block title %}Profil -
 	{{user.username}}
 {% endblock %}
@@ -8,29 +8,46 @@
 	<div class="oxanium mt-5 contain-effect p-lg-5 justify-content-center ">
 		<h1 class="my-3 text-center viga-regular">Mon profil :
 		</h1>
-		<div class="row row-cols-2">
-			<div class="col-lg-2">
-				{% if base64 is not empty %}
-					<img src="data:image/png;base64,{{ base64 }}" class="profile-img" alt="Image de profil">
-				{% else %}
-					<img src="../import/blank-profile.png" class="profile-img" alt="Image par défaut">
-				{% endif %}
-			</div>
-			<div class="col">
-				{{ form_start(form) }}
-				<div class="d-flex-lg align-items-center justify-content-between">
-					<div>
-						{{ form_row(form.photo) }}
-					</div>
-					<div>
-						{{ form_row(form.save) }}
-					</div>
 
-				</div>
-			</div>
-			{{ form_end(form) }}
+		<table class="table justify-content-center">
+			<tbody>
+				<tr>
+					<th class="col align-middle">
+						<span>Photo de profil :</span>
+					</th>
+					<td class="col-auto">
 
-		</div>
+						<div class="row row-cols-2 my-2 align-items-center">
+							<div class="col-lg-2">
+								{% if photoBase64 is not null %}
+									<img src="data:image/webp;base64,{{ photoBase64 }}" class="profile-img" alt="Image de profil">
+								{% else %}
+									<img src="../import/blank-profile.png" class="profile-img" alt="Image par défaut">
+								{% endif %}
+							</div>
+							<div class="col-lg-10">
+								{{ form_start(form) }}
+								<div class="d-flex justify-content-evenly">
+									<div>
+										{{ form_row(form.photo) }}
+									</div>
+									<div>
+										<button type="submit" class="btn btn-success mb-3">{{photoBase64 == null ? "Ajouter une" : "Modifier la"}}
+											photo</button>
+										<a href="{{ path(name = 'app_delete_profile_picture', parameters = {user_id: user.id} ) }}" class="btn btn-danger {{photoBase64 == null ? " disabled" : " "}} mb-3" role="button" {{photoBase64 == null ? "aria-disabled='true'" : ""}}>Supprimer</a>
+									</div>
+
+
+								</div>
+							</div>
+							{{ form_end(form) }}
+
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
 
 		<table class="table justify-content-center">
 			<tbody>
@@ -120,5 +137,5 @@
 				</tr>
 			</tbody>
 		</table>
-	</div>
-{% endblock %}
+	</tr>
+</tbody></td></tr></tbody></div>{% endblock %}
