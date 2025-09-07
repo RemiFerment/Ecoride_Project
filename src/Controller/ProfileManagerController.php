@@ -27,15 +27,6 @@ final class ProfileManagerController extends AbstractController
 
         $form = $this->createForm(ProfilePictureType::class);
         $form->handleRequest($request);
-
-        //la photo est récupéré (au format binaire)
-        $data = $user->getPhoto();
-        if (is_resource($data)) {
-            //On récupère l'objet binaire via la fonction ci-dessus pour pouvoir le convertir.
-            $data = stream_get_contents($data);
-        }
-        //Conversion du flux binaire en base64
-        $base64 = base64_encode($data);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $file = $form->get('photo')->getData();
@@ -63,9 +54,29 @@ final class ProfileManagerController extends AbstractController
 
         return $this->render('profile_manager/index.html.twig', [
             'user' => $user ?? null,
-            'form' => $form,
-            //On envoie le flux converti dans la vue, twig se chargera de l'ouvrir en png
-            'base64' => $base64 ?? null
+            'form' => $form->createView(),
         ]);
+    }
+
+    #[Route("/profile/manager/{user_id}/delete_photo", name: "app_delete_profile_picture", requirements: ['user_id' => '\d+'])]
+    public function deleteProfilePhoto(EntityManagerInterface $em, int $user_id)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($user_id !== $user->getId()) {
+            $this->addFlash(
+                'danger',
+                'Le lien que vous avez sélectionné ne vous est pas destiné, vérifiez le lien.'
+            );
+            return $this->redirectToRoute('app_profile_manager');
+        }
+        $user->setPhoto(null);
+        $em->persist($user);
+        $em->flush();
+        $this->addFlash(
+            'success',
+            'La photo a bien été supprimé !'
+        );
+        return $this->redirectToRoute('app_profile_manager');
     }
 }

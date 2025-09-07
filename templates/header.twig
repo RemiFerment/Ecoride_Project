@@ -56,7 +56,7 @@
 							<a class="nav-link {{ app.current_route == 'home' ? 'active' : '' }} oxanium" aria-current="page" href="{{path(name = 'home')}}">Accueil</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link oxanium" aria-current="page" href="">Rechercher un covoiturage</a>
+							<a class="nav-link {{ app.current_route == 'app_search_carpool' ? 'active' : '' }} oxanium" aria-current="page" href="{{path(name = 'app_search_carpool')}}">Rechercher un covoiturage</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link oxanium" aria-current="page" href="">Nous contacter</a>

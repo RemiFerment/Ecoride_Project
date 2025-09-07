@@ -73,7 +73,7 @@ class CarManagerController extends AbstractController
 
         return $this->render('car/add.html.twig', [
             'user' => $user ?? null,
-            'form' => $form
+            'form' => $form->createView()
         ]);
     }
 

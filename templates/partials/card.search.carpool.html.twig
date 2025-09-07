@@ -1,0 +1,62 @@
+{% set user = carpool.createdBy %}
+{% set photoBase64 = user.photo|to_base64 %}
+<div class="d-flex justify-content-center oxanium">
+	<div class="prefab-carpool-search my-3 rounded shadow">
+
+		<div class="container justify-content-center">
+			<div class="row text-center my-4 justify-content-center">
+
+				<div class="col-lg">
+					{% if photoBase64 is not null %}
+						<img src="data:image/png;base64,{{ photoBase64 }}" class="profile-img" alt="Image de profil">
+					{% else %}
+						<img src="../import/blank-profile.png" class="profile-img" alt="Image par défaut">
+					{% endif %}
+					<div class="">{{user.username}}</div>
+					<div class="">Note :
+						{{user.grade == null ? "--" : user.grade}}/5</div>
+				</div>
+				<div class="col-lg-auto">
+					<div class="row">
+						<div class="col-lg-auto text-start">
+							<div class="p-2 my-3 rounded" style="background-color: white;">
+								<i class="bi bi-person me-3"></i>Place(s) restante(s) :
+								{{carpool.availableSeat}}
+							</div>
+							<div class="p-2 my-3 rounded" style="background-color: white;">
+								<i class="bi bi-coin me-3"></i>Prix de la course :
+								{{carpool.pricePerPerson}}
+							</div>
+							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == "Electrique" ? " green" : " red" }}; color : white ">
+								<i class="bi bi-car-front me-3"></i>
+								{{carpool.car.powerEngine}}
+							</div>
+						</div>
+
+						<div class="col-lg-auto text-start">
+							<div class="col-lg">
+								<div class="p-2 my-3 rounded" style="background-color: whitesmoke;">
+									<i class="me-3 bi bi-geo-alt"></i>
+									{{carpool.startPlace}}</div>
+								<div class="p-2 my-3 rounded" style="background-color: whitesmoke;">
+									<i class="me-3 bi bi-flag"></i>
+									{{carpool.endPlace}}</div>
+								<div class="p-2 my-3 rounded" style="background-color: whitesmoke;">
+									<i class="me-3 bi bi-clock"></i>
+									Heure de départ :
+									{{carpool.startdate | date("H:i") }}</div>
+							</div>
+						</div>
+					</div>
+					<div class="input-group mb-3">
+						<button type="button" class="btn btn-ecoride text-left px-3 text-white text-center rounded" placeholder="Rechercher une destination..." id="research">
+							<i class="bi bi-info-square pe-3"></i>
+							Afficher les détails
+						</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
