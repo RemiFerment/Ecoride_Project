@@ -46,4 +46,10 @@ final class SearchCarpoolController extends AbstractController
             ]
         );
     }
+
+    //     #[Route('/search/carpool/{id}/details', name: 'app_search_carpool_details')]
+    //     public function detailCarpool(Request $request, CarpoolingRepository $carpoolingRep): Response 
+    //     {
+
+    //     }
 }

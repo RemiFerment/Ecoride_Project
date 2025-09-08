@@ -33,43 +33,68 @@ class CarpoolingRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    public function findAllByUserAndDate(User $user, bool $past = false): array
+    public function findAllByUserAndDate(User $user, int $past = 0): array
     {
-        $date = new DateTimeImmutable();
+        $today = new \DateTimeImmutable('today'); // 00:00:00
+        $tomorrow = $today->modify('+1 day');
 
-        return $this->createQueryBuilder('c')
+        $qb = $this->createQueryBuilder('c')
             ->andWhere('c.created_by = :user_id')
             ->andWhere('c.statut = :statut')
-            ->andWhere($past ? 'c.start_date < :now' : 'c.start_date >= :now')
             ->setParameter('user_id', $user)
             ->setParameter('statut', "Online")
-            ->setParameter('now', $date)
-            ->setMaxResults(50)
+            ->setMaxResults(50);
+
+        switch ($past) {
+            case -1:
+                $qb->andWhere('c.start_date < :today')
+                    ->setParameter('today', $today);
+                break;
+            case 0:
+                $qb->andWhere('c.start_date >= :today')
+                    ->andWhere('c.start_date < :tomorrow')
+                    ->setParameter('tomorrow', $tomorrow)
+                    ->setParameter('today', $today);
+                break;
+            case 1:
+                $qb->andWhere('c.start_date >= :tomorrow')
+                    ->setParameter('tomorrow', $tomorrow);
+                break;
+            default:
+                $qb->andWhere('c.start_date >= :today')
+                    ->andWhere('c.start_date < :tomorrow')
+                    ->setParameter('tomorrow', $tomorrow)
+                    ->setParameter('today', $today);
+                break;
+        }
+
+        return $qb
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
+
 
     public function findBySearchCarpool(
         string $startPlace,
         string $endPlace,
         DateTimeImmutable $date,
-        User $user,
+        ?User $user,
     ): array {
-        return $this->createQueryBuilder('c')
+        $qb = $this->createQueryBuilder('c')
             ->andWhere('c.start_place = :startPlace')
             ->andWhere('c.end_place = :endPlace')
             ->andWhere('c.start_date > :date')
-            ->andWhere('c.created_by != :user')
             ->andWhere('c.available_seat > 0')
             ->setParameter('startPlace', $startPlace)
             ->setParameter('endPlace', $endPlace)
-            ->setParameter('date', $date)
-            ->setParameter('user', $user)
-            ->setMaxResults(10)
+            ->setParameter('date', $date);
+        if ($user !== null) {
+            $qb->andWhere('c.created_by != :user')
+                ->setParameter('user', $user);
+        }
+        return $qb->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     //    public function findOneBySomeField($value): ?Carpooling

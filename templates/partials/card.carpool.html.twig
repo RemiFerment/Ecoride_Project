@@ -1,4 +1,4 @@
-<div class="card" style="width: 18rem;">
+<div class="card ecoride-container px-3" style="width: 20rem;">
 
 	<div class="card-body text-center">
 		<h5 class="card-title">Trajet du
@@ -21,7 +21,7 @@
 		</div>
 	</div>
 
-	<ul class="list-group list-group-flush">
+	<ul class="list-group list-group-flush rounded">
 
 		<li class="list-group-item d-flex justify-content-between">
 			<span>
@@ -42,7 +42,7 @@
 		<li class="list-group-item d-flex justify-content-between">
 			<span>
 				<i class="bi bi-person-check"></i>
-				Nombre de place(s) restante(s) :</span>
+				place(s) restante(s) :</span>
 			<span>{{carpool.availableseat}}</span>
 		</li>
 
@@ -54,7 +54,7 @@
 		</li>
 		<li class="list-group-item d-flex justify-content-between">
 			<span>
-				<i class="bi bi-currency-exchange"></i>
+				<i class="bi bi-car-front-fill"></i>
 				Voiture utilisé :</span>
 			<span>{{carpool.car.marque.name}}
 				{{carpool.car.model}}

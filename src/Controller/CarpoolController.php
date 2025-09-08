@@ -31,12 +31,14 @@ class CarpoolController extends AbstractController
             );
             return $this->redirectToRoute('app_login');
         }
-        $currentCarpools = $carpoolRep->findAllByUserAndDate($user);
-        $previousCarpools = $carpoolRep->findAllByUserAndDate($user, true);
+        $soonCarpools = $carpoolRep->findAllByUserAndDate($user, 1);
+        $currentCarpools = $carpoolRep->findAllByUserAndDate($user, 0);
+        $previousCarpools = $carpoolRep->findAllByUserAndDate($user, -1);
         return $this->render('carpool/index.html.twig', [
             'user' => $user ?? null,
-            'currentCarpools' => $currentCarpools,
+            'soonCarpools' => $soonCarpools,
             'previousCarpools' => $previousCarpools,
+            'currentCarpools' => $currentCarpools
         ]);
     }
 

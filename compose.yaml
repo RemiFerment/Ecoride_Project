@@ -29,10 +29,11 @@ services:
       MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
     volumes:
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf:ro
-      - ./:/var/www/html:ro,delegated
+      - ./:/var/www/html:delegated # <- enlève :ro
       - symfony-cache:/var/www/html/var/cache
       - symfony-logs:/var/www/html/var/log
       - symfony-sessions:/var/www/html/var/sessions
+
     tmpfs:
       - /tmp
     depends_on:
@@ -42,7 +43,6 @@ services:
         mkdir -p var/cache var/log var/sessions &&
         chown -R www-data:www-data var/cache var/log var/sessions &&
         exec apache2-foreground &&
-        php bin/console doctrine:migrations:migrate
       "
 
   phpma:
