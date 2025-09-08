@@ -78,7 +78,7 @@ class RegistrationController extends AbstractController
         }
 
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
+            'registrationForm' => $form->createView(),
         ]);
     }
 
@@ -103,6 +103,8 @@ class RegistrationController extends AbstractController
                 $user->setIsVerified(true);
                 $em->persist($user);
                 $em->flush();
+                $this->addFlash('success', 'Votre compte a bien été activé !');
+                return $this->redirectToRoute('home');
             }
         }
         $this->addFlash('danger', 'Le token est invalide ou a expiré.');

@@ -50,8 +50,8 @@ class CarpoolController extends AbstractController
     ): Response {
         /** @var User $user  */
         $user = $this->getUser();
-        /** @var Car $userCar */
-        $userCar = $carRep->find($user->getCurrentCarId());
+
+
         if ($user === null) {
             $this->addFlash(
                 'danger',
@@ -67,6 +67,8 @@ class CarpoolController extends AbstractController
             );
             return $this->redirectToRoute('app_car_index');
         }
+        /** @var Car $userCar */
+        $userCar = $carRep->find($user->getCurrentCarId());
 
         $carpooling = new Carpooling();
         $form = $this->createForm(CarpoolType::class, $carpooling);
@@ -91,6 +93,11 @@ class CarpoolController extends AbstractController
 
             $em->persist($carpooling);
             $em->flush();
+
+            //On retire 2 crédits comme indiqué dans la demande client
+            $user->setEcopiece($user->getEcopiece() - 2);
+            $em->persist($user);
+            $em->flush();
             $this->addFlash('success', 'Votre trajet à bien été mise en ligne !');
             return $this->redirectToRoute('app_carpool_index');
         }
@@ -98,7 +105,7 @@ class CarpoolController extends AbstractController
         return $this->render('carpool/create.html.twig', [
             'user' => $user ?? null,
             'form' => $form->createView(),
-            'userCar' => $userCar
+            'userCar' => $userCar ?? null
         ]);
     }
 
@@ -123,6 +130,11 @@ class CarpoolController extends AbstractController
             return $this->redirectToRoute('app_carpool_index');
         }
         $em->remove($carpooling);
+        $em->flush();
+
+        //Remise des pièces utilisées pour créer le trajet.
+        $user->setEcopiece($user->getEcopiece() + 2);
+        $em->persist($user);
         $em->flush();
         $this->addFlash(
             'success',
