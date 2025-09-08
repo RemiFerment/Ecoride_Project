@@ -104,14 +104,14 @@ a {
   max-width: 400px;
 }
 
-.prefab-carpool-search {
-  background: linear-gradient(80deg, rgb(190, 235, 216), rgb(153, 233, 153) 26%, rgb(201, 232, 109));
+.ecoride-container {
+  background: linear-gradient(126deg, rgb(190, 235, 216), rgb(153, 233, 153) 26%, rgb(201, 232, 109));
   background-size: 200% 200%;
   background-position: 0% 50%;
   transition: background-position 500ms ease-out;
 }
 
-.prefab-carpool-search:hover {
+.ecoride-container:hover {
   background-position: 100% 50%;
 }
 
