@@ -72,9 +72,9 @@ class RegistrationFormType extends AbstractType
             ->add('username', options: [
                 'label' => 'Nom d\'utilisateur'
             ])
-            ->add('save', SubmitType::class, [
-                'label' => 'S\'inscrire',
-            ],)
+            // ->add('save', SubmitType::class, [
+            //     'label' => 'S\'inscrire',
+            // ],)
         ;
     }
 

@@ -32,7 +32,8 @@ final class SearchCarpoolController extends AbstractController
             $searchResults = $carpoolingRep->findBySearchCarpool(
                 startPlace: $gs->getOfficialCityName($form->getData()['startPlace']),
                 endPlace: $gs->getOfficialCityName($form->getData()['endPlace']),
-                date: new DateTimeImmutable(($form->getData()['startDateTime'])->format('Y-m-d'))
+                date: new DateTimeImmutable(($form->getData()['startDateTime'])->format('Y-m-d')),
+                user: $user
             );
         }
 

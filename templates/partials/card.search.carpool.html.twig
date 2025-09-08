@@ -19,15 +19,18 @@
 				<div class="col-lg-auto">
 					<div class="row">
 						<div class="col-lg-auto text-start">
-							<div class="p-2 my-3 rounded" style="background-color: white;">
-								<i class="bi bi-person me-3"></i>Place(s) restante(s) :
-								{{carpool.availableSeat}}
-							</div>
+							<div class="p-2 my-3 rounded" style="background-color: whitesmoke;">
+								<i class="me-3 bi bi-geo-alt"></i>
+								{{carpool.startPlace}}</div>
+							<div class="p-2 my-3 rounded" style="background-color: whitesmoke;">
+								<i class="me-3 bi bi-clock"></i>
+								Date :
+								{{carpool.startdate | date("d / m / Y") }}</div>
 							<div class="p-2 my-3 rounded" style="background-color: white;">
 								<i class="bi bi-coin me-3"></i>Prix de la course :
 								{{carpool.pricePerPerson}}
 							</div>
-							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == "Electrique" ? " green" : " red" }}; color : white ">
+							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == " electrique" ? " green" : " red" }}; color : white ">
 								<i class="bi bi-car-front me-3"></i>
 								{{carpool.car.powerEngine}}
 							</div>
@@ -36,23 +39,24 @@
 						<div class="col-lg-auto text-start">
 							<div class="col-lg">
 								<div class="p-2 my-3 rounded" style="background-color: whitesmoke;">
-									<i class="me-3 bi bi-geo-alt"></i>
-									{{carpool.startPlace}}</div>
-								<div class="p-2 my-3 rounded" style="background-color: whitesmoke;">
 									<i class="me-3 bi bi-flag"></i>
 									{{carpool.endPlace}}</div>
 								<div class="p-2 my-3 rounded" style="background-color: whitesmoke;">
 									<i class="me-3 bi bi-clock"></i>
-									Heure de départ :
+									Heure :
 									{{carpool.startdate | date("H:i") }}</div>
 							</div>
+							<div class="p-2 my-3 rounded" style="background-color: white;">
+								<i class="bi bi-person me-3"></i>Place(s) restante(s) :
+								{{carpool.availableSeat}}
+							</div>
+							<div class="input-group">
+								<button type="button" class="form-control btn-ecoride text-left p-2 text-white mb-3" placeholder="Rechercher une destination..." id="research">
+									<i class="bi bi-info-square me-3"></i>
+									Afficher les détails
+								</button>
+							</div>
 						</div>
-					</div>
-					<div class="input-group mb-3">
-						<button type="button" class="btn btn-ecoride text-left px-3 text-white text-center rounded" placeholder="Rechercher une destination..." id="research">
-							<i class="bi bi-info-square pe-3"></i>
-							Afficher les détails
-						</button>
 					</div>
 				</div>
 

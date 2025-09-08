@@ -26,6 +26,7 @@ a {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    border-radius: 50px;
 }
 
 .text-color-primary {
@@ -40,8 +41,17 @@ a {
     width: 50px;
 }
 
-.btn-ecoride {
-    background-color: #677C55;
+.btn-ecoride,
+.btn-ecoride:focus {
+    background-color: #449652;
+}
+
+.btn-ecoride:hover {
+    background-color: #4ca75b;
+}
+
+.btn-ecoride:active {
+    background-color: #306b3a;
 }
 
 .test:hover {
@@ -49,10 +59,14 @@ a {
 }
 
 .contain-effect {
-    border-radius: 14px;
-    background: #f6f6f6;
-    box-shadow: inset -7px -7px 18px #cccccc,
-        inset 7px 7px 18px #ffffff;
+    border-radius: 30% 50% 30% 0%;
+    background: linear-gradient(326deg, rgba(190, 235, 216, 1) 0%, rgba(153, 233, 153, 1) 26%, rgba(201, 232, 109, 1) 100%);
+    transition: ease 150ms;
+}
+
+.contain-effect:hover {
+    border-radius: 50px;
+    transition: ease 150ms;
 }
 
 .viga-regular {
@@ -70,6 +84,13 @@ a {
     font-style: normal;
 }
 
+.agbalumo-regular {
+    font-family: "Agbalumo", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
 .permanent-marker-regular {
     font-family: "Permanent Marker", cursive;
     font-weight: 400;
@@ -78,7 +99,7 @@ a {
 }
 
 .blank {
-    padding: 50px;
+    padding: 30px;
 }
 
 .w-form {
@@ -86,8 +107,19 @@ a {
 }
 
 .prefab-carpool-search {
-    background-color: #D1E7DD;
+    background: linear-gradient(80deg,
+            rgba(190, 235, 216, 1),
+            rgba(153, 233, 153, 1) 26%,
+            rgba(201, 232, 109, 1));
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    transition: background-position 500ms ease-out;
 }
+
+.prefab-carpool-search:hover {
+    background-position: 100% 50%;
+}
+
 
 .test {
     background-color: #cccccc38;
@@ -104,6 +136,17 @@ a {
     border-radius: 50%;
     /* rond */
     display: block;
+}
+
+.navbar-ecoride {
+    background: linear-gradient(326deg, rgba(190, 235, 216, 1) 0%, rgba(153, 233, 153, 1) 26%, rgba(201, 232, 109, 1) 100%);
+    border-radius: 0% 0% 20% 20%;
+    border: whitesmoke solid 5px;
+    transition: ease 500ms;
+}
+
+.navbar-ecoride:hover {
+    border-radius: 0% 0% 50px 50px;
 }
 
 // Example: Style from medium breakpoint and down

@@ -27,7 +27,7 @@
 			</thead>
 			<tbody>
 				{% for car in cars %}
-					<tr class="{{user.currentCarId == car.id ? "table-success" : "" }}">
+					<tr class="{{user.currentCarId == car.id ? "table-success" : "" }} align-middle">
 						<td>
 							{% if user.currentCarId == car.id %}
 								<i class="bi bi-car-front-fill" data-bs-toggle="tooltip" data-bs-placement="top" title="Voiture principal"></i>

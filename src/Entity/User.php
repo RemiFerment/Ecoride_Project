@@ -78,6 +78,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $grade = null;
 
+
+    #[ORM\Column(options: ['default' => 20])]
+    private int $ecopiece = 20;
+
     public function __construct()
     {
         $this->userCarpoolings = new ArrayCollection();
@@ -342,6 +346,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGrade(?int $grade): static
     {
         $this->grade = $grade;
+
+        return $this;
+    }
+
+    public function getEcopiece(): int
+    {
+        return $this->ecopiece;
+    }
+
+    public function setEcopiece(int $ecopiece): static
+    {
+        $this->ecopiece = $ecopiece;
 
         return $this;
     }

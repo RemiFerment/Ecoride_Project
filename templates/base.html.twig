@@ -21,7 +21,8 @@
 		<!-- Google Fonts -->
 		<link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet"> {% block stylesheets %}{% endblock %}
+		<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Agbalumo&display=swap" rel="stylesheet"> {% block stylesheets %}{% endblock %}
 		<link rel="stylesheet" href="{{ asset('styles/custom.css') }}?v={{ date().timestamp }}">
 
 		{% block javascripts %}
@@ -33,7 +34,7 @@
 		<div class="toast-container position-static" style="z-index: 100000;">
 			{{ include('partials/toast.html.twig') }}
 		</div>
-		
+
 		<div class="container my-4"> {% block body %}{% endblock %}
 			</div>
 		</body>

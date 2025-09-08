@@ -54,14 +54,18 @@ class CarpoolingRepository extends ServiceEntityRepository
         string $startPlace,
         string $endPlace,
         DateTimeImmutable $date,
+        User $user,
     ): array {
         return $this->createQueryBuilder('c')
             ->andWhere('c.start_place = :startPlace')
             ->andWhere('c.end_place = :endPlace')
             ->andWhere('c.start_date > :date')
+            ->andWhere('c.created_by != :user')
+            ->andWhere('c.available_seat > 0')
             ->setParameter('startPlace', $startPlace)
             ->setParameter('endPlace', $endPlace)
             ->setParameter('date', $date)
+            ->setParameter('user', $user)
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()

@@ -7,13 +7,16 @@
 	<div class="oxanium mt-5 contain-effect p-5 container justify-content-center ">
 		<h3 class="text-center viga-regular">Créer un trajet :</h3>
 		<hr>
-		<div class="text-center">
-			<h5 class="viga-regular">Véhicule utilisé :{{userCar.marque.name}}
-				{{userCar.model}}
-			</h5>
-			<a href=" {{ path('app_car_index') }} " class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Changer de véhicule</a>
-		</div>
-		<hr>
+		{% if userCar is not null %}
+			<div class="text-center">
+				<h5 class="viga-regular">Véhicule utilisé :{{userCar.marque.name}}
+					{{userCar.model}}
+				</h5>
+				<a href=" {{ path('app_car_index') }} " class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Changer de véhicule</a>
+			</div>
+			<hr>
+		{% endif %}
+
 		<div class="row px-5 mt-5 mb-1">
 			<div class="col px-2">
 				{{ form_start(form)}}
@@ -40,6 +43,10 @@
 			{{ form_row(form.save) }}
 		</div>
 		{{form_end(form)}}
+		<div class="text-center text-danger fw-bold">
+			Attention, lorsque vous créez un trajet, cela vous coutera 2
+			<i class="bi bi-coin"></i>.
+		</div>
 
 
 	{% endblock %}
