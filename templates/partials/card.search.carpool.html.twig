@@ -1,7 +1,7 @@
 {% set user = carpool.createdBy %}
 {% set photoBase64 = user.photo|to_base64 %}
 <div class="d-flex justify-content-center oxanium">
-	<div class="prefab-carpool-search my-3 rounded shadow">
+	<div class="ecoride-container my-3 rounded shadow">
 
 		<div class="container justify-content-center">
 			<div class="row text-center my-4 justify-content-center">
@@ -30,7 +30,7 @@
 								<i class="bi bi-coin me-3"></i>Prix de la course :
 								{{carpool.pricePerPerson}}
 							</div>
-							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == " electrique" ? " green" : " red" }}; color : white ">
+							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == "Electrique" ? " green" : " red" }}; color : white ">
 								<i class="bi bi-car-front me-3"></i>
 								{{carpool.car.powerEngine}}
 							</div>
