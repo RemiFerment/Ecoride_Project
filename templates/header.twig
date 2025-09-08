@@ -1,13 +1,13 @@
 {# Définition d'une variable qui vérifie la présence d'un User. #}
 {% set isConnected = user is defined and user is not null %}
 <div class="blank"></div>
-<header class="bg-success-subtle fixed-top text-color-primary">
+<header class="navbar-ecoride fixed-top text-color-primary">
 	<nav class="navbar">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="{{ path('home') }}">
 				<img href="index.php"><img src=" {{app.request.getBaseURL()}}/import/logo.png" class="navbar-brand" alt="logo" width="60">
 			</a>
-			<h1 class="permanent-marker-regular ms-0 mb-0 d-inline-block align-text-top" style="color: #449652;">ÉCORIDE</h1>
+			<h1 class="agbalumo-regular ms-0 mb-0 d-inline-block align-text-top" style="color: #449652;">ÉCORIDE</h1>
 			<div class="d-flex align-items-center">
 				<div class="dropstart me-3">
 
@@ -25,6 +25,14 @@
 							</li>
 							<li>
 								<a class="dropdown-item" type="button " href="{{path(name:'app_car_index')}}">Mes véhicules</a>
+							</li>
+							<li>
+								<a class="dropdown-item" type="button " href="{{path(name:'app_wallet')}}">Mon portefeuille
+									<div class="text-end text-success fw-bold">
+										{{ user.ecopiece == null ? '0' : user.ecopiece }}
+										<i class="bi bi-coin"></i>
+									</div>
+								</a>
 							</li>
 						</ul>
 					{% endif %}
