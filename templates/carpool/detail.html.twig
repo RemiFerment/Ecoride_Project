@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Écoride - Trajet {{carpool.startPlace}} > {{carpool.endPlace}}
+{% endblock %}
+
+{% block body %}
+    <div class="mt-5 ecoride-container rounded p-5 container d-flex justify-content-center">
+        <div class ="w-75">
+            <h5 class="text-center viga-regular">Détail du trajet {{carpool.startPlace}} > {{carpool.endPlace}}</h5>
+            <hr>
+            <div class="row row-cols-4 p-3 bg-light text-dark my-2 rounded">
+                <div class="col">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-geo-alt fs-1 me-2"></i>
+                        <div class="d-flex flex-column">
+                            <h4>Départ</h4>
+                            <span class="fw-bold"> {{carpool.startplace}}</span>
+                            <span> {{carpool.startdate | date('d/m/Y - H\\hi')}} </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col ">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <i class="bi bi-arrow-right fs-1"></i>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-geo-alt-fill fs-1 me-2"></i>
+                        <div class="d-flex flex-column">
+                            <h4>Arrivé</h4>
+                            <span class="fw-bold"> {{carpool.endplace}}</span>
+                            <span> {{carpool.enddate | date('d/m/Y - H\\hi')}} </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-car-front fs-1 me-2"></i>
+                        <div class="d-flex flex-column">
+                            <h4>Véhicule</h4>
+                            <span class="fw-bold"> {{user.currentcar.marque.name}} {{user.currentcar.model}} </span>
+                            <span> {{user.currentcar.registration}} </span>
+                            <a href=" {{path('app_car_index')}} " class="ecoride-link">Changer de véhicule</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           <div class="row p-3 justify-content-center">
+                <div class="col-auto">
+                    <button class="btn btn-primary">
+                        <i class="bi bi-play-fill"></i> Démarrer le covoiturage
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
