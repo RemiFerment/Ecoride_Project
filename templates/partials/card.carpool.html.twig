@@ -1,4 +1,4 @@
-<div class="card ecoride-container px-3" style="width: 20rem;">
+<div class="card ecoride-container px-3 pb-3" style="width: 20rem;">
 
 	<div class="card-body text-center">
 		<h5 class="card-title">Trajet du
@@ -62,10 +62,22 @@
 		</li>
 
 	</ul>
-	{% if previous is not defined %}
+	{% if soon is defined %}
 		<div class="card-body d-flex justify-content-between">
-			<a href="" class="btn btn-primary">Modifier</a>
-			<a href="{{path('app_carpool_delete',{id: carpool.id})}}" class="btn btn-danger">Supprimer</a>
+			<a href="" class="btn btn-success">Afficher les détails</a>
+			<a href="{{path('app_carpool_delete',{id: carpool.id})}}" class="btn btn-danger">Annuler</a>
+		</div>
+	{% endif %}
+	{% if current is defined %}
+		<div class="card-body d-flex justify-content-between">
+			<a href="" class="btn btn-success">Afficher les détails</a>
+			<a href="{{path('app_carpool_delete',{id: carpool.id})}}" class="btn btn-danger">Annuler</a>
+		</div>
+	{% endif %}
+	{% if previous is defined %}
+		<div class="card-body d-flex justify-content-between">
+			<a href="" class="btn btn-success">Afficher les détails</a>
+			<a class="btn btn-danger disabled">Annuler</a>
 		</div>
 	{% endif %}
 </div>
