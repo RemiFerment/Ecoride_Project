@@ -36,11 +36,10 @@
 		<button type="submit" class="btn btn-success">S'inscrire</button>
 	</div>
 
+	<div class="form-text text-center mt-2">
+		Déjà un compte ?
+		<a href="{{ path('app_login') }}" class="ecoride-link">Connectez-vous !</a>
+	</div>
 	{{ form_end(registrationForm) }}
 
-	<div class="form-text text-center">
-		Déjà un compte ?
-		<a href="{{ path('app_login') }}">Connectez-vous</a>
-		!
-	</div>
 {% endblock %}

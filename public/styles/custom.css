@@ -142,4 +142,49 @@ a {
 
 .navbar-ecoride:hover {
   border-radius: 0% 0% 50px 50px;
+}
+
+.ecoride-link {
+  position: relative;
+  color: #449652;
+  text-decoration: none;
+}
+
+.ecoride-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-color: #449652;
+  transition: width 0.3s ease;
+}
+
+.ecoride-link:hover::after {
+  width: 100%;
+}
+
+.plaque {
+  display: inline-flex;
+  align-items: stretch;
+  background: white;
+  border: 1.5px solid black;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1em;
+  line-height: 1.2;
+  overflow: hidden;
+}
+
+.plaque-side {
+  width: 0.8em;
+  background: #006cf0;
+}
+
+.plaque-number {
+  padding: 0 0.2em;
+  color: black;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
 }/*# sourceMappingURL=custom.css.map */
