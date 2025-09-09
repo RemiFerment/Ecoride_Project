@@ -60,8 +60,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $current_car_id = null;
+    #[ORM\ManyToOne(targetEntity: Car::class)]
+    private ?Car $current_car = null;
 
     /**
      * @var Collection<int, UserCarpooling>
@@ -269,14 +269,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCurrentCarId(): ?int
+    public function getCurrentCar(): ?Car
     {
-        return $this->current_car_id;
+        return $this->current_car;
     }
 
-    public function setCurrentCarId(?int $current_car_id): static
+    public function setCurrentCar(?Car $current_car): static
     {
-        $this->current_car_id = $current_car_id;
+        $this->current_car = $current_car;
 
         return $this;
     }

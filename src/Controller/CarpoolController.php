@@ -63,7 +63,7 @@ class CarpoolController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        if ($user->getCurrentCarId() === null) {
+        if ($user->getCurrentCar() === null) {
             $this->addFlash(
                 'warning',
                 'Veuillez ajouter une voiture avant de proposer un trajet.'
@@ -71,7 +71,7 @@ class CarpoolController extends AbstractController
             return $this->redirectToRoute('app_car_index');
         }
         /** @var Car $userCar */
-        $userCar = $carRep->find($user->getCurrentCarId());
+        $userCar = $carRep->$user->getCurrentCar();
 
         $carpooling = new Carpooling();
         $form = $this->createForm(CarpoolType::class, $carpooling);
@@ -79,7 +79,7 @@ class CarpoolController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $carpooling->setCreatedBy($user);
-            $carpooling->setCar($carRep->find($user->getCurrentCarId()));
+            $carpooling->setCar($carRep->find($user->getCurrentCar()->getId()));
             $carpooling->setStartPlace($gs->getOfficialCityName($carpooling->getStartPlace()));
             $carpooling->setEndPlace($gs->getOfficialCityName($carpooling->getEndPlace()));
 
