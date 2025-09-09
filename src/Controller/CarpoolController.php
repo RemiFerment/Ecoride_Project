@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\CarpoolType;
 use App\Repository\CarpoolingRepository;
 use App\Repository\CarRepository;
+use App\Repository\UserCarpoolingRepository;
 use App\Services\GeolocationService;
 use DateInterval;
 use DateTimeImmutable;
@@ -143,5 +144,18 @@ class CarpoolController extends AbstractController
             'Le trajet à bien été supprimé !'
         );
         return $this->redirectToRoute('app_carpool_index');
+    }
+
+    #[Route('/carpool/details/{id}', name: 'app_carpool_details', requirements: ['id' => '\d+'])]
+    public function detailsCarpool(EntityManagerInterface $em, int $id, CarpoolingRepository $carpoolRep, UserCarpoolingRepository $userCarpoolRep): Response
+    {
+        $user = $this->getUser();
+
+        $carpool = $carpoolRep->find($id);
+
+        return $this->render('carpool/detail.html.twig', [
+            'user' => $user,
+            'carpool' => $carpool,
+        ]);
     }
 }
