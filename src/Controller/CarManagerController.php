@@ -64,7 +64,7 @@ class CarManagerController extends AbstractController
             $car->setUserId($user->getId());
             $em->persist($car);
             $em->flush();
-            $user->setCurrentCarId($car->getId());
+            $user->setCurrentCar($car);
             $em->persist($user);
             $em->flush();
             $this->addFlash('success', 'Votre voiture à bien été ajouté !');
@@ -92,7 +92,7 @@ class CarManagerController extends AbstractController
             return $this->redirectToRoute('app_car_index');
         }
 
-        $user->setCurrentCarId($car->getId());
+        $user->setCurrentCar($car);
         $em->persist($user);
         $em->flush($user);
         $this->addFlash(
@@ -125,12 +125,12 @@ class CarManagerController extends AbstractController
         $allUserCar = $carRep->findAllByUserId($user->getId());
 
         //Check if the current deleted car is the default used car.
-        if ($user->getCurrentCarId() === $id && count($allUserCar) > 0) {
-            $user->setCurrentCarId($allUserCar[0]->getId());
+        if ($user->getCurrentCar()->getId() === $id && count($allUserCar) > 0) {
+            $user->setCurrentCar($allUserCar[0]);
         }
         //Check if the user haven't car yet
         if (count($allUserCar) === 0) {
-            $user->setCurrentCarId(null);
+            $user->setCurrentCar(null);
         }
 
         $em->persist($user);
