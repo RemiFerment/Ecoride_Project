@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Carpooling;
+use App\Entity\Participation;
 use App\Entity\User;
 use App\Form\CarpoolType;
 use App\Repository\CarpoolingRepository;
 use App\Repository\CarRepository;
-use App\Repository\UserCarpoolingRepository;
+use App\Repository\ParticipationRepository;
 use App\Services\GeolocationService;
 use DateInterval;
 use DateTimeImmutable;
@@ -20,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class CarpoolController extends AbstractController
 {
     #[Route('/carpool', name: 'app_carpool_index')]
-    public function index(CarpoolingRepository $carpoolRep, CarRepository $carRep): Response
+    public function index(CarpoolingRepository $carpoolRep, ParticipationRepository $participation): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -32,16 +33,25 @@ class CarpoolController extends AbstractController
             );
             return $this->redirectToRoute('app_login');
         }
+        //Section Mes Trajets:
         $soonCarpools = $carpoolRep->findAllByUserAndDate($user, 1);
         $currentCarpools = $carpoolRep->findAllByUserAndDate($user, 0);
         $previousCarpools = $carpoolRep->findAllByUserAndDate($user, -1);
+
+        // Ajouter trois nouveaux onglet dans la partie : Trajets rejoins
+        // Section Trajets rejoins
+        $allParticipation = $participation->findBy(['user' => $user]);
+
         return $this->render('carpool/index.html.twig', [
             'user' => $user ?? null,
             'soonCarpools' => $soonCarpools,
             'previousCarpools' => $previousCarpools,
-            'currentCarpools' => $currentCarpools
+            'currentCarpools' => $currentCarpools,
+            'allParticipation' => $allParticipation
         ]);
     }
+
+
 
     #[Route('/carpool/create', name: 'app_carpool_create')]
     public function createCarpool(
@@ -49,7 +59,6 @@ class CarpoolController extends AbstractController
         EntityManagerInterface $em,
         User $user,
         GeolocationService $gs,
-        CarRepository $carRep
     ): Response {
         /** @var User $user  */
         $user = $this->getUser();
@@ -60,7 +69,7 @@ class CarpoolController extends AbstractController
                 'danger',
                 'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté.'
             );
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_login');
         }
 
         if ($user->getCurrentCar() === null) {
@@ -70,8 +79,8 @@ class CarpoolController extends AbstractController
             );
             return $this->redirectToRoute('app_car_index');
         }
-        /** @var Car $userCar */
-        $userCar = $carRep->$user->getCurrentCar();
+
+        $userCar = $user->getCurrentCar();
 
         $carpooling = new Carpooling();
         $form = $this->createForm(CarpoolType::class, $carpooling);
@@ -79,7 +88,7 @@ class CarpoolController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $carpooling->setCreatedBy($user);
-            $carpooling->setCar($carRep->find($user->getCurrentCar()->getId()));
+            $carpooling->setCar($userCar);
             $carpooling->setStartPlace($gs->getOfficialCityName($carpooling->getStartPlace()));
             $carpooling->setEndPlace($gs->getOfficialCityName($carpooling->getEndPlace()));
 
@@ -117,18 +126,27 @@ class CarpoolController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        /** @var Carpooling $carpooling */
-        if (!$carpooling = $carpoolRep->find($id)) {
+
+        if ($user === null) {
             $this->addFlash(
                 'danger',
-                'Le trajet ne peut pas être supprimé, si le problème persiste, contactez l\'administrateur réseau.'
+                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
+            );
+            return $this->redirectToRoute('app_login');
+        }
+
+        /** @var Carpooling $carpooling */
+        if (!$carpooling == $carpoolRep->find($id)) {
+            $this->addFlash(
+                'danger',
+                'Le trajet ne peut pas être supprimé, si le problème persiste, contactez l\'administrateur.'
             );
             return $this->redirectToRoute('app_carpool_index');
         }
         if ($carpooling->getCreatedBy() !== $user) {
             $this->addFlash(
                 'danger',
-                'Le trajet ne peut pas être supprimé, si le problème persiste, contactez l\'administrateur réseau.'
+                'Le trajet ne peut pas être supprimé, si le problème persiste, contactez l\'administrateur.'
             );
             return $this->redirectToRoute('app_carpool_index');
         }
@@ -146,10 +164,19 @@ class CarpoolController extends AbstractController
         return $this->redirectToRoute('app_carpool_index');
     }
 
-    #[Route('/carpool/details/{id}', name: 'app_carpool_details', requirements: ['id' => '\d+'])]
-    public function detailsCarpool(EntityManagerInterface $em, int $id, CarpoolingRepository $carpoolRep, UserCarpoolingRepository $userCarpoolRep): Response
+    #[Route('/mycarpool/details/{id}', name: 'app_carpool_details', requirements: ['id' => '\d+'])]
+    public function detailsMyCarpool(int $id, CarpoolingRepository $carpoolRep): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
+
+        if ($user === null) {
+            $this->addFlash(
+                'danger',
+                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
+            );
+            return $this->redirectToRoute('app_login');
+        }
 
         $carpool = $carpoolRep->find($id);
 
@@ -157,5 +184,24 @@ class CarpoolController extends AbstractController
             'user' => $user,
             'carpool' => $carpool,
         ]);
+    }
+
+    #[Route('/carpooljoined/detail/{id}', name: 'app_carpool_joined_details', requirements: ['id' => '\d+'])]
+    public function detailsJoinedCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $participationRep): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            $this->addFlash(
+                'danger',
+                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
+            );
+            return $this->redirectToRoute('app_login');
+        }
+
+        $carpool = $carpoolRep->find($id);
+
+        return $this->render('fileName.html.twig', []);
     }
 }

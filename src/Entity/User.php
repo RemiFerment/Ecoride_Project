@@ -63,18 +63,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: Car::class)]
     private ?Car $current_car = null;
 
-    /**
-     * @var Collection<int, UserCarpooling>
-     */
-    #[ORM\ManyToMany(targetEntity: UserCarpooling::class, mappedBy: 'user')]
-    private Collection $userCarpoolings;
-
-    /**
-     * @var Collection<int, Carpooling>
-     */
-    #[ORM\OneToMany(targetEntity: Carpooling::class, mappedBy: 'created_by')]
-    private Collection $carpoolings;
-
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $grade = null;
 
@@ -82,10 +70,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(options: ['default' => 20])]
     private int $ecopiece = 20;
 
+    /**
+     * @var Collection<int, Participation>
+     */
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'user')]
+    private Collection $participations;
+
     public function __construct()
     {
-        $this->userCarpoolings = new ArrayCollection();
-        $this->carpoolings = new ArrayCollection();
+        $this->participations = new ArrayCollection();
     }
 
 
@@ -281,63 +274,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, UserCarpooling>
-     */
-    public function getUserCarpoolings(): Collection
-    {
-        return $this->userCarpoolings;
-    }
-
-    public function addUserCarpooling(UserCarpooling $userCarpooling): static
-    {
-        if (!$this->userCarpoolings->contains($userCarpooling)) {
-            $this->userCarpoolings->add($userCarpooling);
-            $userCarpooling->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserCarpooling(UserCarpooling $userCarpooling): static
-    {
-        if ($this->userCarpoolings->removeElement($userCarpooling)) {
-            $userCarpooling->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Carpooling>
-     */
-    public function getCarpoolings(): Collection
-    {
-        return $this->carpoolings;
-    }
-
-    public function addCarpooling(Carpooling $carpooling): static
-    {
-        if (!$this->carpoolings->contains($carpooling)) {
-            $this->carpoolings->add($carpooling);
-            $carpooling->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCarpooling(Carpooling $carpooling): static
-    {
-        if ($this->carpoolings->removeElement($carpooling)) {
-            // set the owning side to null (unless already changed)
-            if ($carpooling->getCreatedBy() === $this) {
-                $carpooling->setCreatedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getGrade(): ?int
     {
         return $this->grade;
@@ -358,6 +294,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEcopiece(int $ecopiece): static
     {
         $this->ecopiece = $ecopiece;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): static
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
+            $participation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): static
+    {
+        if ($this->participations->removeElement($participation)) {
+            // set the owning side to null (unless already changed)
+            if ($participation->getUser() === $this) {
+                $participation->setUser(null);
+            }
+        }
 
         return $this;
     }

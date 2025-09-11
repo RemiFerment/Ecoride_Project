@@ -8,9 +8,9 @@
 
 				<div class="col-lg">
 					{% if photoBase64 is not null %}
-						<img src="data:image/png;base64,{{ photoBase64 }}" class="profile-img" alt="Image de profil">
+						<img src="data:image/png;base64,{{ photoBase64|e }}" class="profile-img" alt="Image de profil">
 					{% else %}
-						<img src="../import/blank-profile.png" class="profile-img" alt="Image par défaut">
+						<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut">
 					{% endif %}
 					<div class="">{{user.username}}</div>
 					<div class="">Note :
@@ -30,7 +30,7 @@
 								<i class="bi bi-coin me-3"></i>Prix de la course :
 								{{carpool.pricePerPerson}}
 							</div>
-							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == "Electrique" ? " green" : " red" }}; color : white ">
+							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == " electrique" ? " green" : " red" }}; color : white ">
 								<i class="bi bi-car-front me-3"></i>
 								{{carpool.car.powerEngine}}
 							</div>
@@ -51,10 +51,10 @@
 								{{carpool.availableSeat}}
 							</div>
 							<div class="input-group">
-								<button type="button" class="form-control btn-ecoride text-left p-2 text-white mb-3" placeholder="Rechercher une destination..." id="research">
+								<a type="button" class="form-control btn-ecoride text-left p-2 text-white mb-3" href="{{path('app_search_carpool_detail', {id: carpool.id})}}">
 									<i class="bi bi-info-square me-3"></i>
 									Afficher les détails
-								</button>
+								</a>
 							</div>
 						</div>
 					</div>
