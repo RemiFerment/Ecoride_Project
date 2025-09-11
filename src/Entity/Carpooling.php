@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CarpoolingRepository;
 use App\Validator\CityCheck;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -50,12 +52,21 @@ class Carpooling
     #[ORM\ManyToOne(targetEntity: Car::class)]
     private ?Car $car = null;
 
-    #[ORM\ManyToOne(inversedBy: 'carpooling')]
-    private ?UserCarpooling $userCarpooling = null;
 
     #[ORM\ManyToOne(inversedBy: 'carpoolings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $created_by = null;
+
+    /**
+     * @var Collection<int, Participation>
+     */
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'carpooling')]
+    private Collection $participations;
+
+    public function __construct()
+    {
+        $this->participations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -158,18 +169,6 @@ class Carpooling
         return $this;
     }
 
-    public function getUserCarpooling(): ?UserCarpooling
-    {
-        return $this->userCarpooling;
-    }
-
-    public function setUserCarpooling(?UserCarpooling $userCarpooling): static
-    {
-        $this->userCarpooling = $userCarpooling;
-
-        return $this;
-    }
-
     public function getCreatedBy(): ?User
     {
         return $this->created_by;
@@ -178,6 +177,36 @@ class Carpooling
     public function setCreatedBy(?User $created_by): static
     {
         $this->created_by = $created_by;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): static
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
+            $participation->setCarpooling($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): static
+    {
+        if ($this->participations->removeElement($participation)) {
+            // set the owning side to null (unless already changed)
+            if ($participation->getCarpooling() === $this) {
+                $participation->setCarpooling(null);
+            }
+        }
 
         return $this;
     }
