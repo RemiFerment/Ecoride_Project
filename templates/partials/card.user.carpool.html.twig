@@ -1,0 +1,22 @@
+{% set photoBase64 = participation.user.photo |to_base64 %}
+<div class="p-lg-3 p-2 bg-light text-dark my-2 rounded shadow-sm d-inline-flex align-items-center gap-5 flex-nowrap">
+
+    <div class="d-flex flex-column align-items-center text-center">
+        {% if photoBase64 is not null %}
+            <img src="data:image/png;base64,{{ photoBase64|e }}" class="profile-img" alt="Photo de profil de {{ participation.user.username }}">
+        {% else %}
+            <img src="{{ asset('import/blank-profile.png') }}" class="profile-img" alt="Photo de profil par défaut">
+        {% endif %}
+        <span class="fs-5 fw-bold">{{ participation.user.username }}</span>
+    </div>
+
+    <div class="d-flex flex-column align-items-center text-center">
+        <span class="fs-5 fw-bold">{{ participation.user.firstname }}
+            {{ participation.user.lastname }}</span>
+        <span class="fs-5 mt-3">Note :</span>
+        <span>{{ participation.user.grade ?? '--' }}
+            / 5</span>
+    </div>
+    <a href=" {{path('app_mycarpool_kick_user',{'carpool_id':carpool.id,'user_id':participation.user.id})}} " class="btn btn-danger">Expulser</a>
+
+</div>
