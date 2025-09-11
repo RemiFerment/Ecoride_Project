@@ -124,7 +124,7 @@ class CarpoolController extends AbstractController
     }
 
     #[Route('/carpool/delete/{id}', name: 'app_carpool_delete', requirements: ['id' => '\d+'])]
-    public function deleteCarpool(EntityManagerInterface $em, int $id, CarpoolingRepository $carpoolRep): Response
+    public function deleteCarpool(EntityManagerInterface $em, int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, SendEmailService $mail): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -138,13 +138,8 @@ class CarpoolController extends AbstractController
         }
 
         /** @var Carpooling $carpooling */
-        if (!$carpooling == $carpoolRep->find($id)) {
-            $this->addFlash(
-                'danger',
-                'Le trajet ne peut pas être supprimé, si le problème persiste, contactez l\'administrateur.'
-            );
-            return $this->redirectToRoute('app_carpool_index');
-        }
+        $carpooling = $carpoolRep->find($id);
+
         if ($carpooling->getCreatedBy() !== $user) {
             $this->addFlash(
                 'danger',
@@ -152,16 +147,34 @@ class CarpoolController extends AbstractController
             );
             return $this->redirectToRoute('app_carpool_index');
         }
-        $em->remove($carpooling);
-        $em->flush();
 
-        //Remise des pièces utilisées pour créer le trajet.
+        $allParticipation = $partipRep->findBy(['carpooling' => $carpooling]);
+        if(!empty($allParticipation)){
+            foreach ($allParticipation as $participation) {
+                /** @var User $impactedUser */
+                $impactedUser = $participation->getUser();
+
+                //On rembourse l'user impacté par l'annulation, et on envoie un mail pour prévnir de l'annulation du trajet.
+                $impactedUser->setEcopiece($impactedUser->getEcopiece() + $carpooling->getPricePerPerson());
+                $mail->send('contact@ecoride.test',
+                $impactedUser->getEmail(),
+                'IMPORTANT - Un trajet auquel vous participez a été annulé',
+                'cancel_carpool',
+                compact('impactedUser','carpooling','user')
+            );
+            }
+        }
+
+        //On rembourse les pièces utilisées pour créer le trajet.
         $user->setEcopiece($user->getEcopiece() + 2);
         $em->persist($user);
         $em->flush();
+        
+        $em->remove($carpooling);
+        $em->flush();
         $this->addFlash(
             'success',
-            'Le trajet à bien été supprimé !'
+            'Le trajet à bien été supprimé ! Des mails ont été envoyés aux utilisateurs concernés.'
         );
         return $this->redirectToRoute('app_carpool_index');
     }
@@ -275,5 +288,9 @@ class CarpoolController extends AbstractController
         return $this->redirectToRoute('app_carpool_index');
     }
 
+    #[Route('joinedcarpool/{carpool_id}',name:'app_joinedcarpool_cancel_user',requirements:['carpool_id' => '\d+', 'user_id' =>'\d+'])]
+    public function cancelParticipationCarpool() {
+        
+    }
 
 }

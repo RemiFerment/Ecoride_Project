@@ -78,7 +78,7 @@
 				<h5>Il n'y a pas de trajet à afficher</h5>
 			{% else %}
 				{% for participation in allParticipation %}
-					{% set previous = true %}
+					{% set cancel = true %}
 					{% set carpool = participation.carpooling %}
 					{% include "partials/card.joinedcarpool.html.twig" %}
 				{% endfor %}
