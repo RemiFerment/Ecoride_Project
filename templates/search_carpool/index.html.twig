@@ -29,8 +29,14 @@
 		</div>
 	</div>
 	<hr>
-	{% if searchResults is not empty %}
+	{% if isSubmit %}
 		<h4 class="viga-regular text-center mb-3">Résultat de la recherche :</h4>
+		{% if searchResults is empty %}
+			<h5 class="text-center">Aucun trajet n'est disponible pour
+				{{cities.startPlace}}
+				<i class="bi bi-arrow-right"></i>
+				{{cities.endPlace}}</h5>
+		{% endif %}
 
 		{% for carpool in searchResults %}
 			{% include 'partials/card.search.carpool.html.twig' %}
