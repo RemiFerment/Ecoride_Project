@@ -20,9 +20,9 @@
 						<div class="row row-cols-2 my-2 align-items-center">
 							<div class="col-lg-2">
 								{% if photoBase64 is not null %}
-									<img src="data:image/webp;base64,{{ photoBase64 }}" class="profile-img" alt="Image de profil">
+									<img src="data:image/webp;base64,{{ photoBase64|e }}" class="profile-img" alt="Image de profil">
 								{% else %}
-									<img src="../import/blank-profile.png" class="profile-img" alt="Image par défaut">
+									<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut" class="profile-img">
 								{% endif %}
 							</div>
 							<div class="col-lg-10">

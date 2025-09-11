@@ -36,7 +36,15 @@
 							{{car.model}}
 						</td>
 						<td>{{car.powerEngine}}</td>
-						<td>{{car.registration}}</td>
+						<td>
+							<div class="plaque">
+								<div class="plaque-side"></div>
+								<div class="plaque-number">
+									{{car.registration}}
+								</div>
+								<div class="plaque-side"></div>
+							</div>
+						</td>
 						<td>{{car.firstDateRegistration|date("d/m/Y")}}</td>
 						<td>{{car.color}}</td>
 						<td>
