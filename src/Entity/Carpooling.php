@@ -60,7 +60,7 @@ class Carpooling
     /**
      * @var Collection<int, Participation>
      */
-    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'carpooling')]
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'carpooling', cascade: ['persist'])]
     private Collection $participations;
 
     public function __construct()
