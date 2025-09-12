@@ -130,7 +130,7 @@ final class SearchCarpoolController extends AbstractController
         $em->flush();
 
         // Mise à jour du nombre de place dans le covoiturage.
-        $carpool->setAvailableSeat($carpool->getAvailableSeat() - 1);
+        $carpool->addAvailableSeat(-1);
         $em->persist($carpool);
         $em->flush();
 

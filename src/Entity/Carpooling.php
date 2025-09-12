@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CarpoolingRepository;
 use App\Validator\CityCheck;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -67,6 +68,8 @@ class Carpooling
     {
         $this->participations = new ArrayCollection();
     }
+
+    // Getter/Setter
 
     public function getId(): ?int
     {
@@ -209,5 +212,39 @@ class Carpooling
         }
 
         return $this;
+    }
+    // Fonctions supports
+
+    /**
+     * Ajoute ou retire des sièges disponibles au covoiturage
+     * 
+     * A noter : Pour retirer des sièges disponibles, $amount doit être négatif.
+     */
+    public function addAvailableSeat(int $amount): static
+    {
+        $this->available_seat += $amount;
+        return $this;
+    }
+
+    /**
+     * Vérifie si le trajet est annulable (2 heures avant le commencement du trajet)
+     */
+    public function isCancelable(): bool
+    {
+        $limit = $this->getStartDate()->modify('-2 hours');
+        $now = new DateTimeImmutable();
+        return $limit >= $now;
+    }
+
+    /**
+     * Vérifie si le trajet peut être lancé
+     */
+    public function isLaunchable(): bool
+    {
+        $firstlimit = $this->getStartDate()->modify('-2 hours');
+        $secondLimit = $this->getStartDate()->modify('+2 hours');
+
+        $now = new DateTimeImmutable();
+        return $now >= $firstlimit && $now <= $secondLimit;
     }
 }
