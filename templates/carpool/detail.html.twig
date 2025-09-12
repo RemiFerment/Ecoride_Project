@@ -72,10 +72,18 @@
 			{# Bouton de démarrage du covoiturage #}
 			<div class="row p-3 justify-content-center">
 				<div class="col-auto">
-					<button class="btn btn-primary">
-						<i class="bi bi-play-fill"></i>
-						Démarrer le covoiturage
-					</button>
+					{% if carpool.isLaunchable %}
+						<button class="btn btn-primary">
+							<i class="bi bi-play-fill"></i>
+							Démarrer le covoiturage
+						</button>
+					{% else %}
+						<button class="btn btn-primary disabled">
+							<i class="bi bi-play-fill"></i>
+							Démarrer le covoiturage
+						</button>
+					{% endif %}
+
 				</div>
 			</div>
 			{# Zone information covoiturage -> nombre de place et prix par place #}
@@ -102,11 +110,11 @@
 				<h5 class="text-start">Participant à la course :
 				</h5>
 				<div class="d-flex justify-content-center gap-2 flex-wrap">
-				{% if allParticipation is not empty %}
-					{% for participation in allParticipation %}
-						{% include 'partials/card.user.carpool.html.twig' %}
-					{% endfor %}
-				{% endif %}
+					{% if allParticipation is not empty %}
+						{% for participation in allParticipation %}
+							{% include 'partials/card.user.carpool.html.twig' %}
+						{% endfor %}
+					{% endif %}
 				</div>
 			</div>
 		</div>

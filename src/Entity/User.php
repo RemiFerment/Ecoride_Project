@@ -297,6 +297,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function addEcopiece(int $amount): static
+    {
+        $this->ecopiece += $amount;
+        return $this;
+    }
+
 
     /**
      * @return Collection<int, Participation>
