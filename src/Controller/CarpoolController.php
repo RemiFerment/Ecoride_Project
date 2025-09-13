@@ -58,6 +58,8 @@ class CarpoolController extends AbstractController
 
 
     #[Route('/carpool/create', name: 'app_carpool_create')]
+    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function createCarpool(
         Request $request,
         EntityManagerInterface $em,
@@ -66,15 +68,6 @@ class CarpoolController extends AbstractController
     ): Response {
         /** @var User $user  */
         $user = $this->getUser();
-
-
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté.'
-            );
-            return $this->redirectToRoute('app_login');
-        }
 
         if ($user->getCurrentCar() === null) {
             $this->addFlash(
@@ -125,6 +118,8 @@ class CarpoolController extends AbstractController
     }
 
     #[Route('/carpool/delete/{id}', name: 'app_carpool_delete', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function deleteCarpool(
         EntityManagerInterface $em,
         int $id,
@@ -134,14 +129,6 @@ class CarpoolController extends AbstractController
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
-
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
-            );
-            return $this->redirectToRoute('app_login');
-        }
 
         /** @var Carpooling $carpooling */
         $carpooling = $carpoolRep->find($id);
@@ -186,18 +173,12 @@ class CarpoolController extends AbstractController
     }
 
     #[Route('/mycarpool/details/{id}', name: 'app_carpool_details', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function detailsMyCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $participationRep): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
-            );
-            return $this->redirectToRoute('app_login');
-        }
 
         $carpool = $carpoolRep->find($id);
         $allParticipation = $participationRep->findBy(['carpooling' => $carpool]);
@@ -209,6 +190,8 @@ class CarpoolController extends AbstractController
     }
 
     #[Route('mycarpool/{carpool_id}/kickuser/{user_id}', name: 'app_mycarpool_kick_user', requirements: ['carpool_id' => '\d+', 'user_id' => '\d+'])]
+    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function kickUserFromCarpool(
         int $carpool_id,
         int $user_id,
@@ -220,13 +203,7 @@ class CarpoolController extends AbstractController
     ) {
 
         $user = $this->getUser();
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
-            );
-            return $this->redirectToRoute('app_login');
-        }
+
         /** @var Carpooling $carpool */
         $carpool = $carpoolRep->find($carpool_id);
 
@@ -276,28 +253,16 @@ class CarpoolController extends AbstractController
     }
 
     #[Route('joinedcarpool/cancel/{id}', name: 'app_joinedcarpool_cancel_user', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function cancelParticipationCarpool(
         int $id,
         CarpoolingRepository $carpoolRep,
         ParticipationRepository $partipRep,
         EntityManagerInterface $em,
     ) {
-        //Annuler la participation d'un participant (règle métier : faisable au maximume 2 h avant le début de la course)
-        //Vérification : 
-        //A faire : 
-        // Supprimer la participation User Carpooling correspondant.
-        // Rembourser les pièces correspondant au prix de la course
-        // Ajouter une place disponible à la course
-
         /** @var User $user */
         $user = $this->getUser();
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                "Vous ne pouvez pas accéder à cette page tant que vous n'êtes pas connecté(e)."
-            );
-            return $this->redirectToRoute('app_login');
-        }
 
         /** @var Carpooling $carpool */
         $carpool = $carpoolRep->find($id);
