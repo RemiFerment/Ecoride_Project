@@ -21,6 +21,9 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
+            access_denied_handler: App\Security\AccessDeniedHandler
+            entry_point: App\Security\AuthenticationEntryPoint
+            stateless: false
             logout:
                 path: app_logout
                 # where to redirect after logout

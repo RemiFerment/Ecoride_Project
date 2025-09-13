@@ -18,22 +18,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CarpoolController extends AbstractController
 {
     #[Route('/carpool', name: 'app_carpool_index')]
+    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(CarpoolingRepository $carpoolRep, ParticipationRepository $participation): Response
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
-            );
-            return $this->redirectToRoute('app_login');
-        }
+        // if ($user === null) {
+        //     $this->addFlash(
+        //         'danger',
+        //         'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
+        //     );
+        //     return $this->redirectToRoute('app_login');
+        // }
         //Section Mes Trajets:
         $soonCarpools = $carpoolRep->findAllByUserAndDate($user, 1);
         $currentCarpools = $carpoolRep->findAllByUserAndDate($user, 0);
