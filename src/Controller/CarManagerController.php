@@ -13,11 +13,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CarManagerController extends AbstractController
 {
 
     #[Route('/car', name: 'app_car_index')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_DRIVER')]
     public function index(CarRepository $carRepository)
     {
         /** @var User $user */
@@ -39,6 +42,8 @@ class CarManagerController extends AbstractController
     }
 
     #[Route('/car/add', name: 'app_car_add')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_DRIVER')]
     public function createCarpool(
         Request $request,
         EntityManagerInterface $em,
@@ -78,19 +83,14 @@ class CarManagerController extends AbstractController
     }
 
     #[Route('/car/set/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_setDefault")]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_DRIVER')]
     public function setUsedCar(EntityManagerInterface $em, CarRepository $carRep, int $id): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         /** @var Car $car */
         $car = $carRep->find($id);
-        if ($user->getId() !== $car->getUserId()) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas définir cette voiture comme principale, vérifier le lien.'
-            );
-            return $this->redirectToRoute('app_car_index');
-        }
 
         $user->setCurrentCar($car);
         $em->persist($user);
@@ -103,6 +103,8 @@ class CarManagerController extends AbstractController
     }
 
     #[Route('/car/delete/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_delete")]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_DRIVER')]
     public function deleteCar(EntityManagerInterface $em, CarRepository $carRep, int $id): Response
     {
         /** @var User $user */
