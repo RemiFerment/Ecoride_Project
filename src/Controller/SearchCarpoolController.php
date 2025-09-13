@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class SearchCarpoolController extends AbstractController
 {
@@ -76,6 +77,8 @@ final class SearchCarpoolController extends AbstractController
     }
 
     #[Route('/carpool/{id}/participate', name: 'app_carpool_participate', requirements: ['id' => Requirement::DIGITS])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_PASSAGER')]
     public function participateToCarpool(CarpoolingRepository $carpoolingRep, int $id, EntityManagerInterface $em, ParticipationRepository $participationRep)
     {
         /** @var User $user */
