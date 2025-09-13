@@ -3,12 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Carpooling;
-use App\Entity\Participation;
 use App\Entity\User;
 use App\Form\CarpoolType;
 use App\Repository\CarpoolingRepository;
 use App\Repository\ParticipationRepository;
-use App\Repository\UserRepository;
+use App\Services\CarpoolManagerService;
 use App\Services\GeolocationService;
 use App\Services\SendEmailService;
 use DateInterval;
@@ -53,12 +52,8 @@ class CarpoolController extends AbstractController
     #[Route('/carpool/create', name: 'app_carpool_create')]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function createCarpool(
-        Request $request,
-        EntityManagerInterface $em,
-        User $user,
-        GeolocationService $gs,
-    ): Response {
+    public function createCarpool(Request $request,CarpoolManagerService $carpool_manager): Response 
+    {
         /** @var User $user  */
         $user = $this->getUser();
 
@@ -70,35 +65,12 @@ class CarpoolController extends AbstractController
             return $this->redirectToRoute('app_car_index');
         }
 
-        $userCar = $user->getCurrentCar();
 
         $carpooling = new Carpooling();
         $form = $this->createForm(CarpoolType::class, $carpooling);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $carpooling->setCreatedBy($user);
-            $carpooling->setCar($userCar);
-            $carpooling->setStartPlace($gs->getOfficialCityName($carpooling->getStartPlace()));
-            $carpooling->setEndPlace($gs->getOfficialCityName($carpooling->getEndPlace()));
-
-            //calcul de la durée
-            $duration = $gs->routeTimeCalcul($carpooling->getStartPlace(), $carpooling->getEndPlace());
-            $newdate = $carpooling->getStartDate();
-
-            $interval = new DateInterval('PT' . $duration . 'M');
-            $newdate = $newdate->add($interval);
-
-            //On met à jour le carpool
-            $carpooling->setEndDate(new DateTimeImmutable($newdate->format('Y-m-d H:i')));
-            $carpooling->setStatut('Online');
-            $em->persist($carpooling);
-
-            //On retire 2 crédits comme indiqué dans la demande client
-            $user->addEcopiece(-2);
-            $em->persist($user);
-
-            $em->flush();
+        $carpool_manager->FinalizeCreation($carpooling,$user);
             $this->addFlash('success', 'Votre trajet à bien été mise en ligne !');
             return $this->redirectToRoute('app_carpool_index');
         }
@@ -114,11 +86,10 @@ class CarpoolController extends AbstractController
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function deleteCarpool(
-        EntityManagerInterface $em,
         int $id,
         CarpoolingRepository $carpoolRep,
         ParticipationRepository $partipRep,
-        SendEmailService $mail
+        CarpoolManagerService $carpoolManager
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
@@ -135,29 +106,9 @@ class CarpoolController extends AbstractController
         }
 
         $allParticipation = $partipRep->findBy(['carpooling' => $carpooling]);
-        if (!empty($allParticipation)) {
-            foreach ($allParticipation as $participation) {
-                /** @var User $impactedUser */
-                $impactedUser = $participation->getUser();
 
-                //On rembourse l'user impacté par l'annulation, et on envoie un mail pour prévnir de l'annulation du trajet.
-                $impactedUser->addEcopiece($carpooling->getPricePerPerson());
-                $mail->send(
-                    'contact@ecoride.test',
-                    $impactedUser->getEmail(),
-                    'IMPORTANT - Un trajet auquel vous participez a été annulé',
-                    'cancel_carpool',
-                    compact('impactedUser', 'carpooling', 'user')
-                );
-            }
-        }
-
-        //On rembourse les pièces utilisées pour créer le trajet.
-        $user->addEcopiece(2);
-        $em->persist($user);
-
-        $em->remove($carpooling);
-        $em->flush();
+        $carpoolManager->FinalizeDeletion($carpooling, $allParticipation, $user);
+        
         $this->addFlash(
             'success',
             'Le trajet à bien été supprimé ! Des mails ont été envoyés aux utilisateurs concernés.'
