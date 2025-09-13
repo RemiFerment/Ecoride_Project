@@ -5,17 +5,17 @@
 {% endblock %}
 
 {% block body %}
-	<div class="oxanium mt-5 ecoride-container p-lg-5 justify-content-center rounded">
+	<div class="oxanium my-5 ecoride-container p-lg-5 justify-content-center rounded">
 		<h1 class="my-3 text-center viga-regular">Mon profil :
 		</h1>
 
-		<table class="table justify-content-center">
-			<tbody class="rounded">
+		<table class="table justify-content-center d-inline-flex">
+			<tbody class="rounded shadow-sm">
 				<tr>
 					<th class="col align-middle">
 						<span>Photo de profil :</span>
 					</th>
-					<td class="col-auto">
+					<td class="col-auto align-middle">
 
 						<div class="row row-cols-2 my-2 align-items-center">
 							<div class="col-lg-2">
@@ -49,93 +49,78 @@
 		</table>
 
 
-		<table class="table justify-content-center rounded">
-			<tbody class="rounded">
+		<table class="table justify-content-center rounded d-inline-flex">
+			<tbody class="rounded shadow-sm">
 				<tr>
-					<th class="col-lg-4">Nom d'utilisateur :
+					<th class="col-lg-5">Nom d'utilisateur :
 					</th>
 					<td class="col-auto">
-						<input type="text" value="{{user.username}}" readonly>
-					</td>
-					<td>
-						<a href="" id="">
-							<i class="bi bi-pencil"></i>
-						</a>
+						{{user.username}}
 					</td>
 				</tr>
 				<tr>
 					<th class="col">Nom de famille :
 					</th>
 					<td class="col">
-						<input type="text" value="{{user.firstname}}" readonly>
-					</td>
-					<td>
-						<a href="" id="">
-							<i class="bi bi-pencil"></i>
-						</a>
+						{{user.firstname}}
 					</td>
 				</tr>
 				<tr>
 					<th class="col">Prénom :
 					</th>
 					<td>
-						<input type="text" value="{{user.lastname}}" readonly>
+						{{user.lastname}}
 					</td>
-					<td>
-						<a href="" id="">
-							<i class="bi bi-pencil"></i>
-						</a>
-					</td>
+
 				</tr>
 				<tr>
 					<th class="col">Numéro de téléphone :
 					</th>
 					<td>
-						<input type="text" value="{{user.phonenumber}}" readonly>
+						{{user.phonenumber}}
 					</td>
-					<td>
-						<a href="" id="">
-							<i class="bi bi-pencil"></i>
-						</a>
-					</td>
+
 				</tr>
 				<tr>
 					<th class="col">Adresse postale :
 					</th>
 					<td>
-						<input type="text" value="{{user.postaladress}}" readonly>
+						{{user.postaladress}}
 					</td>
-					<td>
-						<a href="" id="">
-							<i class="bi bi-pencil"></i>
-						</a>
-					</td>
+
 				</tr>
 				<tr>
 					<th class="col">Date de naissance :
 					</th>
 					<td>
-						<input type="date" value="{{user.birthdate | date('Y-m-d')}}" readonly>
+						{{user.birthdate | date('d / m / Y')}}
 					</td>
-					<td>
-						<a href="" id="">
-							<i class="bi bi-pencil"></i>
-						</a>
-					</td>
+
 				</tr>
 				<tr>
-					<th class="col">Password :
+					<th class="col">Type de profil :
 					</th>
 					<td>
-						<input type="password" value="password" readonly>
+						{% set labels = {
+    					'ROLE_PASSAGER': 'Passager',
+						'ROLE_DRIVER': 'Chauffeur',
+						'ROLE_USER': ''
+						} %}
+
+						{% for role in user.roles %}
+							{{ labels[role]|default('') }}
+						{% endfor %}
+
 					</td>
+
+				</tr>
+				<tr>
+					<th></th>
 					<td>
-						<a href="" id="">
-							<i class="bi bi-pencil"></i>
-						</a>
+						<a href="" class="btn btn-primary">Modifier</a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-	</tr>
-</tbody></td></tr></tbody></div>{% endblock %}
+	</div>
+{% endblock %}
