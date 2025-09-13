@@ -52,7 +52,7 @@ class CarpoolController extends AbstractController
     #[Route('/carpool/create', name: 'app_carpool_create')]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function createCarpool(Request $request,CarpoolManagerService $carpool_manager): Response 
+    public function createCarpool(Request $request, CarpoolManagerService $carpool_manager): Response
     {
         /** @var User $user  */
         $user = $this->getUser();
@@ -70,7 +70,7 @@ class CarpoolController extends AbstractController
         $form = $this->createForm(CarpoolType::class, $carpooling);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-        $carpool_manager->FinalizeCreation($carpooling,$user);
+            $carpool_manager->FinalizeCreation($carpooling, $user);
             $this->addFlash('success', 'Votre trajet à bien été mise en ligne !');
             return $this->redirectToRoute('app_carpool_index');
         }
@@ -85,12 +85,8 @@ class CarpoolController extends AbstractController
     #[Route('/carpool/delete/{id}', name: 'app_carpool_delete', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function deleteCarpool(
-        int $id,
-        CarpoolingRepository $carpoolRep,
-        ParticipationRepository $partipRep,
-        CarpoolManagerService $carpoolManager
-    ): Response {
+    public function deleteCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, CarpoolManagerService $carpoolManager): Response
+    {
         /** @var User $user */
         $user = $this->getUser();
 
@@ -108,7 +104,7 @@ class CarpoolController extends AbstractController
         $allParticipation = $partipRep->findBy(['carpooling' => $carpooling]);
 
         $carpoolManager->FinalizeDeletion($carpooling, $allParticipation, $user);
-        
+
         $this->addFlash(
             'success',
             'Le trajet à bien été supprimé ! Des mails ont été envoyés aux utilisateurs concernés.'
