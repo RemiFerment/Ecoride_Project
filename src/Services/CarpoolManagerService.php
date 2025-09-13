@@ -37,6 +37,7 @@ final class CarpoolManagerService{
 
     public function FinalizeDeletion(Carpooling $carpool, array $allParticipation, User $user)
     {
+        
         if (!empty($allParticipation)) {
             foreach ($allParticipation as $participation) {
                 /** @var User $impactedUser */
