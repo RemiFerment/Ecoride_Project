@@ -44,11 +44,8 @@ class CarManagerController extends AbstractController
     #[Route('/car/add', name: 'app_car_add')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
-    public function createCarpool(
-        Request $request,
-        EntityManagerInterface $em,
-        User $user
-    ): ?Response {
+    public function createCar(Request $request, EntityManagerInterface $em, User $user): ?Response
+    {
 
         /** @var User $user  */
         $user = $this->getUser();
