@@ -9,10 +9,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProfileManagerController extends AbstractController
 {
     #[Route('/profile/manager', name: 'app_profile_manager')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(EntityManagerInterface $em, Request $request): Response
     {
         /** @var User $user */
@@ -59,6 +61,7 @@ final class ProfileManagerController extends AbstractController
     }
 
     #[Route("/profile/manager/{user_id}/delete_photo", name: "app_delete_profile_picture", requirements: ['user_id' => '\d+'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function deleteProfilePhoto(EntityManagerInterface $em, int $user_id)
     {
         /** @var User $user */
