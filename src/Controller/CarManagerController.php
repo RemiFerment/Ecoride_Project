@@ -121,6 +121,8 @@ class CarManagerController extends AbstractController
             return $this->redirectToRoute('app_car_index');
         }
 
+        //Check si la voiture n'est pas déjà utilisé sur un trajet
+
         //Car is removed from the DB
         $em->remove($car);
         $em->flush();
