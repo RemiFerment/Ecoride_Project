@@ -2,27 +2,73 @@
 
 namespace App\Controller;
 
+use App\Entity\Carpooling;
+use App\Entity\Participation;
+use App\Entity\User;
 use App\Repository\CarpoolingRepository;
 use App\Repository\ParticipationRepository;
 use App\Repository\UserRepository;
-use App\Services\SendEmailService;
+use App\Services\ParticipationManagerService;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ParticipationController extends AbstractController
 {
+    #[Route('/carpool/{id}/participate', name: 'app_carpool_participate', requirements: ['id' => '\d+'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_PASSAGER')]
+    public function participateToCarpool(int $id, CarpoolingRepository $carpoolingRep, ParticipationRepository $participationRep, ParticipationManagerService $participationManager)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Carpooling $carpool */
+        $carpool = $carpoolingRep->find($id);
+
+        // Vérification de chaque élément sujet à comprommetre l'acceptation au covoiturage.
+        if ($carpool->getAvailableSeat() === 0) {
+            $this->addFlash(
+                'danger',
+                'Ce trajet n\'est plus disponible.'
+            );
+            return $this->redirectToRoute('app_carpool_index');
+        }
+
+        if ($carpool->getPricePerPerson() > $user->getEcopiece()) {
+            $this->addFlash(
+                'danger',
+                "Vous n'avez pas assez d\'écopièces ! (Écopièces nécessaire : " . $carpool->getPricePerPerson() . ".)"
+            );
+            return $this->redirectToRoute('app_search_carpool_detail', ['id' => $id]);
+        }
+
+        if ($participationRep->findOneBy(['user' => $user, 'carpooling' => $carpool]) !== null) {
+            $this->addFlash(
+                'danger',
+                "Vous participez déjà à ce covoiturage."
+            );
+            return $this->redirectToRoute('app_search_carpool');
+        }
+
+        $participationManager->FinalizeParticipation($user, $carpool);
+
+        $cityA = $carpool->getStartPlace();
+        $cityB = $carpool->getEndPlace();
+        $this->addFlash(
+            'success',
+            "La participation au trajet $cityA > $cityB a bien été prise en compte !"
+        );
+        return $this->redirectToRoute('app_carpool_index');
+    }
+
     #[Route('joinedcarpool/cancel/{id}', name: 'app_joinedcarpool_cancel_user', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function cancelParticipationCarpool(
-        int $id,
-        CarpoolingRepository $carpoolRep,
-        ParticipationRepository $partipRep,
-        EntityManagerInterface $em,
-    ) {
+    public function cancelParticipationCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, ParticipationManagerService $participationManager): Response
+    {
         /** @var User $user */
         $user = $this->getUser();
 
@@ -60,18 +106,12 @@ final class ParticipationController extends AbstractController
             );
             return $this->redirectToRoute('app_carpool_index');
         }
-        //Rembourse au user le trajet en écopièce:
-        $user->addEcopiece($carpool->getPricePerPerson());
-        $carpool->addAvailableSeat(1);
+        $participationManager->FinalizeCancel($user, $participation, $carpool);
 
-        $em->persist($user);
-        $em->persist($carpool);
-        $em->remove($participation);
-
-        $em->flush();
         $this->addFlash(
             'success',
-            'La participation au trajet ' . $carpool->getStartPlace() . ' > ' . $carpool->getEndPlace() . ' a bien été pris en compte ! Un remboursement de ' . $carpool->getPricePerPerson() . ' écopièces a été effectué.'
+            'La participation au trajet ' . $carpool->getStartPlace() . ' > ' . $carpool->getEndPlace() . ' a bien été annulé ! Un remboursement de '
+                . $carpool->getPricePerPerson() . ' écopièces a été effectué.'
         );
         return $this->redirectToRoute('app_carpool_index');
     }
@@ -79,15 +119,8 @@ final class ParticipationController extends AbstractController
     #[Route('mycarpool/{carpool_id}/kickuser/{user_id}', name: 'app_mycarpool_kick_user', requirements: ['carpool_id' => '\d+', 'user_id' => '\d+'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function kickUserFromCarpool(
-        int $carpool_id,
-        int $user_id,
-        CarpoolingRepository $carpoolRep,
-        ParticipationRepository $partipRep,
-        UserRepository $userRep,
-        EntityManagerInterface $em,
-        SendEmailService $sendEmail,
-    ) {
+    public function kickUserFromCarpool(int $carpool_id, int $user_id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, UserRepository $userRep, ParticipationManagerService $participationManager)
+    {
 
         $user = $this->getUser();
 
@@ -108,28 +141,7 @@ final class ParticipationController extends AbstractController
             return $this->redirectToRoute('app_carpool_index');
         }
 
-        //Après toutes les vérifications (sécurité), on supprime la participation du User
-        $em->remove($participation);
-
-
-        //On rembourse le User
-        $kickedUser->addEcopiece($carpool->getPricePerPerson());
-        $em->persist($kickedUser);
-
-
-        //On remet à jour le nombre de siège sur le Carpool
-        $carpool->addAvailableSeat(1);
-        $em->persist($carpool);
-        $em->flush();
-
-        //On envoie un mail au User expulsé de la participation pour le prévenir.
-        $sendEmail->send(
-            'no-reply@ecoride-project.test',
-            $kickedUser->getEmail(),
-            "IMPORTANT - l'hôte d'un de vos trajets prévus vous a expulsé de sa course",
-            'kick_carpool',
-            compact('carpool', 'user', 'kickedUser')
-        );
+        $participationManager->FinalizeKickUser($user, $kickedUser, $participation, $carpool);
 
         //On recharge la page de détail du User
         $this->addFlash(
