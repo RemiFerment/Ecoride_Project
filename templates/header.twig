@@ -20,12 +20,14 @@
 							<li>
 								<a class="dropdown-item" type="button" href="{{path(name:'app_profile_manager')}}">Mon profil</a>
 							</li>
-							<li>
-								<a class="dropdown-item" type="button" href="{{path(name:'app_carpool_index')}}">Mes trajets</a>
-							</li>
-							<li>
-								<a class="dropdown-item" type="button " href="{{path(name:'app_car_index')}}">Mes véhicules</a>
-							</li>
+							{% if is_granted('ROLE_DRIVER') %}
+								<li>
+									<a class="dropdown-item" type="button" href="{{path(name:'app_carpool_index')}}">Mes trajets</a>
+								</li>
+								<li>
+									<a class="dropdown-item" type="button " href="{{path(name:'app_car_index')}}">Mes véhicules</a>
+								</li>
+							{% endif %}
 							<li>
 								<a class="dropdown-item" type="button " href="{{path(name:'app_wallet')}}">Mon portefeuille
 									<div class="text-end text-success fw-bold">

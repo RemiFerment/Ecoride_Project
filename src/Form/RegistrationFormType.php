@@ -6,7 +6,9 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
+use Symfony\Component\Form\Event\SubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,7 +22,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
-    private string $plainPassword;
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -72,9 +73,15 @@ class RegistrationFormType extends AbstractType
             ->add('username', options: [
                 'label' => 'Nom d\'utilisateur'
             ])
-            // ->add('save', SubmitType::class, [
-            //     'label' => 'S\'inscrire',
-            // ],)
+            ->add('roles', ChoiceType::class, options: [
+                'choices' => [
+                    'Passager' => 'ROLE_PASSAGER',
+                    'Chauffeur' => 'ROLE_DRIVER',
+                    'Les deux' => 'twice',
+                ],
+                'mapped' => false,
+                'placeholder' => 'Choisir son type de profil',
+            ])
         ;
     }
 
