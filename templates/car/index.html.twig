@@ -27,9 +27,9 @@
 			</thead>
 			<tbody>
 				{% for car in cars %}
-					<tr class="{{user.currentCar.id == car.id ? "table-success" : "" }} align-middle">
+					<tr class="{{user.currentCar != null and user.currentCar.id == car.id ? "table-success" : "" }} align-middle">
 						<td>
-							{% if user.currentCar.id == car.id %}
+							{% if user.currentCar != null and user.currentCar.id == car.id %}
 								<i class="bi bi-car-front-fill" data-bs-toggle="tooltip" data-bs-placement="top" title="Voiture principal"></i>
 							{% endif %}
 							{{car.marque.name}}
@@ -50,7 +50,7 @@
 						<td>
 							<div>
 								<a href="" class="btn btn-primary">Modifier</a>
-								<a href="{{ path(name = 'app_car_setDefault', parameters = {id: car.id} ) }} " class="btn btn-success {{ user.currentCar.id == car.id ? " d-none" : " " }}">Utiliser</a>
+								<a href="{{ path(name = 'app_car_setDefault', parameters = {id: car.id} ) }} " class="btn btn-success {{user.currentCar != null and  user.currentCar.id == car.id ? " d-none" : " " }}">Utiliser</a>
 								<a href="{{ path(name = 'app_car_delete', parameters = {id: car.id} ) }}" class="btn btn-danger">Supprimer</a>
 							</td>
 						</td>

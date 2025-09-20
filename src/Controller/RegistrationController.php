@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Services\GlobalStatService;
 use App\Services\JWTService;
 use App\Services\SendEmailService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier) {}
+    public function __construct(private EmailVerifier $emailVerifier, private GlobalStatService $globalStat) {}
 
     #[Route('/register', name: 'app_register')]
     public function register(
@@ -78,6 +79,7 @@ class RegistrationController extends AbstractController
 
             $this->addFlash("success", "L'inscription a bien été effectué ! Un E-mail de confirmation vous a été envoyé.");
 
+            $this->globalStat->incGlobalStat(GlobalStatService::ACCOUNT_STAT);
             return $security->login($user, 'form_login', 'main');
         }
 

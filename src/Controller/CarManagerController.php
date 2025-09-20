@@ -5,13 +5,13 @@ namespace App\Controller;
 use App\Entity\Car;
 use App\Entity\User;
 use App\Form\CarType;
+use App\Repository\CarpoolingRepository;
 use App\Repository\CarRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Services\CarManagerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -44,7 +44,7 @@ class CarManagerController extends AbstractController
     #[Route('/car/add', name: 'app_car_add')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
-    public function createCar(Request $request, EntityManagerInterface $em, User $user): ?Response
+    public function createCar(Request $request, CarManagerService $carManager, User $user): ?Response
     {
 
         /** @var User $user  */
@@ -63,12 +63,9 @@ class CarManagerController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Car $car */
             $car = $form->getData();
-            $car->setUserId($user->getId());
-            $em->persist($car);
-            $em->flush();
-            $user->setCurrentCar($car);
-            $em->persist($user);
-            $em->flush();
+
+            $carManager->FinalizeCreate($user, $car);
+
             $this->addFlash('success', 'Votre voiture à bien été ajouté !');
             return $this->redirectToRoute('app_car_index');
         }
@@ -82,16 +79,15 @@ class CarManagerController extends AbstractController
     #[Route('/car/set/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_setDefault")]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
-    public function setUsedCar(EntityManagerInterface $em, CarRepository $carRep, int $id): Response
+    public function setUsedCar(int $id, CarManagerService $carManager, CarRepository $carRep): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         /** @var Car $car */
         $car = $carRep->find($id);
 
-        $user->setCurrentCar($car);
-        $em->persist($user);
-        $em->flush($user);
+        $carManager->FinalizeSetDefaultCar($user, $car);
+
         $this->addFlash(
             'success',
             "Votre " . $car->getMarque()->getName() . " " . $car->getModel() . " a bien été défini comme votre voiture principale."
@@ -102,14 +98,13 @@ class CarManagerController extends AbstractController
     #[Route('/car/delete/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_delete")]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
-    public function deleteCar(EntityManagerInterface $em, CarRepository $carRep, int $id): Response
+    public function deleteCar(CarManagerService $carManager, CarRepository $carRep, CarpoolingRepository $carpoolingRepository, int $id): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         /** @var Car $car */
         $car = $carRep->find($id);
 
-        //Check if the car ID match with the owner of that car
         if ($user->getId() !== $car->getUserId()) {
             $this->addFlash(
                 'danger',
@@ -118,24 +113,21 @@ class CarManagerController extends AbstractController
             return $this->redirectToRoute('app_car_index');
         }
 
-        //Check si la voiture n'est pas déjà utilisé sur un trajet
+        if ($carpoolingRepository->findCarpoolByUserAndCar($car, $user)) {
+            $this->addFlash(
+                'danger',
+                'Vous ne pouvez pas supprimer cette voiture car elle est utilisé pour effectuer un covoiturage.'
+            );
+            return $this->redirectToRoute('app_car_index');
+        }
 
-        //Car is removed from the DB
-        $em->remove($car);
-        $em->flush();
+        $carManager->FinalizeDelation($user, $car);
+
         $allUserCar = $carRep->findAllByUserId($user->getId());
 
-        //Check if the current deleted car is the default used car.
-        if ($user->getCurrentCar()->getId() === $id && count($allUserCar) > 0) {
-            $user->setCurrentCar($allUserCar[0]);
-        }
-        //Check if the user haven't car yet
-        if (count($allUserCar) === 0) {
-            $user->setCurrentCar(null);
-        }
+        $newCar = $user->getCurrentCar() === null && count($allUserCar) > 0 ? $allUserCar[0] : null;
 
-        $em->persist($user);
-        $em->flush();
+        $carManager->FinalizeSetDefaultCar($user, $newCar);
 
         $this->addFlash(
             'success',

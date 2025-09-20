@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Car;
 use App\Entity\Carpooling;
 use App\Entity\User;
 use DateTimeImmutable;
@@ -27,7 +28,19 @@ class CarpoolingRepository extends ServiceEntityRepository
             ->andWhere('c.created_by = :user')
             ->andWhere('c.statut = :statut')
             ->setParameter('user', $user)
-            ->setParameter('statut', "Online")
+            ->setParameter('statut', "ONLINE")
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findAllByUserAndStatut(User $user, string $statut): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.created_by = :user')
+            ->andWhere('c.statut = :statut')
+            ->setParameter('user', $user)
+            ->setParameter('statut', $statut)
             ->setMaxResults(50)
             ->getQuery()
             ->getResult()
@@ -73,7 +86,6 @@ class CarpoolingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
     public function findBySearchCarpool(
         string $startPlace,
         string $endPlace,
@@ -85,6 +97,7 @@ class CarpoolingRepository extends ServiceEntityRepository
             ->andWhere('c.end_place = :endPlace')
             ->andWhere('c.start_date > :date')
             ->andWhere('c.available_seat > 0')
+            ->andWhere('c.statut = ONLINE')
             ->setParameter('startPlace', $startPlace)
             ->setParameter('endPlace', $endPlace)
             ->setParameter('date', $date);
@@ -97,13 +110,17 @@ class CarpoolingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    //    public function findOneBySomeField($value): ?Carpooling
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findCarpoolByUserAndCar(Car $car, User $user): bool
+    {
+        $qb =  $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->andWhere('c.created_by = :user')
+            ->andWhere('c.car = :car')
+            ->setParameter('user', $user)
+            ->setParameter('car', $car)
+            ->getQuery()
+            ->getSingleScalarResult();
+        // dd((int)$qb);
+        return (int)$qb > 0;
+    }
 }

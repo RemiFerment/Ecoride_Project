@@ -7,83 +7,44 @@
 {% endblock %}
 
 {% block body %}
-	<div class="mt-5 ecoride-container rounded p-2 container d-flex justify-content-center text-center align-self-center align-self-lg-start">
+	<div class="mt-5 ecoride-container rounded p-lg-2 d-flex justify-content-center text-center align-self-center align-self-lg-start">
 		<div
 			class="w-75">
 
 			{# Zone de résumé du trajet #}
+			{% set car = carpool.createdby.currentcar %}
+			{% include 'partials/carpool/element.carpooldetails.html.twig' %}
 
-			<div class="row row-cols-lg-4 row-cols-1 p-lg-3 p-2 bg-light text-dark my-2 rounded shadow-sm bg-white">
-				<div class="col mt-2">
-					<div class="d-flex align-items-center justify-content-center">
-						<i class="bi bi-geo-alt fs-1 me-2"></i>
-						<div class="d-flex flex-column">
-							<h4>Départ</h4>
-							<span class="fw-bold">
-								{{carpool.startplace}}</span>
-							<span>
-								{{carpool.startdate | date('d/m/Y - H\\hi')}}
-							</span>
-						</div>
-					</div>
-				</div>
-				<div class="col mt-lg-0 mt-3">
-					<div class="col d-flex justify-content-lg-center align-items-center justify-content-center">
-						<i class="bi bi-arrow-right fs-1 d-none d-lg-block"></i>
-						<i class="bi bi-arrow-down fs-1 d-md-block d-lg-none"></i>
-					</div>
-				</div>
-				<div class="col mt-lg-0 mt-3">
-					<div class="d-flex align-items-center justify-content-center">
-						<i class="bi bi-geo-alt-fill fs-1 me-2"></i>
-						<div class="d-flex flex-column">
-							<h4>Arrivé</h4>
-							<span class="fw-bold">
-								{{carpool.endplace}}</span>
-							<span>
-								{{carpool.enddate | date('d/m/Y - H\\hi')}}
-							</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="col mt-lg-0 mt-3">
-					<div class="d-flex align-items-center justify-content-center">
-						<i class="bi bi-car-front fs-1 me-2"></i>
-						<div class="d-flex flex-column">
-							<h4>Véhicule</h4>
-							<span class="fw-bold">
-								{{user.currentcar.marque.name}}
-								{{user.currentcar.model}}
-							</span>
-							<div class="plaque">
-								<span class="plaque-side"></span>
-								<span class="plaque-number">{{user.currentcar.registration}}</span>
-								<span class="plaque-side"></span>
-							</div>
-
-							<span>
-								{{user.currentcar.powerengine}}
-							</span>
-						</div>
-					</div>
-				</div>
-			</div>
 			{# Bouton de démarrage du covoiturage #}
 			<div class="row p-3 justify-content-center">
 				<div class="col-auto">
-					{% if carpool.isLaunchable %}
-						<button class="btn btn-primary">
+					{% if carpool.statut == 'ONLINE' and carpool.isLaunchable %}
+						<a class="load-btn btn btn-primary" href="{{ path('app_carpool_launch', {id: carpool.id}) }}" data-loading-text="Démarrage...">
 							<i class="bi bi-play-fill"></i>
-							Démarrer le covoiturage
-						</button>
-					{% else %}
-						<button class="btn btn-primary disabled">
-							<i class="bi bi-play-fill"></i>
-							Démarrer le covoiturage
-						</button>
-					{% endif %}
+							<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+							<span class="btn-text">Démarrer le covoiturage</span>
+						</a>
 
+					{% endif %}
+					{% if carpool.statut == 'IN_PROGRESS' %}
+						<a class='load-btn btn btn-success' href='{{path('app_carpool_finalize', {id:carpool.id})}}' data-loading-text='Chargement...'>
+							<span class='spinner-border spinner-border-sm ms-2 d-none' role='status' aria-hidden='true'></span>
+							<i class="bi bi-house-check"></i>
+							<span class='btn-text'>Finaliser le covoiturage</span>
+						</a>
+					{% endif %}
+					{% if carpool.statut == 'DONE' %}
+						<a class="btn btn-success disabled">
+							<i class="bi bi-check2-all"></i>
+							Covoiturage effectué
+						</a>
+					{% endif %}
+					{% if carpool.statut == 'MISS' %}
+						<a class="btn btn-danger disabled">
+							<i class="bi bi-check2-all"></i>
+							Covoiturage manqué
+						</a>
+					{% endif %}
 				</div>
 			</div>
 			{# Zone information covoiturage -> nombre de place et prix par place #}
@@ -100,10 +61,10 @@
 					par place
 				</div>
 				<div class="col d-flex align-items-center justify-content-center">
-					<i class="bi bi-piggy-bank-fill pe-2 fs-2"></i>
-					{{carpool.pricePerPerson * carpool.availableseat}}
-					<i class="bi bi-coin px-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Écopièce"></i>
-					au total
+
+
+					<i class="bi {{ carpool.car.powerEngine == 'Electrique' ? 'bi-lightning-charge-fill':'bi-fuel-pump-fill' }} pe-2 fs-2"></i>
+					{{carpool.car.powerEngine }}
 				</div>
 			</div>
 			<div class="row row-cols-1 p-lg-3 p-2 bg-light text-dark my-2 rounded shadow-sm bg-white justify-content-center">
@@ -117,6 +78,31 @@
 					{% endif %}
 				</div>
 			</div>
-		</div>
+			{% if carpool.statut == 'DONE' %}
+				<div class="row row-cols-1 p-lg-3 p-2 bg-light text-dark my-2 rounded shadow-sm bg-white justify-content-center">
+					<h5>Avis sur ce trajet :
+					</h5>
+					{% for review in carpoolReviews %}
+						{% set photoBase64 = review.user.photo | to_base64 %}
+						<div class="row align-items-center">
+							<div class="col-auto d-flex flex-column text-center">
+								{% if photoBase64 is not null %}
+									<img src="data:image/png;base64,{{ photoBase64|e }}" class="profile-img" alt="Image de profil">
+								{% else %}
+									<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut" class="profile-img">
+								{% endif %}
+								<div class="fs-5">{{ review.user.username }}</div>
+							</div>
+							<div class="col bg-secondary p-3 text-white text-start bubble">
+								{{ review.review.comment }}
+							</div>
+						</div>
+
+
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+
 	</div>
-{% endblock %}
+</div>{% endblock %}

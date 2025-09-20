@@ -121,15 +121,11 @@ a {
 }
 
 .profile-img {
-  width: 128px;
-  /* largeur fixe */
-  height: 128px;
-  /* hauteur fixe => carré */
+  width: 5rem;
+  height: 5rem;
   -o-object-fit: cover;
      object-fit: cover;
-  /* recadre sans déformer */
   border-radius: 50%;
-  /* rond */
   display: block;
 }
 
@@ -187,4 +183,16 @@ a {
   color: black;
   letter-spacing: 0.1em;
   white-space: nowrap;
+}
+
+.bubble {
+  border-radius: 40px 40px 40px 0px;
+  /* défaut (≥ md) */
+}
+
+@media (max-width: 576px) {
+  /* en-dessous du breakpoint sm */
+  .bubble {
+    border-radius: 0px 40px 40px 40px;
+  }
 }/*# sourceMappingURL=custom.css.map */

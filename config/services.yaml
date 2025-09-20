@@ -7,6 +7,8 @@ parameters:
    app.jwtsecret: '%env(JWT_SECRET)%'
    api.geoname.username: '%env(API_USERNAME_GEONAME)%'
    api.mapbox.token: '%env(API_TOKEN_MAPBOX)%'
+   env(MONGODB_URI): ''
+   env(MONGODB_DB): ''
 
 services:
     # default configuration for services in *this* file
