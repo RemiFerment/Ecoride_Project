@@ -80,6 +80,15 @@
 								</a>
 							</li>
 						{% endif %}
+						{% if is_granted("ROLE_ADMIN") %}
+							<hr>
+							<li class="nav-item">
+								<a href="{{ path(name = 'app_admin_dashboard') }}" class="nav-link oxanium {{ app.current_route == 'app_admin_dashboard' ? 'active' : '' }} oxanium" type="button" id="connexionButton">
+									<i class="bi bi-motherboard-fill"></i>
+									Tableau de bord
+								</a>
+							</li>
+						{% endif %}
 						<!--Ajouter les nav-item en fonction du rôle de l'utilisateur-->
 					</ul>
 				</div>

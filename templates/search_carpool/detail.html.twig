@@ -12,65 +12,7 @@
 	{# Zone de résumé du trajet #}
 	<div class="mt-5 ecoride-container rounded p-2 container d-flex justify-content-center text-center align-self-center align-self-lg-start">
 		<div class="w-75">
-			<div class="row row-cols-lg-4 row-cols-1 p-lg-3 p-2 bg-light text-dark my-2 rounded shadow-sm">
-
-				<div class="col mt-2">
-					<div class="d-flex align-items-center justify-content-center">
-						<i class="bi bi-geo-alt fs-1 me-2"></i>
-						<div class="d-flex flex-column">
-							<h4>Départ</h4>
-							<span class="fw-bold">
-								{{carpool.startplace}}</span>
-							<span>
-								{{carpool.startdate | date('d/m/Y - H\\hi')}}
-							</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="col mt-lg-0 mt-3">
-					<div class="col d-flex align-items-center justify-content-center">
-						<i class="bi bi-arrow-right fs-1 d-none d-lg-block"></i>
-						<i class="bi bi-arrow-down fs-1 d-md-block d-lg-none"></i>
-					</div>
-				</div>
-
-				<div class="col mt-lg-0 mt-3">
-					<div class="d-flex align-items-center justify-content-center">
-						<i class="bi bi-geo-alt-fill fs-1 me-2"></i>
-						<div class="d-flex flex-column">
-							<h4>Arrivé</h4>
-							<span class="fw-bold">
-								{{carpool.endplace}}</span>
-							<span>
-								{{carpool.enddate | date('d/m/Y - H\\hi')}}
-							</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="col mt-lg-0 mt-3">
-					<div class="d-flex align-items-center justify-content-center">
-						<i class="bi bi-car-front fs-1 me-2"></i>
-						<div class="d-flex flex-column">
-							<h4>Véhicule</h4>
-							<span class="fw-bold">
-								{{carpoolCar.marque.name}}
-								{{carpoolCar.model}}
-							</span>
-							<div class="plaque">
-								<span class="plaque-side"></span>
-								<span class="plaque-number">{{carpoolCar.registration}}</span>
-								<span class="plaque-side"></span>
-							</div>
-
-							<span>
-								{{carpoolCar.powerengine}}
-							</span>
-						</div>
-					</div>
-				</div>
-			</div>
+			{% include 'partials/carpool/element.carpooldetails.html.twig' %}
 
 			{# Bouton de démarrage du covoiturage #}
 			<div class="row p-3 justify-content-center">

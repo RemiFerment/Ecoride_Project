@@ -20,4 +20,5 @@
 ###< symfony/asset-mapper ###
 
 /db-data/
-/miscellaneous
+/data/
+/miscellaneous/

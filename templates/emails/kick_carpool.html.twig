@@ -3,9 +3,18 @@
 <p>Bonjour
 	{{kickedUser.username}},
 </p>
-<p>L'utilisateur {{user.username}} a décidé de vous expulser du trajet {{carpool.startplace}} > {{carpool.endplace}} prévu ce {{carpool.startdate | date('d/m/Y')}}
-à {{carpool.startdate | date('H\\hi')}}. Un remboursement de {{carpool.priceperperson}} écopièces vous a été distribué.</p>
-<p>
-</p>
+<p>L'utilisateur
+	{{user.username}}
+	a décidé de vous expulser du trajet
+	{{carpooling.startplace}}
+	>
+	{{carpooling.endplace}}
+	prévu ce
+	{{carpooling.startdate | date('d/m/Y')}}
+	à
+	{{carpooling.startdate | date('H\\hi')}}. Un remboursement de
+	{{carpooling.priceperperson}}
+	écopièces vous a été distribué.</p>
+<p></p>
 <hr>
 <p>Bonne journée à vous, l'équipe ÉCORIDE.</p>

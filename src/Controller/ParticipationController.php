@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTimeImmutable;
 use App\Entity\Carpooling;
 use App\Entity\Participation;
 use App\Entity\User;
@@ -9,7 +10,6 @@ use App\Repository\CarpoolingRepository;
 use App\Repository\ParticipationRepository;
 use App\Repository\UserRepository;
 use App\Services\ParticipationManagerService;
-use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,8 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class ParticipationController extends AbstractController
 {
     #[Route('/carpool/{id}/participate', name: 'app_carpool_participate', requirements: ['id' => '\d+'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[IsGranted('ROLE_PASSAGER')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY', 'ROLE_PASSAGER', 'ROLE_ADMIN')]
     public function participateToCarpool(int $id, CarpoolingRepository $carpoolingRep, ParticipationRepository $participationRep, ParticipationManagerService $participationManager)
     {
         /** @var User $user */
@@ -28,7 +27,7 @@ final class ParticipationController extends AbstractController
         /** @var Carpooling $carpool */
         $carpool = $carpoolingRep->find($id);
 
-        // Vérification de chaque élément sujet à comprommetre l'acceptation au covoiturage.
+        // Vérification de chaque élément sujet à comprommetre l'acceptation au covoiturage. A REFACTO
         if ($carpool->getAvailableSeat() === 0) {
             $this->addFlash(
                 'danger',
@@ -36,7 +35,6 @@ final class ParticipationController extends AbstractController
             );
             return $this->redirectToRoute('app_carpool_index');
         }
-
         if ($carpool->getPricePerPerson() > $user->getEcopiece()) {
             $this->addFlash(
                 'danger',
@@ -44,11 +42,24 @@ final class ParticipationController extends AbstractController
             );
             return $this->redirectToRoute('app_search_carpool_detail', ['id' => $id]);
         }
-
         if ($participationRep->findOneBy(['user' => $user, 'carpooling' => $carpool]) !== null) {
             $this->addFlash(
                 'danger',
                 "Vous participez déjà à ce covoiturage."
+            );
+            return $this->redirectToRoute('app_search_carpool');
+        }
+        if ($user === $carpool->getCreatedBy()) {
+            $this->addFlash(
+                'danger',
+                "Vous ne pouvez pas participé à votre propre covoiturage"
+            );
+            return $this->redirectToRoute('app_search_carpool');
+        }
+        if ($carpool->getStatut() !== 'ONLINE') {
+            $this->addFlash(
+                'danger',
+                "Ce trajet n'est plus disponible"
             );
             return $this->redirectToRoute('app_search_carpool');
         }
@@ -65,8 +76,7 @@ final class ParticipationController extends AbstractController
     }
 
     #[Route('joinedcarpool/cancel/{id}', name: 'app_joinedcarpool_cancel_user', requirements: ['id' => '\d+'])]
-    #[IsGranted('ROLE_DRIVER')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(['IS_AUTHENTICATED_FULLY', 'ROLE_DRIVER', 'ROLE_ADMIN'])]
     public function cancelParticipationCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, ParticipationManagerService $participationManager): Response
     {
         /** @var User $user */
@@ -117,8 +127,7 @@ final class ParticipationController extends AbstractController
     }
 
     #[Route('mycarpool/{carpool_id}/kickuser/{user_id}', name: 'app_mycarpool_kick_user', requirements: ['carpool_id' => '\d+', 'user_id' => '\d+'])]
-    #[IsGranted('ROLE_DRIVER')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY', 'ROLE_DRIVER', 'ROLE_ADMIN')]
     public function kickUserFromCarpool(int $carpool_id, int $user_id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, UserRepository $userRep, ParticipationManagerService $participationManager)
     {
 
@@ -132,8 +141,7 @@ final class ParticipationController extends AbstractController
 
         /** @var Participation $participation */
         $participation = $partipRep->findOneBy(['user' => $kickedUser, 'carpooling' => $carpool]);
-
-        if ($carpool->getCreatedBy() !== $user || $carpool->getStatut() !== 'Online' || $carpool->getStartDate() < new DateTimeImmutable('-2 hours') || $participation === null) {
+        if ($carpool->getCreatedBy() !== $user || $carpool->getStatut() !== 'ONLINE' || !$carpool->isCancelable() || $participation === null) {
             $this->addFlash(
                 'danger',
                 'Un problème est survenue avec le lien, si le problème persiste contact l\'administrateur.'

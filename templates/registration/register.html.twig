@@ -21,6 +21,7 @@
 			{{ form_row(registrationForm.last_name) }}
 			{{ form_row(registrationForm.email) }}
 			{{ form_row(registrationForm.username) }}
+			{{ form_row(registrationForm.roles) }}
 		</div>
 		<div class="col px-2">
 			{{ form_row(registrationForm.phone_number) }}
@@ -28,12 +29,17 @@
 			{{ form_row(registrationForm.birth_date) }}
 			{{ form_row(registrationForm.plainPassword) }}
 		</div>
+		{{ form_row(registrationForm.agreeTerms) }}
 	</div>
 
-	{{ form_row(registrationForm.agreeTerms) }}
 
 	<div class="text-center">
-		<button type="submit" class="btn btn-success">S'inscrire</button>
+		<button type='submit' class='load-btn btn btn-success' data-loading-text='Inscription...'>
+			<i class='bi bi-send-fill'></i>
+			<span class='spinner-border spinner-border-sm ms-2 d-none' role='status' aria-hidden='true'></span>
+			<span class='btn-text'>S'inscrire</span>
+		</button>
+		{# <button type="submit" class="btn btn-success">S'inscrire</button> #}
 	</div>
 
 	<div class="form-text text-center mt-2">
