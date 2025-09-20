@@ -64,6 +64,12 @@ class Carpooling
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'carpooling', cascade: ['persist'])]
     private Collection $participations;
 
+    #[ORM\Column(length: 255)]
+    private ?string $startAdress = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $endAdress = null;
+
     public function __construct()
     {
         $this->participations = new ArrayCollection();
@@ -213,6 +219,29 @@ class Carpooling
 
         return $this;
     }
+    public function getStartAdress(): ?string
+    {
+        return $this->startAdress;
+    }
+
+    public function setStartAdress(string $startAdress): static
+    {
+        $this->startAdress = $startAdress;
+
+        return $this;
+    }
+
+    public function getEndAdress(): ?string
+    {
+        return $this->endAdress;
+    }
+
+    public function setEndAdress(string $endAdress): static
+    {
+        $this->endAdress = $endAdress;
+
+        return $this;
+    }
     // Fonctions supports
 
     /**
@@ -241,10 +270,15 @@ class Carpooling
      */
     public function isLaunchable(): bool
     {
-        $firstlimit = $this->getStartDate()->modify('-2 hours');
+        $firstlimit = $this->getStartDate()->modify('-30 minutes');
         $secondLimit = $this->getStartDate()->modify('+2 hours');
 
         $now = new DateTimeImmutable();
         return $now >= $firstlimit && $now <= $secondLimit;
+    }
+
+    public function checkUser(User $user): bool
+    {
+        return $user === $this->created_by;
     }
 }

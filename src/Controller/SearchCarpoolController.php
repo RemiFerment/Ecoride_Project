@@ -2,21 +2,17 @@
 
 namespace App\Controller;
 
+use DateTimeImmutable;
 use App\Entity\Carpooling;
-use App\Entity\Participation;
-use App\Entity\User;
 use App\Form\SearchCarpoolType;
 use App\Repository\CarpoolingRepository;
 use App\Repository\ParticipationRepository;
 use App\Services\GeolocationService;
-use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class SearchCarpoolController extends AbstractController
 {
@@ -75,6 +71,4 @@ final class SearchCarpoolController extends AbstractController
             'isParticipate' => $isParticipate
         ]);
     }
-
-   
 }

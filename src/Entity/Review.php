@@ -18,7 +18,7 @@ class Review
     private ?string $comment = null;
 
     #[ORM\Column]
-    private ?int $role_id = null;
+    private ?string $role_id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
@@ -40,12 +40,12 @@ class Review
         return $this;
     }
 
-    public function getRoleId(): ?int
+    public function getRoleId(): ?string
     {
         return $this->role_id;
     }
 
-    public function setRoleId(int $role_id): static
+    public function setRoleId(string $role_id): static
     {
         $this->role_id = $role_id;
 
