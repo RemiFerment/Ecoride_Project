@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['email'], message: 'Il y a déjà un compte associé à cette adresse mail.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -76,9 +77,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'user', cascade: ['persist'])]
     private Collection $participations;
 
+    /**
+     * @var Collection<int, UserReview>
+     */
+    #[ORM\OneToMany(targetEntity: UserReview::class, mappedBy: 'user')]
+    private Collection $userReviews;
+
     public function __construct()
     {
         $this->participations = new ArrayCollection();
+        $this->userReviews = new ArrayCollection();
     }
 
 
@@ -331,6 +339,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserReview>
+     */
+    public function getUserReviews(): Collection
+    {
+        return $this->userReviews;
+    }
+
+    public function addUserReview(UserReview $userReview): static
+    {
+        if (!$this->userReviews->contains($userReview)) {
+            $this->userReviews->add($userReview);
+            $userReview->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserReview(UserReview $userReview): static
+    {
+        if ($this->userReviews->removeElement($userReview)) {
+            // set the owning side to null (unless already changed)
+            if ($userReview->getUser() === $this) {
+                $userReview->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function updateGrade(int $grade): static
+    {
+        $actualGrade = $this->grade;
+        $this->grade === null ? $this->grade = $grade : $this->grade = ($actualGrade + $grade) / 2;
         return $this;
     }
 }

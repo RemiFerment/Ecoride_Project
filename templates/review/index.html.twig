@@ -1,0 +1,44 @@
+{% set photoBase64 = driverUser.photo |to_base64 %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Écoride - Avis
+{% endblock %}
+
+{% block body %}
+	<div class="oxanium mt-5 ecoride-container rounded p-5 container justify-content-center ">
+		<h3 class="text-center viga-regular">Notez votre trajet
+			{{carpooling.getStartPlace}}
+			>
+			{{carpooling.getEndPlace}}
+			:</h3>
+		<hr>
+		{{ form_start(form) }}
+		{{ form_row(form.comment) }}
+		<hr>
+		<h5>Notez la prestation de votre chauffeur</h5>
+		<div class="d-flex gap-5 justify-content-center">
+			<div class="d-flex flex-column align-items-center text-center">
+				{% if photoBase64 is not null %}
+					<img src="data:image/png;base64,{{ photoBase64|e }}" class="profile-img" alt="Photo de profil de {{ driverUser.username }}">
+				{% else %}
+					<img src="{{ asset('import/blank-profile.png') }}" class="profile-img" alt="Photo de profil par défaut">
+				{% endif %}
+				<span class="fs-5 fw-bold">{{ driverUser.username }}</span>
+			</div>
+
+			<div class="d-flex flex-column align-items-center text-center">
+				<span class="fs-5 fw-bold">{{ driverUser.firstname }}
+					{{ driverUser.lastname }}</span>
+				<span class="fs-5 mt-3">Note :</span>
+				<span>{{ driverUser.grade ?? '--' }}
+					/ 5</span>
+			</div>
+			{{ form_row(form.grade) }}
+		</div>
+		<button type='submit' class='load-btn btn btn-success' data-loading-text='Envoi en cours...'>
+			<span class='spinner-border spinner-border-sm ms-2 d-none' role='status' aria-hidden='true'></span>
+			<span class='btn-text'>Envoyer</span>
+		</button>
+		{{ form_end(form) }}
+	</div>
+{% endblock %}

@@ -18,16 +18,22 @@ class CarpoolType extends AbstractType
                 'label' => 'Jour de départ'
             ],)
             ->add('start_place', options: [
-                'label' => 'Lieu de départ'
+                'label' => 'Ville de départ'
             ])
             ->add('end_place', options: [
-                'label' => 'Destination'
+                'label' => 'Ville d\'arrivé'
             ])
             ->add('available_seat', options: [
                 'label' => 'Nombre de siège'
             ])
             ->add('price_per_person', options: [
                 'label' => 'Prix de la place (en Écopièce)'
+            ])
+            ->add('startAdress', options: [
+                'label' => 'Adresse de départ'
+            ])
+            ->add('endAdress', options: [
+                'label' => 'Adresse d\'arrivée'
             ])
             ->add('save', SubmitType::class, [
                 'label' => "Créer le trajet",

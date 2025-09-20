@@ -15,36 +15,39 @@
 	<hr>
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="current-carpool-tab" data-bs-toggle="tab" data-bs-target="#current-carpool-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">En cours</button>
+			<button class="nav-link active" id="online-carpool-tab" data-bs-toggle="tab" data-bs-target="#online-carpool-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">En ligne</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link active" id="soon-carpool-tab" data-bs-toggle="tab" data-bs-target="#soon-carpool-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">A venir</button>
+			<button class="nav-link" id="ongoing-carpool-tab" data-bs-toggle="tab" data-bs-target="#ongoing-carpool-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">En route</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="previous-carpool-tab" data-bs-toggle="tab" data-bs-target="#previous-carpool-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Passé</button>
+			<button class="nav-link" id="done-carpool-tab" data-bs-toggle="tab" data-bs-target="#done-carpool-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Terminé</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="missed-carpool-tab" data-bs-toggle="tab" data-bs-target="#missed-carpool-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Non validé</button>
 		</li>
 	</ul>
 
 
 	<div class="tab-content" id="myTabContent">
-		<div class="tab-pane fade" id="current-carpool-tab-pane" role="tabpanel" aria-labelledby="current-carpool-tab" tabindex="0">
+		<div class="tab-pane fade show active" id="online-carpool-tab-pane" role="tabpanel" aria-labelledby="online-carpool-tab" tabindex="0">
 			<div class="d-flex justify-content-center gap-2 my-4 flex-wrap">
-				{% if currentCarpools is empty %}
-					<h5>Aucun trajet de prévu pour aujourd'hui.</h5>
+				{% if onlineCarpools is empty %}
+					<h5>Aucun trajet n'est en ligne.</h5>
 				{% else %}
-					{% for carpool in currentCarpools %}
+					{% for carpool in onlineCarpools %}
 						{% set current = true %}
 						{% include "partials/card.carpool.html.twig" %}
 					{% endfor %}
 				{% endif %}
 			</div>
 		</div>
-		<div class="tab-pane fade show active" id="soon-carpool-tab-pane" role="tabpanel" aria-labelledby="soon-carpool-tab" tabindex="0">
+		<div class="tab-pane fade" id="ongoing-carpool-tab-pane" role="tabpanel" aria-labelledby="ongoing-carpool-tab" tabindex="0">
 			<div class="d-flex justify-content-center gap-2 my-4 flex-wrap">
-				{% if soonCarpools is empty %}
-					<h5>Aucun trajet de prévu à l'avenir.</h5>
+				{% if inProgressCarpools is empty %}
+					<h5>Aucun trajet n'est en cours.</h5>
 				{% else %}
-					{% for carpool in soonCarpools %}
+					{% for carpool in inProgressCarpools %}
 						{% set soon = true %}
 						{% include "partials/card.carpool.html.twig" %}
 					{% endfor %}
@@ -53,12 +56,24 @@
 			</div>
 
 		</div>
-		<div class="tab-pane fade" id="previous-carpool-tab-pane" role="tabpanel" aria-labelledby="previous-carpool-tab" tabindex="0">
+		<div class="tab-pane fade" id="done-carpool-tab-pane" role="tabpanel" aria-labelledby="done-carpool-tab" tabindex="0">
 			<div class="d-flex justify-content-center gap-2 my-4 flex-wrap">
-				{% if previousCarpools is empty %}
-					<h5>Il n'y a pas de trajet à afficher</h5>
+				{% if doneCarpools is empty %}
+					<h5>Aucun trajet n'est terminé</h5>
 				{% else %}
-					{% for carpool in previousCarpools %}
+					{% for carpool in doneCarpools %}
+						{% set previous = true %}
+						{% include "partials/card.carpool.html.twig" %}
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+		<div class="tab-pane fade" id="missed-carpool-tab-pane" role="tabpanel" aria-labelledby="missed-carpool-tab" tabindex="0">
+			<div class="d-flex justify-content-center gap-2 my-4 flex-wrap">
+				{% if missCarpools is empty %}
+					<h5>Aucun trajet n'a été manqué</h5>
+				{% else %}
+					{% for carpool in missCarpools %}
 						{% set previous = true %}
 						{% include "partials/card.carpool.html.twig" %}
 					{% endfor %}

@@ -1,0 +1,21 @@
+<h1 style="color:green;">VOTRE TRAJET EST TERMINÉ !</h1>
+<hr>
+<p>Bonjour
+	{{contributor.username}},
+</p>
+<p>L'utilisateur
+	{{user.username}}
+	a indiqué que le trajet
+	{{carpooling.startplace}}
+	>
+	{{carpooling.endplace}}
+	prévu ce
+	{{carpooling.startdate | date('d/m/Y')}}
+	à
+	{{carpooling.startdate | date('H\\hi')}}
+	est terminé. Veuillez cliquer sur le lien pour noter et donner votre avis sur ce trajet :
+</p>
+<a href="{{absolute_url(path('app_review',{'user_id':contributor.id, 'carpool_id':carpooling.id}))}}">Noter votre course</a>
+<p></p>
+<hr>
+<p>Bonne journée à vous, l'équipe ÉCORIDE.</p>

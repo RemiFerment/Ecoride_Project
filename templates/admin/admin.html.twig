@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Écoride - Dashboard
+{% endblock %}
+
+{% block body %}
+	<h1 class="viga-regular">Tableau de bord</h1>
+	<div class="w-100 ecoride-container rounded d-flex justify-content-center">
+		<div class="m-2 d-flex gap-2">
+			<div class="card">
+				<div class="card-header">
+					Total des covoiturages proposés
+				</div>
+				<div class="card-body">
+					<h5 class="card-title text-end">{{ allCarpoolStat }}</h5>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					Total des écopièces générées
+				</div>
+				<div class="card-body">
+					<h5 class="card-title text-end">{{ allEcopieceStat }}</h5>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					Total des comptes créés
+				</div>
+				<div class="card-body">
+					<h5 class="card-title text-end">{{ allAccountStat }}</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
