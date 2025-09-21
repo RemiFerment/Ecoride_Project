@@ -44,7 +44,7 @@ class CarManagerController extends AbstractController
     #[Route('/car/add', name: 'app_car_add')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
-    public function createCar(Request $request, CarManagerService $carManager, User $user): ?Response
+    public function createCar(Request $request, CarManagerService $carManager): ?Response
     {
 
         /** @var User $user  */
