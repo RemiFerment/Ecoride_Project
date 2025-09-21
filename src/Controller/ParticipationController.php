@@ -37,6 +37,13 @@ final class ParticipationController extends AbstractController
             );
             return $this->redirectToRoute('app_carpool_index');
         }
+        if ($user === $carpool->getCreatedBy()) {
+            $this->addFlash(
+                'danger',
+                "Vous ne pouvez pas participé à votre propre covoiturage"
+            );
+            return $this->redirectToRoute('app_search_carpool');
+        }
         if ($carpool->getPricePerPerson() > $user->getEcopiece()) {
             $this->addFlash(
                 'danger',
@@ -48,13 +55,6 @@ final class ParticipationController extends AbstractController
             $this->addFlash(
                 'danger',
                 "Vous participez déjà à ce covoiturage."
-            );
-            return $this->redirectToRoute('app_search_carpool');
-        }
-        if ($user === $carpool->getCreatedBy()) {
-            $this->addFlash(
-                'danger',
-                "Vous ne pouvez pas participé à votre propre covoiturage"
             );
             return $this->redirectToRoute('app_search_carpool');
         }
