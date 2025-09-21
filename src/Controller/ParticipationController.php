@@ -18,7 +18,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class ParticipationController extends AbstractController
 {
     #[Route('/carpool/{id}/participate', name: 'app_carpool_participate', requirements: ['id' => '\d+'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY', 'ROLE_PASSAGER', 'ROLE_ADMIN')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_PASSAGER')]
+    #[IsGranted('ROLE_ADMIN')]
     public function participateToCarpool(int $id, CarpoolingRepository $carpoolingRep, ParticipationRepository $participationRep, ParticipationManagerService $participationManager)
     {
         /** @var User $user */
