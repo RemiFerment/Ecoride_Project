@@ -6,3 +6,8 @@
 # /.env.test
 .gitignore
 db-data
+.git
+node_modules
+var
+vendor
+docker-compose.yaml

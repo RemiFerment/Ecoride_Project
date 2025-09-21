@@ -23,6 +23,11 @@
         <env name="MONGODB_URI" value="mongodb://localhost:27017"/>
         <env name="MONGODB_DB" value="symfony"/>
         <!-- ###- doctrine/mongodb-odm-bundle ### -->
+
+        <!-- ###+ mailgun/mailgun-php ### -->
+        <!-- Get your API key form https://app.mailgun.com/app/domains -->
+        <env name="MAILGUN_API_KEY" value="replace_me"/>
+        <!-- ###- mailgun/mailgun-php ### -->
     </php>
 
     <testsuites>
