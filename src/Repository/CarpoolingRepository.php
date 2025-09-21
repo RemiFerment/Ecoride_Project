@@ -97,10 +97,11 @@ class CarpoolingRepository extends ServiceEntityRepository
             ->andWhere('c.end_place = :endPlace')
             ->andWhere('c.start_date > :date')
             ->andWhere('c.available_seat > 0')
-            ->andWhere('c.statut = ONLINE')
+            ->andWhere('c.statut = :statut')
             ->setParameter('startPlace', $startPlace)
             ->setParameter('endPlace', $endPlace)
-            ->setParameter('date', $date);
+            ->setParameter('date', $date)
+            ->setParameter('statut', 'ONLINE');
         if ($user !== null) {
             $qb->andWhere('c.created_by != :user')
                 ->setParameter('user', $user);
