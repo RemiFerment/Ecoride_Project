@@ -68,8 +68,6 @@ class RegistrationController extends AbstractController
 
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
 
-            print_r($token);
-
             //Envoyer l'email.
             $mail->send(
                 'no-reply@ecoride-project.test',
