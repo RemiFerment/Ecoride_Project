@@ -44,12 +44,12 @@ final class ParticipationController extends AbstractController
             );
             return $this->redirectToRoute('app_search_carpool');
         }
-        if ($carpool->getPricePerPerson() > $user->getEcopiece()) {
+        if ($carpool->getStatut() !== 'ONLINE') {
             $this->addFlash(
                 'danger',
-                "Vous n'avez pas assez d\'écopièces ! (Écopièces nécessaire : " . $carpool->getPricePerPerson() . ".)"
+                "Ce trajet n'est plus disponible"
             );
-            return $this->redirectToRoute('app_search_carpool_detail', ['id' => $id]);
+            return $this->redirectToRoute('app_search_carpool');
         }
         if ($participationRep->findOneBy(['user' => $user, 'carpooling' => $carpool]) !== null) {
             $this->addFlash(
@@ -58,12 +58,12 @@ final class ParticipationController extends AbstractController
             );
             return $this->redirectToRoute('app_search_carpool');
         }
-        if ($carpool->getStatut() !== 'ONLINE') {
+        if ($carpool->getPricePerPerson() > $user->getEcopiece()) {
             $this->addFlash(
                 'danger',
-                "Ce trajet n'est plus disponible"
+                "Vous n'avez pas assez d\'écopièces ! (Écopièces nécessaire : " . $carpool->getPricePerPerson() . ".)"
             );
-            return $this->redirectToRoute('app_search_carpool');
+            return $this->redirectToRoute('app_search_carpool_detail', ['id' => $id]);
         }
 
         $participationManager->FinalizeParticipation($user, $carpool);
