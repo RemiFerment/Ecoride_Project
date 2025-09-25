@@ -20,7 +20,6 @@ final class ParticipationController extends AbstractController
     #[Route('/carpool/{id}/participate', name: 'app_carpool_participate', requirements: ['id' => '\d+'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_PASSAGER')]
-    #[IsGranted('ROLE_ADMIN')]
     public function participateToCarpool(int $id, CarpoolingRepository $carpoolingRep, ParticipationRepository $participationRep, ParticipationManagerService $participationManager)
     {
         /** @var User $user */
@@ -78,7 +77,7 @@ final class ParticipationController extends AbstractController
     }
 
     #[Route('joinedcarpool/cancel/{id}', name: 'app_joinedcarpool_cancel_user', requirements: ['id' => '\d+'])]
-    #[IsGranted(['IS_AUTHENTICATED_FULLY', 'ROLE_DRIVER', 'ROLE_ADMIN'])]
+    #[IsGranted(['IS_AUTHENTICATED_FULLY', 'ROLE_DRIVER'])]
     public function cancelParticipationCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, ParticipationManagerService $participationManager): Response
     {
         /** @var User $user */
@@ -129,7 +128,7 @@ final class ParticipationController extends AbstractController
     }
 
     #[Route('mycarpool/{carpool_id}/kickuser/{user_id}', name: 'app_mycarpool_kick_user', requirements: ['carpool_id' => '\d+', 'user_id' => '\d+'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY', 'ROLE_DRIVER', 'ROLE_ADMIN')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY', 'ROLE_DRIVER')]
     public function kickUserFromCarpool(int $carpool_id, int $user_id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, UserRepository $userRep, ParticipationManagerService $participationManager)
     {
 
