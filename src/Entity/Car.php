@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CarRepository;
-use App\Validator\CityCheck;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,9 +25,6 @@ class Car
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $first_date_registration = null;
-
-    // #[ORM\Column]
-    // private ?int $marque_id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $color = null;
