@@ -1,5 +1,0 @@
-- https://symfony.com/doc/7.4/security/access_denied_handler.html#security-entry-point
-- https://symfony.com/doc/7.4/security.html#security-make-registration-form
-https://trello.com/b/nw7Pv6vR/ecf
-
-Récupérer
