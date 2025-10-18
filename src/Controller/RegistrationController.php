@@ -88,7 +88,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route("/verif/{token}", name: "verify_user")]
+    #[Route("/verif/{token}", name: "verify_user", methods: ['GET'])]
     public function verifUser(
         string $token,
         JWTService $jwt,

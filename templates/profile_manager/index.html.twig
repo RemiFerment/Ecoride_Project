@@ -26,17 +26,19 @@
 								{% endif %}
 							</div>
 							<div class="col-lg-10">
-								{{ form_start(form) }}
+								{{ form_start(form,{'method':'POST'}) }}
 								<div class="d-flex justify-content-evenly">
 									<div>
 										{{ form_row(form.photo) }}
 									</div>
 									<div>
+
 										<button type="submit" class="load-btn btn btn-success mb-3">
 											<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true" data-loading-text="Ajout..."></span>
 											<span class="btn-text">{{photoBase64 == null ? "Ajouter une" : "Modifier la"}}
 												photo</span>
 										</button>
+										{{ form_end(form) }}
 										<form action="{{ path(name = 'app_delete_profile_picture', parameters = {user_id: user.id} ) }}" class="load-btn btn btn-danger {{photoBase64 == null ? " disabled" : " "}}" method="post">
 											<input type="hidden" name="_method" value="DELETE">
 											<button type="submit" role="button" {{photoBase64 == null ? "aria-disabled='true'" : ""}} data-loading-text="Supression...">
@@ -49,7 +51,6 @@
 
 								</div>
 							</div>
-							{{ form_end(form) }}
 
 						</div>
 					</td>
