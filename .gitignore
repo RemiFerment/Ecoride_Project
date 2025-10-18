@@ -22,6 +22,6 @@
 /db-data/
 /data/
 /miscellaneous/
-.env
+/.env
 
 /Dockerfile
