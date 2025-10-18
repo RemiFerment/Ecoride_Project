@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ReviewController extends AbstractController
 {
-    #[Route('/review/{user_id}/add/{carpool_id}', name: 'app_review')]
+    #[Route('/review/{user_id}/add/{carpool_id}', name: 'app_review', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_PASSAGER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function addReview(
@@ -76,5 +76,4 @@ final class ReviewController extends AbstractController
             'carpooling' => $carpooling
         ]);
     }
-    
 }
