@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Requirement\Requirement;
 
 final class SearchCarpoolController extends AbstractController
 {
-    #[Route('/search/carpool', name: 'app_search_carpool')]
+    #[Route('/search/carpool', name: 'app_search_carpool', methods: ['GET', 'POST'])]
     public function index(Request $request, CarpoolingRepository $carpoolingRep, GeolocationService $gs): Response
     {
         $user = $this->getUser() ?? null;
@@ -51,7 +51,7 @@ final class SearchCarpoolController extends AbstractController
         );
     }
 
-    #[Route('/search/carpool/{id}/detail', name: 'app_search_carpool_detail', requirements: ['id' => Requirement::DIGITS])]
+    #[Route('/search/carpool/{id}/detail', name: 'app_search_carpool_detail', requirements: ['id' => Requirement::DIGITS], methods: ['GET'])]
     public function detailCarpool(CarpoolingRepository $carpoolingRep, int $id, Carpooling $carpool, ParticipationRepository $participationRep): Response
     {
         $user = $this->getUser();
