@@ -10,7 +10,8 @@ class SendEmailService
     public function __construct(private MailerInterface $mailer) {}
     public function send(string $from, string $to, string $subject, string $template, array $content): void
     {
-        $email = new TemplatedEmail()->from($from)
+        $email = new TemplatedEmail();
+        $email->from($from)
             ->to($to)
             ->subject($subject)
             ->htmlTemplate("emails/$template.html.twig")
