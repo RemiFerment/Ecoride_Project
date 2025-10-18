@@ -4,9 +4,11 @@ framework:
     trusted_proxies: '%env(TRUSTED_PROXIES)%'
     trusted_hosts: '%env(TRUSTED_HOSTS)%'
     http_method_override: true
+    csrf_protection: true
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session: 
+      cookie_lifetime: 0 # expires when browser closes
 
     #esi: true
     #fragments: true
