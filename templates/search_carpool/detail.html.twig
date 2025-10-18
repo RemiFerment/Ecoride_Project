@@ -18,10 +18,12 @@
 			<div class="row p-3 justify-content-center">
 				<div class="col-auto">
 					{% if not isParticipate %}
-						<a class="btn btn-success" href=" {{path('app_carpool_participate', {id:carpool.id})}} ">
-							<i class="bi bi-send-plus"></i>
-							Participer au covoiturage
-						</a>
+						<form action="{{path('app_carpool_participate', {id:carpool.id})}}" method="post">
+							<button class="btn btn-success" type="submit">
+								<i class="bi bi-send-plus"></i>
+								Participer au covoiturage
+							</button>
+						</form>
 					{% else %}
 						<a class="btn btn-success disabled">
 							<i class="bi bi-send-plus"></i>

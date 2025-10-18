@@ -22,7 +22,9 @@
 	</div>
 	{% if carpool.statut == 'ONLINE' and carpool.isCancelable %}
 		<div class="col">
-			<a href=" {{path('app_mycarpool_kick_user',{'carpool_id':carpool.id,'user_id':participation.user.id})}} " class="btn btn-danger">Expulser</a>
+			<form action="{{path('app_mycarpool_kick_user',{'carpool_id':carpool.id,'user_id':participation.user.id})}}" method="post">
+				<button class="btn btn-danger" type="submit">Expulser</button>
+			</form>
 		</div>
 	{% endif %}
 </div>

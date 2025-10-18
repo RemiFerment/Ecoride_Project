@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ParticipationController extends AbstractController
 {
-    #[Route('/carpool/{id}/participate', name: 'app_carpool_participate', requirements: ['id' => '\d+'])]
+    #[Route('/carpool/{id}/participate', name: 'app_carpool_participate', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_PASSAGER')]
     public function participateToCarpool(int $id, CarpoolingRepository $carpoolingRep, ParticipationRepository $participationRep, ParticipationManagerService $participationManager)
@@ -76,7 +76,7 @@ final class ParticipationController extends AbstractController
         return $this->redirectToRoute('app_carpool_index');
     }
 
-    #[Route('joinedcarpool/cancel/{id}', name: 'app_joinedcarpool_cancel_user', requirements: ['id' => '\d+'])]
+    #[Route('joinedcarpool/cancel/{id}', name: 'app_joinedcarpool_cancel_user', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted(['IS_AUTHENTICATED_FULLY', 'ROLE_DRIVER'])]
     public function cancelParticipationCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, ParticipationManagerService $participationManager): Response
     {
@@ -127,7 +127,7 @@ final class ParticipationController extends AbstractController
         return $this->redirectToRoute('app_carpool_index');
     }
 
-    #[Route('mycarpool/{carpool_id}/kickuser/{user_id}', name: 'app_mycarpool_kick_user', requirements: ['carpool_id' => '\d+', 'user_id' => '\d+'])]
+    #[Route('mycarpool/{carpool_id}/kickuser/{user_id}', name: 'app_mycarpool_kick_user', requirements: ['carpool_id' => '\d+', 'user_id' => '\d+'], methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY', 'ROLE_DRIVER')]
     public function kickUserFromCarpool(int $carpool_id, int $user_id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, UserRepository $userRep, ParticipationManagerService $participationManager)
     {
