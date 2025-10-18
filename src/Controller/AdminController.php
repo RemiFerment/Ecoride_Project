@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class AdminController extends AbstractController
 {
-    #[Route('/dashboard', name: 'app_admin_dashboard')]
+    #[Route('/dashboard', name: 'app_admin_dashboard', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function dashboard(GlobalStatService $globalStat): Response
     {

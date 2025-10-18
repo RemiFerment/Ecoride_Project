@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CarManagerController extends AbstractController
 {
 
-    #[Route('/car', name: 'app_car_index')]
+    #[Route('/car', name: 'app_car_index', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
     public function index(CarRepository $carRepository)
@@ -41,7 +41,7 @@ class CarManagerController extends AbstractController
         ]);
     }
 
-    #[Route('/car/add', name: 'app_car_add')]
+    #[Route('/car/add', name: 'app_car_add', methods: ['GET', 'POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
     public function createCar(Request $request, CarManagerService $carManager): ?Response
@@ -76,7 +76,7 @@ class CarManagerController extends AbstractController
         ]);
     }
 
-    #[Route('/car/set/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_setDefault")]
+    #[Route('/car/set/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_setDefault", methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
     public function setUsedCar(int $id, CarManagerService $carManager, CarRepository $carRep): Response
@@ -95,7 +95,7 @@ class CarManagerController extends AbstractController
         return $this->redirectToRoute('app_car_index');
     }
 
-    #[Route('/car/delete/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_delete")]
+    #[Route('/car/delete/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_delete", methods: ['DELETE'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[IsGranted('ROLE_DRIVER')]
     public function deleteCar(CarManagerService $carManager, CarRepository $carRep, CarpoolingRepository $carpoolingRepository, int $id): Response
