@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProfileManagerController extends AbstractController
 {
-    #[Route('/profile/manager', name: 'app_profile_manager')]
+    #[Route('/profile/manager', name: 'app_profile_manager', methods: ['GET', 'POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(EntityManagerInterface $em, Request $request): Response
     {
@@ -60,7 +60,7 @@ final class ProfileManagerController extends AbstractController
         ]);
     }
 
-    #[Route("/profile/manager/{user_id}/delete_photo", name: "app_delete_profile_picture", requirements: ['user_id' => '\d+'])]
+    #[Route("/profile/manager/{user_id}/delete_photo", name: "app_delete_profile_picture", requirements: ['user_id' => '\d+'], methods: ['DELETE'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function deleteProfilePhoto(EntityManagerInterface $em, int $user_id)
     {

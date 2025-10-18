@@ -37,11 +37,13 @@
 											<span class="btn-text">{{photoBase64 == null ? "Ajouter une" : "Modifier la"}}
 												photo</span>
 										</button>
-
-										<a href="{{ path(name = 'app_delete_profile_picture', parameters = {user_id: user.id} ) }}" class="load-btn btn btn-danger {{photoBase64 == null ? " disabled" : " "}} mb-3" role="button" {{photoBase64 == null ? "aria-disabled='true'" : ""}} data-loading-text="Supression...">
-											<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
-											<span class="btn-text">Supprimer</span>
-										</a>
+										<form action="{{ path(name = 'app_delete_profile_picture', parameters = {user_id: user.id} ) }}" class="load-btn btn btn-danger {{photoBase64 == null ? " disabled" : " "}}" method="post">
+											<input type="hidden" name="_method" value="DELETE">
+											<button type="submit" role="button" {{photoBase64 == null ? "aria-disabled='true'" : ""}} data-loading-text="Supression...">
+												<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+												<span class="btn-text">Supprimer</span>
+											</button>
+										</form>
 									</div>
 
 
