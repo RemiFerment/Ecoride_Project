@@ -9,7 +9,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class WalletController extends AbstractController
 {
-    #[Route('/wallet', name: 'app_wallet')]
+    #[Route('/wallet', name: 'app_wallet', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(): Response
     {
@@ -19,13 +19,13 @@ final class WalletController extends AbstractController
         ]);
     }
 
-    #[Route('/wallet/addfund', name: 'app_wallet_addfund')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function addFund()
-    {
-        $user = $this->getUser();
-        return $this->render('wallet/addfun.html.twig', [
-            'user' => $user
-        ]);
-    }
+    // #[Route('/wallet/addfund', name: 'app_wallet_addfund')]
+    // #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    // public function addFund()
+    // {
+    //     $user = $this->getUser();
+    //     return $this->render('wallet/addfun.html.twig', [
+    //         'user' => $user
+    //     ]);
+    // }
 }
