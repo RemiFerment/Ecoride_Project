@@ -150,10 +150,10 @@ VALUES
 
 INSERT INTO review (id, comment, role, status)
 VALUES
-(1, 'Great trip, very punctual driver!', 'passenger', 'APPROVED'),
-(2, 'Nice passenger, good vibes.', 'driver', 'APPROVED'),
-(3, 'Clean car and smooth ride.', 'passenger', 'APPROVED'),
-(4, 'A bit late but overall fine.', 'driver', 'TO_BE_CHECKED');
+(1, 'Super voyage! De très bonne conversation merci encore!', 'ROLE_PASSENGER', 'APPROVED'),
+(2, 'Une bonne ambiance!', 'ROLE_PASSENGER', 'APPROVED'),
+(3, 'Voiture propre. Conduite impaccable', 'ROLE_PASSENGER', 'APPROVED'),
+(4, 'Un peu en retard mais ça va!', 'ROLE_PASSENGER', 'TO_BE_CHECKED');
 
 
 INSERT INTO user_review (id, user_id, review_id, affected_user_id, carpooling_id)
