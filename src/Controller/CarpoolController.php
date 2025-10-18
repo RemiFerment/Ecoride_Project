@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CarpoolController extends AbstractController
 {
-    #[Route('/carpool', name: 'app_carpool_index')]
+    #[Route('/carpool', name: 'app_carpool_index', methods: ['GET'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(CarpoolingRepository $carpoolRep, ParticipationRepository $participation): Response
@@ -49,7 +49,7 @@ class CarpoolController extends AbstractController
 
 
 
-    #[Route('/carpool/create', name: 'app_carpool_create')]
+    #[Route('/carpool/create', name: 'app_carpool_create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function createCarpool(Request $request, CarpoolManagerService $carpool_manager): Response
@@ -82,7 +82,7 @@ class CarpoolController extends AbstractController
         ]);
     }
 
-    #[Route('/carpool/delete/{id}', name: 'app_carpool_delete', requirements: ['id' => '\d+'])]
+    #[Route('/carpool/delete/{id}', name: 'app_carpool_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function deleteCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, CarpoolManagerService $carpoolManager): Response
@@ -112,7 +112,7 @@ class CarpoolController extends AbstractController
         return $this->redirectToRoute('app_carpool_index');
     }
 
-    #[Route('/mycarpool/details/{id}', name: 'app_carpool_details', requirements: ['id' => '\d+'])]
+    #[Route('/mycarpool/details/{id}', name: 'app_carpool_details', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function detailsMyCarpool(
@@ -135,7 +135,7 @@ class CarpoolController extends AbstractController
         ]);
     }
 
-    #[Route('/mycarpool/launch/{id}', name: 'app_carpool_launch', requirements: ['id' => '\d+'])]
+    #[Route('/mycarpool/launch/{id}', name: 'app_carpool_launch', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function launchCarpool(int $id, CarpoolingRepository $carpoolRep, CarpoolManagerService $carpoolManager): Response
@@ -177,7 +177,7 @@ class CarpoolController extends AbstractController
         return $this->redirectToRoute('app_carpool_details', ['id' => $id]);
     }
 
-    #[Route('/mycarpool/finalize/{id}', name: 'app_carpool_finalize', requirements: ['id' => '\d+'])]
+    #[Route('/mycarpool/finalize/{id}', name: 'app_carpool_finalize', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('ROLE_DRIVER')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function finalizeCarpool(int $id, CarpoolingRepository $carpoolRep, CarpoolManagerService $carpoolManager, ParticipationManagerService $participationManager, ParticipationRepository $participationRep): Response

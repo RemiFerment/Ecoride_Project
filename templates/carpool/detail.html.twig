@@ -19,19 +19,24 @@
 			<div class="row p-3 justify-content-center">
 				<div class="col-auto">
 					{% if carpool.statut == 'ONLINE' and carpool.isLaunchable %}
-						<a class="load-btn btn btn-primary" href="{{ path('app_carpool_launch', {id: carpool.id}) }}" data-loading-text="Démarrage...">
-							<i class="bi bi-play-fill"></i>
-							<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
-							<span class="btn-text">Démarrer le covoiturage</span>
-						</a>
+						<form action="{{ path('app_carpool_launch', {id: carpool.id}) }}" method="POST">
+							<button class="load-btn btn btn-primary" data-loading-text="Démarrage..." type="submit">
+								<i class="bi bi-play-fill"></i>
+								<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+								<span class="btn-text">Démarrer le covoiturage</span>
+							</button>
+						</form>
+
 
 					{% endif %}
 					{% if carpool.statut == 'IN_PROGRESS' %}
-						<a class='load-btn btn btn-success' href='{{path('app_carpool_finalize', {id:carpool.id})}}' data-loading-text='Chargement...'>
-							<span class='spinner-border spinner-border-sm ms-2 d-none' role='status' aria-hidden='true'></span>
-							<i class="bi bi-house-check"></i>
-							<span class='btn-text'>Finaliser le covoiturage</span>
-						</a>
+						<form action="{{path('app_carpool_finalize', {id:carpool.id})}}" method="post">
+							<button class='load-btn btn btn-success' href='' data-loading-text='Chargement...' type="submit">
+								<span class='spinner-border spinner-border-sm ms-2 d-none' role='status' aria-hidden='true'></span>
+								<i class="bi bi-house-check"></i>
+								<span class='btn-text'>Finaliser le covoiturage</span>
+							</button>
+						</form>
 					{% endif %}
 					{% if carpool.statut == 'DONE' %}
 						<a class="btn btn-success disabled">
