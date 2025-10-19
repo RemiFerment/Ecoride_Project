@@ -49,7 +49,7 @@
 						<td>{{car.color}}</td>
 						<td>
 							<div>
-								<a href="" class="btn btn-primary">Modifier</a>
+								<a href="{{ path(name = 'app_car_edit', parameters = {id: car.id} ) }}" class="btn btn-primary">Modifier</a>
 								<a href="{{ path(name = 'app_car_setDefault', parameters = {id: car.id} ) }} " class="btn btn-success {{user.currentCar != null and  user.currentCar.id == car.id ? " d-none" : " " }}">Utiliser</a>
 								<form action="{{ path(name = 'app_car_delete', parameters = {id: car.id} ) }}" method="POST">
 									<input type="hidden" name="_method" value="DELETE">

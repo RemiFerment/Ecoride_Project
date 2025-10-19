@@ -72,6 +72,7 @@ class CarManagerController extends AbstractController
 
         return $this->render('car/add.html.twig', [
             'user' => $user ?? null,
+            'edit' => false,
             'form' => $form->createView()
         ]);
     }
@@ -135,5 +136,43 @@ class CarManagerController extends AbstractController
         );
 
         return $this->redirectToRoute('app_car_index');
+    }
+
+    #[Route('/car/edit/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_edit", methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_DRIVER')]
+    public function editCar(Request $request, CarManagerService $carManager, CarRepository $carRep, int $id): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        /** @var Car $car */
+        $car = $carRep->find($id);
+
+        if ($user->getId() !== $car->getUserId()) {
+            $this->addFlash(
+                'danger',
+                'Vous ne pouvez pas modifier cette voiture, vérifier le lien.'
+            );
+            return $this->redirectToRoute('app_car_index');
+        }
+
+        $form = $this->createForm(CarType::class, $car, options: ['edit' => true]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Car $car */
+            $car = $form->getData();
+
+            $carManager->FinalizeCreate($user, $car, edit: true);
+
+            $this->addFlash('success', 'Votre voiture à bien été modifiée !');
+            return $this->redirectToRoute('app_car_index');
+        }
+
+        return $this->render('car/add.html.twig', [
+            'user' => $user ?? null,
+            'edit' => true,
+            'form' => $form->createView()
+        ]);
     }
 }
