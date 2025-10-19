@@ -20,9 +20,6 @@ class CarType extends AbstractType
             ->add('model', options: [
                 'label' => 'Modèle : ',
             ])
-            ->add('registration', options: [
-                'label' => 'Numéro d\'immatriculation : '
-            ])
             ->add('power_engine', ChoiceType::class, options: [
                 'label' => 'Type de moteur : ',
                 'choices' => [
@@ -69,6 +66,16 @@ class CarType extends AbstractType
                 'attr' => ["class" => "btn btn-success"]
             ],)
         ;
+        if (!$options['edit']) {
+            $builder->add('registration', options: [
+                'label' => 'Numéro d\'immatriculation : '
+            ]);
+        } else {
+            $builder->add('registration', options: [
+                'label' => 'Numéro d\'immatriculation : ',
+                'disabled' => true,
+            ]);
+        }
     }
 
 
@@ -76,6 +83,7 @@ class CarType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Car::class,
+            'edit' => false,
         ]);
     }
 }

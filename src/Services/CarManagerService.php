@@ -10,13 +10,13 @@ final class CarManagerService
 {
     public function __construct(private EntityManagerInterface $em) {}
 
-    public function FinalizeCreate(User $user, Car $car): static
+    public function FinalizeCreate(User $user, Car $car, bool $edit = false): static
     {
-        $car->setUserId($user->getId());
-        $user->setCurrentCar($car);
+        if (!$edit) {
+            $car->setUserId($user->getId());
+            $user->setCurrentCar($car);
+        }
 
-        $this->em->persist($car);
-        $this->em->persist($user);
         $this->em->flush();
         return $this;
     }
