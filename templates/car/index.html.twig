@@ -1,65 +1,21 @@
 {% extends 'base.html.twig' %}
-{% set isCar = cars is not empty %}
 {% block title %}Écoride - Mes voitures
 {% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between oxanium mt-5 p-lg-5">
-	<div>
-		<h1>Mes voitures :</h1>
+	<div class="d-flex justify-content-between oxanium mt-5 p-lg-5">
+		<div>
+			<h1>Mes voitures :</h1>
+		</div>
+		<div>
+			<form action="{{path(name:'app_car_add')}}" method="post">
+				<button type="submit" class="btn btn-success">Ajouter une nouvelle voiture</button>
+			</form>
+		</div>
 	</div>
-	<div>
-		<a class="btn btn-success" href="{{path(name:'app_car_add')}}">Ajouter une nouvelle voiture</a>
+	<div class="d-flex justify-content-center gap-2">
+		{% for car in cars %}
+			{% include 'partials/car/card.car.html.twig' %}
+		{% endfor %}
 	</div>
-</div>
-<div>
-	{% if isCar %}
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col">Marque et model</th>
-					<th scope="col">Énergie</th>
-					<th scope="col">Plaque d'immatriculation</th>
-					<th scope="col">Première date d'immatriculation</th>
-					<th scope="col">Couleur</th>
-					<th scope="col">Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for car in cars %}
-					<tr class="{{user.currentCar != null and user.currentCar.id == car.id ? "table-success" : "" }} align-middle">
-						<td>
-							{% if user.currentCar != null and user.currentCar.id == car.id %}
-								<i class="bi bi-car-front-fill" data-bs-toggle="tooltip" data-bs-placement="top" title="Voiture principal"></i>
-							{% endif %}
-							{{car.marque.name}}
-							{{car.model}}
-						</td>
-						<td>{{car.powerEngine}}</td>
-						<td>
-							<div class="plaque">
-								<div class="plaque-side"></div>
-								<div class="plaque-number">
-									{{car.registration}}
-								</div>
-								<div class="plaque-side"></div>
-							</div>
-						</td>
-						<td>{{car.firstDateRegistration|date("d/m/Y")}}</td>
-						<td>{{car.color}}</td>
-						<td>
-							<div>
-								<a href="{{ path(name = 'app_car_edit', parameters = {id: car.id} ) }}" class="btn btn-primary">Modifier</a>
-								<a href="{{ path(name = 'app_car_setDefault', parameters = {id: car.id} ) }} " class="btn btn-success {{user.currentCar != null and  user.currentCar.id == car.id ? " d-none" : " " }}">Utiliser</a>
-								<form action="{{ path(name = 'app_car_delete', parameters = {id: car.id} ) }}" method="POST">
-									<input type="hidden" name="_method" value="DELETE">
-									<button type="submit" class="btn btn-danger">Supprimer</button>
-								</form>
-							</td>
-						</td>
-					</tr>
-				</div>
-			</tbody>
-		</tr>
-	{% endfor %}
-</tbody></table>{% endif %}</div>{% endblock %}
+{% endblock %}

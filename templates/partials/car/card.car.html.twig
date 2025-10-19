@@ -1,0 +1,61 @@
+<div class="card ecoride-container px-3 pb-3" style="width-min: 23rem;">
+	<div class="card-body text-center">
+		<h5 class="card-title">
+			{% if user.currentCar != null and user.currentCar.id == car.id %}
+				<i class="bi bi-car-front-fill" data-bs-toggle="tooltip" data-bs-placement="top" title="Voiture principal"></i>
+			{% endif %}
+			{{car.marque.name}}
+			{{car.model}}
+		</h5>
+		<hr>
+	</div>
+
+	<ul class="list-group list-group-flush rounded">
+		<li class="list-group-item d-flex justify-content-between">
+			<span>
+				<i class="bi bi-fuel-pump"></i>
+				Énergie :</span>
+			<span>{{car.powerEngine}}</span>
+		</li>
+
+		<li class="list-group-item d-flex justify-content-between">
+			<span>
+				<i class="bi bi-card-text"></i>
+				Immatriculation :</span>
+			<span class="plaque">
+				<div class="plaque-side"></div>
+				<div class="plaque-number">{{car.registration}}</div>
+				<div class="plaque-side"></div>
+			</span>
+		</li>
+
+		<li class="list-group-item d-flex justify-content-between">
+			<span>
+				<i class="bi bi-calendar"></i>
+				Date d'immatriculation :</span>
+			<span>{{car.firstDateRegistration|date("d/m/Y")}}</span>
+		</li>
+
+		<li class="list-group-item d-flex justify-content-between">
+			<span>
+				<i class="bi bi-palette"></i>
+				Couleur :</span>
+			<span>{{car.color}}</span>
+		</li>
+	</ul>
+
+	<div class="card-body d-flex justify-content-between">
+
+		<form action="{{ path(name = 'app_car_edit', parameters = {id: car.id} ) }}" method="post">
+			<button type="submit" class="btn btn-primary">Modifier</button>
+		</form>
+
+		<form action="{{ path(name = 'app_car_setDefault', parameters = {id: car.id} ) }}" method="post">
+			<button type="submit" class="btn btn-success {{user.currentCar != null and user.currentCar.id == car.id ? " d-none" : " "}}">Utiliser</button>
+		</form>
+		<form action="{{ path(name = 'app_car_delete', parameters = {id: car.id} ) }}" method="POST" class="d-inline">
+			<input type="hidden" name="_method" value="DELETE">
+			<button type="submit" class="btn btn-danger">Supprimer</button>
+		</form>
+	</div>
+</div>
