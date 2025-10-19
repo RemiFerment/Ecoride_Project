@@ -31,9 +31,10 @@ final class CarManagerService
 
     public function FinalizeDelation(User $user, Car $car): static
     {
-        $this->em->remove($car);
-
+        $car->setUserId(null);
         $user->setCurrentCar(null);
+
+        $this->em->persist($car);
         $this->em->persist($user);
         $this->em->flush();
         return $this;

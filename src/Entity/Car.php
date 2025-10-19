@@ -32,7 +32,7 @@ class Car
     #[ORM\ManyToOne(targetEntity: Marque::class)]
     private ?Marque $marque = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $user_id = null;
 
     public function getId(): ?int
@@ -128,7 +128,7 @@ class Car
         return $this->user_id;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUserId(?int $user_id): static
     {
         $this->user_id = $user_id;
 
