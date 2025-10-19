@@ -114,14 +114,6 @@ class CarManagerController extends AbstractController
             return $this->redirectToRoute('app_car_index');
         }
 
-        if ($carpoolingRepository->findCarpoolByUserAndCar($car, $user)) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas supprimer cette voiture car elle est utilisé pour effectuer un covoiturage.'
-            );
-            return $this->redirectToRoute('app_car_index');
-        }
-
         $carManager->FinalizeDelation($user, $car);
 
         $allUserCar = $carRep->findAllByUserId($user->getId());
