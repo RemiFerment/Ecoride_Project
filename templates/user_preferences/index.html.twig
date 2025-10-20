@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Préférences -
+	{{ app.user.username }}
+{% endblock %}
+
+{% block body %}
+	<div class="card ecoride-container my-5 p-3 p-lg-5 rounded shadow-sm mx-auto d-table" style="width: fit-content;">
+		{{ form_start(form, {
+            method: 'POST',
+            attr: { 
+                class: 'oxanium'
+            }
+        }) }}
+
+		<div class="card-body p-0">
+			<h2 class="h4 oxanium viga-regular mb-3">Mes préférences :</h2>
+			<div class="position-relative">
+				<ul class="list-group">
+					<li class="list-group-item">
+						<small class="text-muted">{{ form.noSmoking.vars.label }}</small>
+						<div>{{ form_widget(form.noSmoking) }}</div>
+					</li>
+					<li class="list-group-item">
+						<small class="text-muted">{{ form.noAnimals.vars.label }}</small>
+						<div>{{ form_widget(form.noAnimals) }}</div>
+					</li>
+					<li class="list-group-item">
+						<small class="text-muted">{{ form.noMusic.vars.label }}</small>
+						<div>{{ form_widget(form.noMusic) }}</div>
+					</li>
+					<li class="list-group-item">
+						<small class="text-muted">{{ form.talkative.vars.label }}</small>
+						<div>{{ form_widget(form.talkative) }}</div>
+					</li>
+				</ul>
+			</div>
+
+			<div class="text-center mt-4">
+				<button type='submit' class='load-btn btn btn-success' data-loading-text='Enregistrement...'>
+					<span class='spinner-border spinner-border-sm ms-2 d-none' role='status' aria-hidden='true'></span>
+					<span class='btn-text'>Enregistrer</span>
+				</button>
+			</div>
+		</div>
+		{{ form_end(form) }}
+	</div>
+{% endblock %}

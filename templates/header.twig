@@ -1,4 +1,5 @@
 {# Définition d'une variable qui vérifie la présence d'un User. #}
+{% set user = app.user %}
 {% set isConnected = user is defined and user is not null %}
 <div class="blank"></div>
 <header class="navbar-ecoride fixed-top text-color-primary">
