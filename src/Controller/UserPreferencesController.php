@@ -11,10 +11,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class UserPreferencesController extends AbstractController
 {
     #[Route('/user/preferences', name: 'app_user_preferences')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_DRIVER')]
     public function preferenceSettings(Request $request, DocumentManager $documentManager): Response
     {
         /** @var User */
@@ -39,7 +42,7 @@ final class UserPreferencesController extends AbstractController
             $documentManager->flush();
 
             $this->addFlash('success', 'Vos préférences ont été enregistrées avec succès.');
-            return $this->redirectToRoute('app_user_preferences');
+            return $this->redirectToRoute('app_profile_manager');
         }
 
         return $this->render('user_preferences/index.html.twig', [
