@@ -5,132 +5,114 @@
 {% endblock %}
 
 {% block body %}
-	<div class="oxanium my-5 ecoride-container p-lg-5 justify-content-center rounded">
-		<h1 class="my-3 text-center viga-regular">Mon profil :
-		</h1>
+	<div class="card ecoride-container my-5 p-3 p-lg-5 rounded shadow-sm mx-auto d-table" style="width: fit-content;">
 
-		<table class="table justify-content-center d-inline-flex">
-			<tbody class="rounded shadow-sm">
-				<tr>
-					<th class="col align-middle">
-						<span>Photo de profil :</span>
-					</th>
-					<td class="col-auto align-middle">
+		<div
+			class="d-flex flex-column flex-lg-row align-items-start gap-4">
+			{# Photo section #}
+			<div class="d-flex flex-column justify-content-center align-items-center text-center position-relative mx-auto">
+				<div class="m-3 d-flex justify-content-center">
+					{% if photoBase64 is not null %}
+						<img src="data:image/webp;base64,{{ photoBase64|e }}" class="profile-img" alt="Image de profil">
+					{% else %}
+						<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut" class="profile-img">
+					{% endif %}
+				</div>
+				{# pen button #}
+				<div class="position-absolute top-0 start-0">
+					{{ form_start(form, {
+						'method':'POST',
+						'attr': {
+							'enctype':'multipart/form-data',
+							'class':'d-none',
+							'id':'photoForm'
+							}
+						}) }}
+					{{ form_row(form.photo, {
+						'attr': {
+							'onchange': 'document.getElementById("photoForm").submit();'
+							}
+						}) }}
+					{{ form_end(form) }}
+					<label for="{{ form.photo.vars.id }}" class="btn btn-link text-primary p-0" style="cursor: pointer;">
+						<i class="bi bi-pen-fill fs-4"></i>
+					</label>
+				</div>
 
-						<div class="row row-cols-2 my-2 align-items-center">
-							<div class="col-lg-2">
-								{% if photoBase64 is not null %}
-									<img src="data:image/webp;base64,{{ photoBase64|e }}" class="profile-img" alt="Image de profil">
-								{% else %}
-									<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut" class="profile-img">
-								{% endif %}
-							</div>
-							<div class="col-lg-10">
-								{{ form_start(form,{'method':'POST'}) }}
-								<div class="d-flex justify-content-evenly">
-									<div>
-										{{ form_row(form.photo) }}
-									</div>
-									<div>
-
-										<button type="submit" class="load-btn btn btn-success mb-3">
-											<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true" data-loading-text="Ajout..."></span>
-											<span class="btn-text">{{photoBase64 == null ? "Ajouter une" : "Modifier la"}}
-												photo</span>
-										</button>
-										{{ form_end(form) }}
-										<form action="{{ path(name = 'app_delete_profile_picture', parameters = {user_id: user.id} ) }}" class="load-btn btn btn-danger {{photoBase64 == null ? " disabled" : " "}}" method="post">
-											<input type="hidden" name="_method" value="DELETE">
-											<button type="submit" role="button" {{photoBase64 == null ? "aria-disabled='true'" : ""}} data-loading-text="Supression...">
-												<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
-												<span class="btn-text">Supprimer</span>
-											</button>
-										</form>
-									</div>
+				{# trash button #}
+				<div class="position-absolute top-0 end-0">
+					{% if photoBase64 is not null %}
+						<form action="{{ path('app_delete_profile_picture', {user_id: user.id}) }}" method="post" class="d-inline">
+							<input type="hidden" name="_method" value="DELETE">
+							<button type="submit" class="btn btn-link text-danger p-0">
+								<i class="bi bi-trash-fill fs-4"></i>
+							</button>
+						</form>
+					{% else %}
+						<button type="submit" class="btn btn-link text-danger p-0 disabled" disabled>
+							<i class="bi bi-trash-fill fs-4"></i>
+						</button>
+					{% endif %}
+				</div>
 
 
+			</div>
+			{# Detail section #}
+			<div class="flex-grow-1 w-100">
+				<div class="card-body p-0">
+					<h2 class="h4 oxanium viga-regular mb-3">Mon profil :</h2>
+					<div class="position-relative">
+						<form action="{{ path(name = 'app_profile_edit', parameters = {user_id: user.id})}}" method="post">
+							<button type="submit" class="position-absolute btn btn-link text-primary top-0 end-0 z-3">
+								<i class="bi bi-pen-fill fs-4"></i>
+							</button>
+						</form>
+						<ul class="list-group">
+
+							<li class="list-group-item">
+								<small class="text-muted">Nom d'utilisateur</small>
+								<div>{{ user.username }}</div>
+							</li>
+							<li class="list-group-item">
+								<small class="text-muted">Nom de famille</small>
+								<div>{{ user.firstname }}</div>
+							</li>
+							<li class="list-group-item">
+								<small class="text-muted">Prénom</small>
+								<div>{{ user.lastname }}</div>
+							</li>
+							<li class="list-group-item">
+								<small class="text-muted">Numéro de téléphone</small>
+								<div>{{ user.phonenumber }}</div>
+							</li>
+							<li class="list-group-item">
+								<small class="text-muted">Adresse postale</small>
+								<div>{{ user.postaladress }}</div>
+							</li>
+							<li class="list-group-item">
+								<small class="text-muted">Date de naissance</small>
+								<div>{{ user.birthdate | date('d / m / Y') }}</div>
+							</li>
+							<li class="list-group-item">
+								<small class="text-muted">Type de profil</small>
+								<div>
+									{% set labels = {
+									'ROLE_PASSAGER': 'Passager',
+									'ROLE_DRIVER': 'Chauffeur',
+									'ROLE_ADMIN': 'Administrateur',
+									'ROLE_USER': 'Utilisateur'
+								} %}
+									{% for role in user.roles %}
+										{{ labels[role]|default('') }}
+										{% if not loop.last %},
+										{% endif %}
+									{% endfor %}
 								</div>
-							</div>
-
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-
-		<table class="table justify-content-center rounded d-inline-flex">
-			<tbody class="rounded shadow-sm">
-				<tr>
-					<th class="col-lg-5">Nom d'utilisateur :
-					</th>
-					<td class="col-auto">
-						{{user.username}}
-					</td>
-				</tr>
-				<tr>
-					<th class="col">Nom de famille :
-					</th>
-					<td class="col">
-						{{user.firstname}}
-					</td>
-				</tr>
-				<tr>
-					<th class="col">Prénom :
-					</th>
-					<td>
-						{{user.lastname}}
-					</td>
-
-				</tr>
-				<tr>
-					<th class="col">Numéro de téléphone :
-					</th>
-					<td>
-						{{user.phonenumber}}
-					</td>
-
-				</tr>
-				<tr>
-					<th class="col">Adresse postale :
-					</th>
-					<td>
-						{{user.postaladress}}
-					</td>
-
-				</tr>
-				<tr>
-					<th class="col">Date de naissance :
-					</th>
-					<td>
-						{{user.birthdate | date('d / m / Y')}}
-					</td>
-
-				</tr>
-				<tr>
-					<th class="col">Type de profil :
-					</th>
-					<td>
-						{% set labels = {
-    					'ROLE_PASSAGER': 'Passager',
-						'ROLE_DRIVER': 'Chauffeur',
-						'ROLE_USER': ''
-						} %}
-
-						{% for role in user.roles %}
-							{{ labels[role]|default('') }}
-						{% endfor %}
-
-					</td>
-
-				</tr>
-				<tr>
-					<th></th>
-					<td>
-						<a href="" class="btn btn-primary">Modifier</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 {% endblock %}

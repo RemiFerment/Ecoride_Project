@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ProfilePictureType;
+use App\Form\ProfileType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,5 +82,55 @@ final class ProfileManagerController extends AbstractController
             'La photo a bien été supprimé !'
         );
         return $this->redirectToRoute('app_profile_manager');
+    }
+
+    #[Route("/profile/edit/{user_id}", name: "app_profile_edit", requirements: ['user_id' => '\d+'], methods: ['PUT', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function editProfile(Request $request, EntityManagerInterface $em, int $user_id): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($user_id !== $user->getId()) {
+            $this->addFlash(
+                'danger',
+                'Le lien que vous avez sélectionné ne vous est pas destiné, vérifiez le lien.'
+            );
+            return $this->redirectToRoute('app_profile_manager');
+        }
+
+        $form = $this->createForm(ProfileType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $selectedRole = $form->get('roles')->getData();
+            // remove any existing passenger/driver roles first
+            if ($selectedRole !== null) {
+                $roles = $user->getRoles();
+                $roles = array_values(array_diff($roles, ['ROLE_PASSAGER', 'ROLE_DRIVER']));
+                $user->setRoles($roles);
+
+                // append the selected role(s) using addRole()
+                if ($selectedRole === 'twice') {
+                    $user->addRole('ROLE_PASSAGER');
+                    $user->addRole('ROLE_DRIVER');
+                } else {
+                    $user->addRole($selectedRole);
+                }
+            }
+
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre profil a bien été mis à jour !'
+            );
+            return $this->redirectToRoute('app_profile_manager');
+        }
+
+        return $this->render('profile_manager/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
     }
 }
