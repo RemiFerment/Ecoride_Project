@@ -36,7 +36,6 @@ class CarManagerController extends AbstractController
         // dd($carArray);
         //Affiche la liste des covoiturages prévu et déjà effectué.
         return $this->render('car/index.html.twig', [
-            'user' => $user ?? null,
             'cars' => $carArray ?? null
         ]);
     }
