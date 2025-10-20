@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le profil
+{% endblock %}
+
+{% block body %}
+	{{ form_start(form, {
+        action: path('app_profile_edit', {'user_id': user.id}),
+        method: 'POST',
+        attr: { class: 'oxanium mt-5 ecoride-container rounded p-5 container justify-content-center' }
+    }) }}
+
+	<h3 class="text-center viga-regular">Modifier le profil</h3>
+	<hr>
+
+	<div class="row px-5 mt-5 mb-3">
+		<div class="col px-2">
+			{{ form_row(form.first_name) }}
+			{{ form_row(form.last_name) }}
+			{{ form_row(form.email) }}
+			{{ form_row(form.username) }}
+			{{ form_row(form.roles) }}
+		</div>
+		<div class="col px-2">
+			{{ form_row(form.phone_number) }}
+			{{ form_row(form.postal_adress) }}
+			{{ form_row(form.birth_date) }}
+		</div>
+	</div>
+
+	<div class="text-center">
+		<button type="submit" class="load-btn btn btn-success" data-loading-text="Enregistrement...">
+			<i class="bi bi-save-fill"></i>
+			<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+			<span class="btn-text">Enregistrer</span>
+		</button>
+	</div>
+
+	<div class="form-text text-center mt-2">
+		<a href="{{ path('app_profile_manager') }}" class="ecoride-link">Retour</a>
+	</div>
+
+	{{ form_end(form) }}
+{% endblock %}
