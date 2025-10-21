@@ -4,25 +4,24 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class SearchCarpoolType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('startPlace', options: [
+            ->add('startPlace', TextType::class, options: [
                 'label' => false,
                 'attr' => [
                     'class' => 'text-center',
                     'placeholder' => 'Départ',
                 ]
             ])
-            ->add('endPlace', options: [
+            ->add('endPlace', TextType::class, options: [
                 'label' => false,
                 'attr' => [
                     'class' => 'text-center',
@@ -32,6 +31,18 @@ class SearchCarpoolType extends AbstractType
             ->add('startDateTime', DateTimeType::class, options: [
                 'widget' => 'single_text',
                 'label' => false,
+                'data' => new \DateTimeImmutable('now'),
+                'html5' => true,
+                'attr' => [
+                    'min' => (new \DateTimeImmutable('now'))->format('Y-m-d\TH:i'),
+                    'class' => 'text-center',
+                ],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 'today',
+                        'message' => 'La date doit être postérieure à aujourd\'hui.',
+                    ]),
+                ],
             ])
         ;
     }
