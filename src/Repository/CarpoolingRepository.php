@@ -91,8 +91,12 @@ class CarpoolingRepository extends ServiceEntityRepository
         string $endPlace,
         DateTimeImmutable $date,
         ?User $user,
+        ?int $maxPrice = null,
+        ?int $minGrade = null
     ): array {
         $qb = $this->createQueryBuilder('c')
+            //Filter using startPlace, endPlace, date and available seats
+            ->innerJoin('c.created_by', 'u')
             ->andWhere('c.start_place = :startPlace')
             ->andWhere('c.end_place = :endPlace')
             ->andWhere('c.start_date > :date')
@@ -102,10 +106,25 @@ class CarpoolingRepository extends ServiceEntityRepository
             ->setParameter('endPlace', $endPlace)
             ->setParameter('date', $date)
             ->setParameter('statut', 'ONLINE');
+
+        //Exclude carpools created by the user
         if ($user !== null) {
             $qb->andWhere('c.created_by != :user')
                 ->setParameter('user', $user);
         }
+        //Filter using maximum price if not null
+        if ($maxPrice !== null) {
+            $qb->andWhere('c.price_per_seat <= :maxPrice')
+                ->setParameter('maxPrice', $maxPrice);
+        }
+
+        //Filter using minimum grade for user if not null
+        if ($minGrade !== null) {
+            $qb->andWhere('u.grade >= :minGrade')
+                ->setParameter('minGrade', $minGrade);
+        }
+
+
         return $qb->setMaxResults(10)
             ->getQuery()
             ->getResult();
