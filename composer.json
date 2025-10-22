@@ -12,7 +12,7 @@
         "doctrine/dbal": "^3.10.2",
         "doctrine/doctrine-bundle": "^2.16.2",
         "doctrine/doctrine-migrations-bundle": "^3.4.2",
-        "doctrine/mongodb-odm-bundle": "^5.4.1",
+        "doctrine/mongodb-odm-bundle": "^5.4",
         "doctrine/orm": "^3.5.2",
         "mailgun/mailgun-php": "^4.3.5",
         "mongodb/mongodb": "^2.1.1",
@@ -104,6 +104,7 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
         "phpunit/phpunit": "^12.3.11",
         "symfony/browser-kit": "7.3.*",
         "symfony/css-selector": "7.3.*",

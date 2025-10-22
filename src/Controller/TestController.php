@@ -2,28 +2,18 @@
 
 namespace App\Controller;
 
-use App\Repository\CarRepository;
-use DateTime;
-use App\Services\GeolocationService;
-use App\Services\GlobalStatService;
+use App\Document\UserPreferences;
+use App\Services\MongoFilterService;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Routing\Annotation\Route;
 
 final class TestController extends AbstractController
 {
     #[Route('/test', name: 'app_test')]
-    #[IsGranted('ROLE_ADMIN')]
-    public function index(CarRepository $carRepository): Response
+    public function index(MongoFilterService $test)
     {
-        //get all cars from a user_id 
-        /** @var User $user */
-        $user = $this->getUser();
-        $cars = $carRepository->findBy(['user_id' => $user->getId()]);
-        return $this->render('test/index.html.twig', [
-            'user' => $user ?? null,
-            'cars' => $cars,
-        ]);
+        $test->getUserPreferences(3);
     }
 }
