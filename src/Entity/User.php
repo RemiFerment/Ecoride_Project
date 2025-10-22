@@ -167,6 +167,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function hasRole(string $role): bool
+    {
+        $role = strtoupper($role);
+        if (strpos($role, 'ROLE_') !== 0) {
+            $role = 'ROLE_' . $role;
+        }
+        return in_array($role, $this->roles, true);
+    }
+
     /**
      * @see PasswordAuthenticatedUserInterface
      */

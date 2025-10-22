@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\CarType;
 use App\Repository\CarpoolingRepository;
 use App\Repository\CarRepository;
+use App\Security\Voter\CarVoter;
 use App\Services\CarManagerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,19 +20,11 @@ class CarManagerController extends AbstractController
 {
 
     #[Route('/car', name: 'app_car_index', methods: ['GET'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted(CarVoter::READ)]
     public function index(CarRepository $carRepository)
     {
         /** @var User $user */
         $user = $this->getUser();
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
-            );
-            return $this->redirectToRoute('home');
-        }
         $carArray = $carRepository->findAllByUserId($user->getId());
         // dd($carArray);
         //Affiche la liste des covoiturages prévu et déjà effectué.
@@ -41,20 +34,12 @@ class CarManagerController extends AbstractController
     }
 
     #[Route('/car/add', name: 'app_car_add', methods: ['GET', 'POST'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted(CarVoter::CREATE)]
     public function createCar(Request $request, CarManagerService $carManager): ?Response
     {
 
         /** @var User $user  */
         $user = $this->getUser();
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté.'
-            );
-            return $this->redirectToRoute('home');
-        }
         $car = new Car();
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
@@ -70,15 +55,13 @@ class CarManagerController extends AbstractController
         }
 
         return $this->render('car/add.html.twig', [
-            'user' => $user ?? null,
             'edit' => false,
             'form' => $form->createView()
         ]);
     }
 
     #[Route('/car/set/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_setDefault", methods: ['POST'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[IsGranted('ROLE_DRIVER')]
+    #[IsGranted(CarVoter::UPDATE, subject: 'car')]
     public function setUsedCar(int $id, CarManagerService $carManager, CarRepository $carRep): Response
     {
         /** @var User $user */
@@ -96,22 +79,11 @@ class CarManagerController extends AbstractController
     }
 
     #[Route('/car/delete/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_delete", methods: ['DELETE'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[IsGranted('ROLE_DRIVER')]
-    public function deleteCar(CarManagerService $carManager, CarRepository $carRep, CarpoolingRepository $carpoolingRepository, int $id): Response
+    #[IsGranted(CarVoter::DELETE, subject: 'car')]
+    public function deleteCar(Car $car, CarManagerService $carManager, CarRepository $carRep, CarpoolingRepository $carpoolingRepository, int $id): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        /** @var Car $car */
-        $car = $carRep->find($id);
-
-        if ($user->getId() !== $car->getUserId()) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas supprimer cette voiture, vérifier le lien.'
-            );
-            return $this->redirectToRoute('app_car_index');
-        }
 
         $carManager->FinalizeDelation($user, $car);
 
@@ -130,22 +102,13 @@ class CarManagerController extends AbstractController
     }
 
     #[Route('/car/edit/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_edit", methods: ['GET', 'POST'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[IsGranted('ROLE_DRIVER')]
-    public function editCar(Request $request, CarManagerService $carManager, CarRepository $carRep, int $id): Response
+    #[IsGranted(CarVoter::UPDATE, subject: 'car')]
+    public function editCar(Car $car, Request $request, CarManagerService $carManager, CarRepository $carRep, int $id): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         /** @var Car $car */
         $car = $carRep->find($id);
-
-        if ($user->getId() !== $car->getUserId()) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas modifier cette voiture, vérifier le lien.'
-            );
-            return $this->redirectToRoute('app_car_index');
-        }
 
         $form = $this->createForm(CarType::class, $car, options: ['edit' => true]);
         $form->handleRequest($request);
