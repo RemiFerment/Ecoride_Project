@@ -3,10 +3,16 @@
 namespace App\Form;
 
 use App\Entity\User;
+use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Choice as ChoiceConstraint;
+use Symfony\Component\Validator\Constraints\LessThan;
 
 class ProfileType extends AbstractType
 {
@@ -20,7 +26,7 @@ class ProfileType extends AbstractType
                     'pattern' => '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$',
                 ],
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Email([
+                    new Email([
                         'message' => 'L\'adresse e-mail "{{ value }}" n\'est pas valide.',
                     ]),
                 ],
@@ -33,7 +39,7 @@ class ProfileType extends AbstractType
                     'maxlength' => 50,
                 ],
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Length([
+                    new Length([
                         'min' => 2,
                         'max' => 50,
                         'minMessage' => 'Le prénom doit contenir au moins {{ limit }} caractères.',
@@ -49,7 +55,7 @@ class ProfileType extends AbstractType
                     'maxlength' => 50,
                 ],
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Length([
+                    new Length([
                         'min' => 2,
                         'max' => 50,
                         'minMessage' => 'Le nom doit contenir au moins {{ limit }} caractères.',
@@ -64,7 +70,7 @@ class ProfileType extends AbstractType
                     'pattern' => '^(0|\+33)[1-9]( *[0-9]{2}){4}$',
                 ],
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Regex([
+                    new Regex([
                         'pattern' => '/^(0|\+33)[1-9]( *[0-9]{2}){4}$/',
                         'message' => 'Le numéro de téléphone "{{ value }}" n\'est pas valide.',
                     ]),
@@ -78,7 +84,7 @@ class ProfileType extends AbstractType
                     'maxlength' => 100,
                 ],
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Length([
+                    new Length([
                         'min' => 5,
                         'max' => 100,
                         'minMessage' => 'L\'adresse postale doit contenir au moins {{ limit }} caractères.',
@@ -90,7 +96,13 @@ class ProfileType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Date de naissance',
                 'attr' => [
-                    'max' => (new \DateTime())->format('Y-m-d'),
+                    'max' => (new DateTime())->format('Y-m-d'),
+                ],
+                'constraints' => [
+                    new LessThan([
+                        'value' => (new DateTime())->format('Y-m-d'),
+                        'message' => 'La date de naissance doit être dans le passé.',
+                    ]),
                 ],
             ])
             ->add('username', null, [
@@ -101,7 +113,7 @@ class ProfileType extends AbstractType
                     'maxlength' => 50,
                 ],
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Length([
+                    new Length([
                         'min' => 3,
                         'max' => 50,
                         'minMessage' => 'Le nom d\'utilisateur doit contenir au moins {{ limit }} caractères.',
@@ -120,7 +132,7 @@ class ProfileType extends AbstractType
                 'label' => 'Choisir son profil',
                 'required' => false,
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Choice([
+                    new ChoiceConstraint([
                         'choices' => ['ROLE_PASSAGER', 'ROLE_DRIVER', 'twice'],
                         'message' => 'Veuillez choisir un type de profil valide.',
                     ]),
