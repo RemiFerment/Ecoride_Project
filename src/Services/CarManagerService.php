@@ -16,6 +16,8 @@ final class CarManagerService
             $car->setUserId($user->getId());
             $user->setCurrentCar($car);
         }
+        $this->em->persist($car);
+        $this->em->persist($user);
 
         $this->em->flush();
         return $this;

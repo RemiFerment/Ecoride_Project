@@ -96,7 +96,9 @@
 								{% else %}
 									<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut" class="profile-img">
 								{% endif %}
-								<div class="fs-5">{{ review.user.username }}</div>
+								<div class="fs-5">
+									<a href="{{ path('app_driver_details',{id: review.user.id}) }}" class="ecoride-link">{{ review.user.username }}</a>
+								</div>
 							</div>
 							<div class="col bg-secondary p-3 text-white text-start bubble">
 								{{ review.review.comment }}

@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+{% set photoBase64 = driver.photo|to_base64 %}
+
+{% block title %}Détails du conducteur
+{% endblock %}
+
+{% block body %}
+	<div class="container my-4">
+		<div class="card">
+			<div class="card-header">
+				<h1 class="mb-0">Profil du conducteur</h1>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-3 text-center mb-4">
+						{% if photoBase64 %}
+							<img src="data:image/jpeg;base64,{{ photoBase64 }}" alt="Photo de profil" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+						{% else %}
+							<img src="{{ asset('import/blank-profile.png') }}" alt="Photo par défaut" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+						{% endif %}
+					</div>
+					<div class="col-md-4">
+						<h3>Informations personnelles</h3>
+						<table class="table">
+							<tr>
+								<th>Nom</th>
+								<td>{{ driver.firstName }}</td>
+							</tr>
+							<tr>
+								<th>Prénom</th>
+								<td>{{ driver.lastName }}</td>
+							</tr>
+							<tr>
+								<th>Pseudonyme</th>
+								<td>{{ driver.username }}</td>
+							</tr>
+							<tr>
+								<th>Note</th>
+								<td>
+									<i class="bi bi-star-fill"></i>
+									{{ driver.grade }}/5</td>
+							</tr>
+						</table>
+					</div>
+
+					<div class="col-md-5">
+						<h3>Préférences</h3>
+						{% if preference %}
+							<table class="table">
+								<tr>
+									<th>Fumeur</th>
+									<td>{{ preference.isNoSmoking ? 'Non' : 'Oui' }}</td>
+								</tr>
+								<tr>
+									<th>Animaux acceptés</th>
+									<td>{{ preference.isNoAnimals ? 'Non' : 'Oui' }}</td>
+								</tr>
+								<tr>
+									<th>Musique</th>
+									<td>{{ preference.isNoMusic ? 'Non' : 'Oui' }}</td>
+								</tr>
+								<tr>
+									<th>Discussion</th>
+									<td>{{ preference.isTalkative ? 'Non' : 'Oui' }}</td>
+								</tr>
+							</table>
+						{% else %}
+							<p>Aucune préférence enregistrée</p>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="mt-4">
+					<a href="{{ app.request.headers.get('referer')|default(path('home')) }}" class="btn btn-secondary">Retour</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

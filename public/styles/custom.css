@@ -60,7 +60,7 @@ a {
 
 .contain-effect {
   border-radius: 30% 50% 30% 0%;
-  background: linear-gradient(326deg, rgb(190, 235, 216) 0%, rgb(153, 233, 153) 26%, rgb(201, 232, 109) 100%);
+  background: linear-gradient(326deg, #beebd8 0%, #99e999 26%, #c9e86d 100%);
   transition: ease 150ms;
 }
 
@@ -132,7 +132,7 @@ a {
 .navbar-ecoride {
   background: linear-gradient(326deg, rgb(190, 235, 216) 0%, rgb(153, 233, 153) 26%, rgb(201, 232, 109) 100%);
   border-radius: 0% 0% 20% 20%;
-  border: whitesmoke solid 5px;
+  border: whitesmoke solid 5px 0px 0px 0px;
   transition: ease 500ms;
 }
 
