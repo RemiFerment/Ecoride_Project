@@ -15,7 +15,16 @@ class CarpoolType extends AbstractType
         $builder
             ->add('start_date', null, [
                 'widget' => 'single_text',
-                'label' => 'Jour de départ'
+                'label' => 'Jour de départ',
+                'attr' => [
+                    'min' => (new \DateTime())->format('Y-m-d'),
+                ],
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\GreaterThanOrEqual([
+                        'value' => (new \DateTime())->format('Y-m-d'),
+                        'message' => 'La date de départ doit être aujourd\'hui ou une date future.',
+                    ]),
+                ],
             ],)
             ->add('start_place', options: [
                 'label' => 'Ville de départ'
@@ -24,10 +33,30 @@ class CarpoolType extends AbstractType
                 'label' => 'Ville d\'arrivé'
             ])
             ->add('available_seat', options: [
-                'label' => 'Nombre de siège'
+                'label' => 'Nombre de siège',
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\Range([
+                        'min' => 1,
+                        'max' => 8,
+                        'notInRangeMessage' => 'Le nombre de siège doit être entre {{ min }} et {{ max }}.',
+                    ]),
+                ],
+                'attr' => [
+                    'min' => 1,
+                    'max' => 8,
+                ],
             ])
             ->add('price_per_person', options: [
-                'label' => 'Prix de la place (en Écopièce)'
+                'label' => 'Prix de la place (en Écopièce)',
+                'attr' => [
+                    'min' => 0,
+                ],
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => 'Le prix doit être supérieur ou égal à {{ compared_value }}.',
+                    ]),
+                ],
             ])
             ->add('startAdress', options: [
                 'label' => 'Adresse de départ'
