@@ -12,7 +12,11 @@
 					{% else %}
 						<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut" class="profile-img">
 					{% endif %}
-					<div class="">{{user.username}}</div>
+					<div class="">
+						<a href="{{ path('app_driver_details', {id: user.id}) }}" class="fs-5 fw-bold ecoride-link">
+							{{user.username}}
+						</a>
+					</div>
 					<div class="">Note :
 						{{user.grade == null ? "--" : user.grade}}/5</div>
 				</div>
@@ -30,7 +34,7 @@
 								<i class="bi bi-coin me-3"></i>Prix de la course :
 								{{carpool.pricePerPerson}}
 							</div>
-							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == " electrique" ? " green" : " red" }}; color : white ">
+							<div class="p-2 my-3 rounded" style="background-color: {{ carpool.car.powerEngine == 'Electrique' ? " green" : " red" }}; color : white ">
 								<i class="bi bi-car-front me-3"></i>
 								{{carpool.car.powerEngine}}
 							</div>
