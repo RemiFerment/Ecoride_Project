@@ -33,13 +33,6 @@ class RegistrationController extends AbstractController
         JWTService $jwt,
         SendEmailService $mail
     ): Response {
-        if ($this->getUser()) {
-            $this->addFlash(
-                'warning',
-                'Vous êtes déjà connecté, veuillez vous déconnecter.'
-            );
-            return $this->redirectToRoute('home');
-        }
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);

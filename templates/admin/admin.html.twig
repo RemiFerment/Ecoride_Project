@@ -5,32 +5,50 @@
 
 {% block body %}
 	<h1 class="viga-regular">Tableau de bord</h1>
-	<div class="w-100 ecoride-container rounded d-flex justify-content-center">
-		<div class="m-2 d-flex gap-2">
-			<div class="card">
-				<div class="card-header">
-					Total des covoiturages proposés
+	<div class="w-100 ecoride-container rounded d-flex flex-column align-items-center m-2 m-md-3 p-2 p-md-3">
+		<h5 class="viga-regular">
+			Statistiques globales :
+		</h5>
+		<div class="d-flex justify-content-center flex-wrap">
+			<div class="m-2 d-flex flex-column flex-md-row gap-2">
+				<div class="card">
+					<div class="card-header">
+						Total des covoiturages proposés
+					</div>
+					<div class="card-body">
+						<h5 class="card-title text-end">{{ allCarpoolStat }}</h5>
+					</div>
 				</div>
-				<div class="card-body">
-					<h5 class="card-title text-end">{{ allCarpoolStat }}</h5>
+				<div class="card">
+					<div class="card-header">
+						Total des écopièces générées
+					</div>
+					<div class="card-body">
+						<h5 class="card-title text-end">{{ allEcopieceStat }}</h5>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header">
+						Total des comptes créés
+					</div>
+					<div class="card-body">
+						<h5 class="card-title text-end">{{ allAccountStat }}</h5>
+					</div>
 				</div>
 			</div>
-			<div class="card">
-				<div class="card-header">
-					Total des écopièces générées
-				</div>
-				<div class="card-body">
-					<h5 class="card-title text-end">{{ allEcopieceStat }}</h5>
-				</div>
-			</div>
-			<div class="card">
-				<div class="card-header">
-					Total des comptes créés
-				</div>
-				<div class="card-body">
-					<h5 class="card-title text-end">{{ allAccountStat }}</h5>
-				</div>
-			</div>
+		</div>
+		<h5 class="viga-regular mt-4 mt-md-5">
+			Administration :
+		</h5>
+		<div class="d-flex justify-content-center flex-column flex-md-row gap-3 gap-md-4 mt-3">
+			<a href="{{ path(name:'app_admin_create_employee') }}" class="btn btn-success p-2 p-md-3 fs-5">
+				<i class="bi bi-person-plus-fill"></i>
+				Créer un compte modérateur
+			</a>
+			<a href="" class="btn btn-primary p-2 p-md-3 fs-5">
+				<i class="bi bi-person-lines-fill"></i>
+				Liste des utilisateurs
+			</a>
 		</div>
 	</div>
 {% endblock %}
