@@ -11,6 +11,7 @@ use App\Repository\ParticipationRepository;
 use App\Repository\UserRepository;
 use App\Security\Voter\ParticipationVoter;
 use App\Services\ParticipationManagerService;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,10 +56,15 @@ final class ParticipationController extends AbstractController
         return $this->redirectToRoute('app_carpool_index');
     }
 
-    #[Route('mycarpool/{carpool_id}/kickuser/{user_id}', name: 'app_mycarpool_kick_user', requirements: ['carpool_id' => '\d+', 'user_id' => '\d+'], methods: ['POST'])]
+    #[Route('mycarpool/{carpooling_id}/kickuser/{user_id}', name: 'app_mycarpool_kick_user', requirements: ['carpooling_id' => '\d+', 'user_id' => '\d+'], methods: ['POST'])]
     #[IsGranted(ParticipationVoter::KICK, subject: 'carpooling')]
-    public function kickUserFromCarpool(Carpooling $carpooling, int $user_id, ParticipationRepository $partipRep, UserRepository $userRep, ParticipationManagerService $participationManager)
-    {
+    public function kickUserFromCarpool(
+        #[MapEntity(mapping: ['carpooling_id' => 'id'])] Carpooling $carpooling,
+        int $user_id,
+        ParticipationRepository $partipRep,
+        UserRepository $userRep,
+        ParticipationManagerService $participationManager
+    ) {
         /** @var User $kickedUser */
         $kickedUser = $userRep->find($user_id);
 
