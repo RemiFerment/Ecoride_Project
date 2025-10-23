@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Security\Voter\RegistrationVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login', methods: ['GET', 'POST'])]
+    #[IsGranted(RegistrationVoter::VIEW)]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
@@ -17,14 +20,6 @@ class SecurityController extends AbstractController
 
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
-        if ($this->getUser()) {
-            $this->addFlash(
-                'warning',
-                'Vous êtes déjà connecté, veuillez-vous déconnecter.'
-            );
-            return $this->redirectToRoute('home');
-        }
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
