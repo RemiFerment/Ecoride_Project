@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% set user = app.user %}
 {% set photoBase64 = user.photo|to_base64 %}
 {% block title %}Profil -
 	{{user.username}}
@@ -42,7 +43,7 @@
 				{# trash button #}
 				<div class="position-absolute top-0 end-0">
 					{% if photoBase64 is not null %}
-						<form action="{{ path('app_delete_profile_picture', {user_id: user.id}) }}" method="post" class="d-inline">
+						<form action="{{ path('app_delete_profile_picture', {id: user.id}) }}" method="post" class="d-inline">
 							<input type="hidden" name="_method" value="DELETE">
 							<button type="submit" class="btn btn-link text-danger p-0">
 								<i class="bi bi-trash-fill fs-4"></i>
@@ -62,7 +63,7 @@
 				<div class="card-body p-0">
 					<h2 class="h4 oxanium viga-regular mb-3">Mon profil :</h2>
 					<div class="position-relative">
-						<form action="{{ path(name = 'app_profile_edit', parameters = {user_id: user.id})}}" method="post">
+						<form action="{{ path(name = 'app_profile_edit', parameters = {id: user.id})}}" method="post">
 							<button type="submit" class="position-absolute btn btn-link text-primary top-0 end-0 z-3">
 								<i class="bi bi-pen-fill fs-4"></i>
 							</button>

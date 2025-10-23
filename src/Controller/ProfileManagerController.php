@@ -5,42 +5,37 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ProfilePictureType;
 use App\Form\ProfileType;
+use App\Security\Voter\ProfileManagerVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProfileManagerController extends AbstractController
 {
+    private ?User $user;
+
+    public function __construct(private Security $security)
+    {
+        $this->user = $security->getUser();
+    }
+
     #[Route('/profile/manager', name: 'app_profile_manager', methods: ['GET', 'POST'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(ProfileManagerVoter::READ)]
     public function index(EntityManagerInterface $em, Request $request): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        if ($user === null) {
-            $this->addFlash(
-                'danger',
-                'Vous ne pouvez pas accéder à cette page tant que vous n\'êtes pas connecté(e).'
-            );
-            return $this->redirectToRoute('app_login');
-        }
-
         $form = $this->createForm(ProfilePictureType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $user */
             $file = $form->get('photo')->getData();
             if ($file) {
-                // fopen en mode rb permet d'ouvrir le fichier en mode binaire (read binary pour rb)
                 $stream = fopen($file->getPathname(), 'rb');
-
-                // le flux ouvert est donc automatiquement convertis en objet binaire sauvegardable dans un BLOB.
-                $user->setPhoto($stream);
-
-                $em->persist($user);
+                $this->user->setPhoto($stream);
+                $em->persist($this->user);
                 $em->flush();
                 $this->addFlash(
                     'success',
@@ -56,24 +51,14 @@ final class ProfileManagerController extends AbstractController
         }
 
         return $this->render('profile_manager/index.html.twig', [
-            'user' => $user ?? null,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route("/profile/manager/{user_id}/delete_photo", name: "app_delete_profile_picture", requirements: ['user_id' => '\d+'], methods: ['DELETE'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function deleteProfilePhoto(EntityManagerInterface $em, int $user_id)
+    #[Route("/profile/manager/delete_photo/{id}", name: "app_delete_profile_picture", requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    #[IsGranted(ProfileManagerVoter::DELETE, subject: 'user')]
+    public function deleteProfilePhoto(User $user, EntityManagerInterface $em)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        if ($user_id !== $user->getId()) {
-            $this->addFlash(
-                'danger',
-                'Le lien que vous avez sélectionné ne vous est pas destiné, vérifiez le lien.'
-            );
-            return $this->redirectToRoute('app_profile_manager');
-        }
         $user->setPhoto(null);
         $em->persist($user);
         $em->flush();
@@ -84,20 +69,10 @@ final class ProfileManagerController extends AbstractController
         return $this->redirectToRoute('app_profile_manager');
     }
 
-    #[Route("/profile/edit/{user_id}", name: "app_profile_edit", requirements: ['user_id' => '\d+'], methods: ['PUT', 'POST'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function editProfile(Request $request, EntityManagerInterface $em, int $user_id): Response
+    #[Route("/profile/edit/{id}", name: "app_profile_edit", requirements: ['id' => '\d+'], methods: ['PUT', 'POST'])]
+    #[IsGranted(ProfileManagerVoter::EDIT, subject: 'user')]
+    public function editProfile(User $user, Request $request, EntityManagerInterface $em): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        if ($user_id !== $user->getId()) {
-            $this->addFlash(
-                'danger',
-                'Le lien que vous avez sélectionné ne vous est pas destiné, vérifiez le lien.'
-            );
-            return $this->redirectToRoute('app_profile_manager');
-        }
-
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
 
@@ -130,7 +105,6 @@ final class ProfileManagerController extends AbstractController
 
         return $this->render('profile_manager/edit.html.twig', [
             'form' => $form->createView(),
-            'user' => $user,
         ]);
     }
 }

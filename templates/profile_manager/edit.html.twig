@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
+{% set user = app.user %}
 
 {% block title %}Modifier le profil
 {% endblock %}
 
 {% block body %}
 	{{ form_start(form, {
-        action: path('app_profile_edit', {'user_id': user.id}),
+        action: path('app_profile_edit', {'id': user.id}),
         method: 'POST',
         attr: { class: 'oxanium mt-5 ecoride-container rounded p-5 container justify-content-center' }
     }) }}
