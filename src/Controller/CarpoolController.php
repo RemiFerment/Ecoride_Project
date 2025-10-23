@@ -7,12 +7,12 @@ use App\Entity\User;
 use App\Form\CarpoolType;
 use App\Repository\CarpoolingRepository;
 use App\Repository\ParticipationRepository;
-use App\Repository\ReviewRepository;
 use App\Repository\UserReviewRepository;
+use App\Security\Voter\CarpoolVoter;
 use App\Services\CarpoolManagerService;
-use App\Services\GlobalStatManager;
 use App\Services\ParticipationManagerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,25 +20,27 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CarpoolController extends AbstractController
 {
+    private ?User $user;
+
+    public function __construct(private Security $security)
+    {
+        $this->user = $this->security->getUser();
+    }
+
     #[Route('/carpool', name: 'app_carpool_index', methods: ['GET'])]
-    #[IsGranted('ROLE_DRIVER')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(CarpoolVoter::READ)]
     public function index(CarpoolingRepository $carpoolRep, ParticipationRepository $participation): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $onlineCarpools = $carpoolRep->findAllByUserAndStatut($user, 'ONLINE');
-        $inProgressCarpools = $carpoolRep->findAllByUserAndStatut($user, 'IN_PROGRESS');
-        $doneCarpools = $carpoolRep->findAllByUserAndStatut($user, 'DONE');
-        $missCarpools = $carpoolRep->findAllByUserAndStatut($user, 'MISS');
+        $onlineCarpools = $carpoolRep->findAllByUserAndStatut($this->user, 'ONLINE');
+        $inProgressCarpools = $carpoolRep->findAllByUserAndStatut($this->user, 'IN_PROGRESS');
+        $doneCarpools = $carpoolRep->findAllByUserAndStatut($this->user, 'DONE');
+        $missCarpools = $carpoolRep->findAllByUserAndStatut($this->user, 'MISS');
 
         // Ajouter trois nouveaux onglet dans la partie : Trajets rejoins
         // Section Trajets rejoins
-        $allParticipation = $participation->findBy(['user' => $user]);
+        $allParticipation = $participation->findBy(['user' => $this->user]);
 
         return $this->render('carpool/index.html.twig', [
-            'user' => $user,
             'onlineCarpools' => $onlineCarpools,
             'inProgressCarpools' => $inProgressCarpools,
             'doneCarpools' => $doneCarpools,
@@ -47,11 +49,8 @@ class CarpoolController extends AbstractController
         ]);
     }
 
-
-
     #[Route('/carpool/create', name: 'app_carpool_create', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_DRIVER')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(CarpoolVoter::CREATE)]
     public function createCarpool(Request $request, CarpoolManagerService $carpool_manager): Response
     {
         /** @var User $user  */
@@ -83,124 +82,56 @@ class CarpoolController extends AbstractController
     }
 
     #[Route('/carpool/delete/{id}', name: 'app_carpool_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
-    #[IsGranted('ROLE_DRIVER')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function deleteCarpool(int $id, CarpoolingRepository $carpoolRep, ParticipationRepository $partipRep, CarpoolManagerService $carpoolManager): Response
+    #[IsGranted(CarpoolVoter::DELETE, subject: 'carpooling')]
+    public function deleteCarpool(Carpooling $carpooling, ParticipationRepository $partipRep, CarpoolManagerService $carpoolManager): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        /** @var Carpooling $carpooling */
-        $carpooling = $carpoolRep->find($id);
-
-        if ($carpooling->getCreatedBy() !== $user) {
-            $this->addFlash(
-                'danger',
-                'Le trajet ne peut pas être supprimé, si le problème persiste, contactez l\'administrateur.'
-            );
-            return $this->redirectToRoute('app_carpool_index');
-        }
-
         $allParticipation = $partipRep->findBy(['carpooling' => $carpooling]);
-
-        $carpoolManager->FinalizeDeletion($carpooling, $allParticipation, $user);
+        $carpoolManager->FinalizeDeletion($carpooling, $allParticipation, $this->user);
 
         $this->addFlash(
             'success',
-            'Le trajet à bien été supprimé ! Des mails ont été envoyés aux utilisateurs concernés.'
+            "Le trajet " .  $carpooling->getStartPlace() . " → " . $carpooling->getEndPlace() . " du " . $carpooling->getStartDate()->format('d/m/Y') . " à bien été supprimé ! Des mails ont été envoyés aux utilisateurs concernés."
         );
         return $this->redirectToRoute('app_carpool_index');
     }
 
     #[Route('/mycarpool/details/{id}', name: 'app_carpool_details', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[IsGranted('ROLE_DRIVER')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function detailsMyCarpool(
-        int $id,
-        CarpoolingRepository $carpoolRep,
-        ParticipationRepository $participationRep,
-        UserReviewRepository $userReviewRepository,
-    ): Response {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $carpool = $carpoolRep->find($id);
-        $allParticipation = $participationRep->findBy(['carpooling' => $carpool]);
-        $carpoolReviews = $userReviewRepository->findBy(['carpooling' => $carpool]);
+    #[IsGranted(CarpoolVoter::READ, subject: 'carpooling')]
+    public function detailsMyCarpool(Carpooling $carpooling, ParticipationRepository $participationRep, UserReviewRepository $userReviewRepository): Response
+    {
+        $allParticipation = $participationRep->findBy(['carpooling' => $carpooling]);
+        $carpoolReviews = $userReviewRepository->findBy(['carpooling' => $carpooling]);
         return $this->render('carpool/detail.html.twig', [
-            'user' => $user,
-            'carpool' => $carpool,
+            'carpool' => $carpooling,
             'allParticipation' => $allParticipation,
             'carpoolReviews' => $carpoolReviews
         ]);
     }
 
     #[Route('/mycarpool/launch/{id}', name: 'app_carpool_launch', requirements: ['id' => '\d+'], methods: ['POST'])]
-    #[IsGranted('ROLE_DRIVER')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function launchCarpool(int $id, CarpoolingRepository $carpoolRep, CarpoolManagerService $carpoolManager): Response
+    #[IsGranted(CarpoolVoter::START, subject: 'carpooling')]
+    public function launchCarpool(Carpooling $carpooling, CarpoolManagerService $carpoolManager): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        /** @var Carpooling $carpool */
-        $carpool = $carpoolRep->find($id);
-        // dd(!$carpool->checkUser($user) || !$carpool->isLaunchable());
-        if (!$carpool->checkUser($user) || !$carpool->isLaunchable()) {
-            $this->addFlash(
-                'danger',
-                'Le trajet ne peut pas être démarrer., si le problème persiste, contactez l\'administrateur.'
-            );
-            return $this->redirectToRoute('app_carpool_index');
-        }
-        if ($carpool->getStatut() !== 'ONLINE') {
-            $this->addFlash(
-                'danger',
-                'Le trajet ne peut pas être démarrer., si le problème persiste, contactez l\'administrateur.'
-            );
-            return $this->redirectToRoute('app_carpool_details', ['id' => $id]);
-        }
-        if (!$carpool->getStatut() === 'IN_PROGRESS') {
-            $this->addFlash(
-                'danger',
-                'Le trajet est déjà en cours.'
-            );
-            return $this->redirectToRoute('app_carpool_details', ['id' => $id]);
-        }
-
-        $carpoolManager->changeCarpoolStatut($carpool, 'IN_PROGRESS');
+        $carpoolManager->changeCarpoolStatut($carpooling, 'IN_PROGRESS');
 
         $this->addFlash(
             'success',
             'Le trajet a bien démarrer, une fois arrivé n\'oubliez pas de l\'indiquer sur l\'application ! Bonne route !'
         );
-        return $this->redirectToRoute('app_carpool_details', ['id' => $id]);
+        return $this->redirectToRoute('app_carpool_details', ['id' => $carpooling->getId()]);
     }
 
     #[Route('/mycarpool/finalize/{id}', name: 'app_carpool_finalize', requirements: ['id' => '\d+'], methods: ['POST'])]
-    #[IsGranted('ROLE_DRIVER')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function finalizeCarpool(int $id, CarpoolingRepository $carpoolRep, CarpoolManagerService $carpoolManager, ParticipationManagerService $participationManager, ParticipationRepository $participationRep): Response
+    #[IsGranted(CarpoolVoter::END, subject: 'carpooling')]
+    public function finalizeCarpool(Carpooling $carpooling, CarpoolManagerService $carpoolManager, ParticipationManagerService $participationManager, ParticipationRepository $participationRep): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
 
-        /** @var Carpooling $carpool */
-        $carpool = $carpoolRep->find($id);
-
-        if (!$carpool->checkUser($user)) {
-            $this->addFlash(
-                'danger',
-                'Le trajet ne peut pas être démarrer., si le problème persiste, contactez l\'administrateur.'
-            );
-            return $this->redirectToRoute('app_carpool_index');
-        }
-        $allParticipation = $participationRep->findBy(['carpooling' => $carpool]);
-        $carpoolManager->ChangeCarpoolStatut($carpool, 'DONE');
-        $participationManager->FinalizeCarpool($user, $carpool, $allParticipation);
+        $allParticipation = $participationRep->findBy(['carpooling' => $carpooling]);
+        $carpoolManager->ChangeCarpoolStatut($carpooling, 'DONE');
+        $participationManager->FinalizeCarpool($this->user, $carpooling, $allParticipation);
         $this->addFlash(
             'success',
-            'Le trajet a bien été finalisé, un mail à été envoyé au participant pour noter et donner leur ressenti sur le trajet. Vous avez été crédité de ' . count($allParticipation) * $carpool->getPricePerPerson() . ' écopièces.'
+            'Le trajet a bien été finalisé, un mail à été envoyé au participant pour noter et donner leur ressenti sur le trajet. Vous avez été crédité de ' . count($allParticipation) * $carpooling->getPricePerPerson() . ' écopièces.'
         );
         return $this->redirectToRoute('app_carpool_index');
     }

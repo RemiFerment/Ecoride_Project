@@ -35,7 +35,6 @@ final class CarVoter extends Voter
         switch ($attribute) {
             case self::CREATE:
             case self::READ:
-                // Allow creation only for drivers
                 return in_array('ROLE_DRIVER', $user->getRoles());
 
             case self::UPDATE:
@@ -43,8 +42,6 @@ final class CarVoter extends Voter
                 if (!$subject instanceof \App\Entity\Car) {
                     return false;
                 }
-
-                // Only the owner (and maybe a driver) can read/edit/delete
                 return $subject->getUserId() === $user->getId();
         }
 
