@@ -28,6 +28,9 @@ class UserReview
     #[ORM\JoinColumn(nullable: false)]
     private ?Carpooling $carpooling = null;
 
+    #[ORM\Column]
+    private ?int $gradeGiven = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +80,18 @@ class UserReview
     public function setCarpooling(?Carpooling $carpooling): static
     {
         $this->carpooling = $carpooling;
+
+        return $this;
+    }
+
+    public function getGradeGiven(): ?int
+    {
+        return $this->gradeGiven;
+    }
+
+    public function setGradeGiven(int $gradeGiven): static
+    {
+        $this->gradeGiven = $gradeGiven;
 
         return $this;
     }
