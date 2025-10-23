@@ -23,7 +23,8 @@ final class ReviewManagerService
         $userReview->setUser($user)
             ->setAffectedUser($driverUser)
             ->setReview($review)
-            ->setCarpooling($carpooling);
+            ->setCarpooling($carpooling)
+            ->setGradeGiven($grade);
         $this->em->persist($userReview);
 
         $driverUser->updateGrade($grade);
