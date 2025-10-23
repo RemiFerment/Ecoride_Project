@@ -10,22 +10,30 @@ use App\Repository\CarRepository;
 use App\Security\Voter\CarVoter;
 use App\Services\CarManagerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class CarManagerController extends AbstractController
 {
+    private ?User $user;
+
+    public function __construct(private Security $security)
+    {
+        $this->user = $this->security->getUser();
+    }
 
     #[Route('/car', name: 'app_car_index', methods: ['GET'])]
     #[IsGranted(CarVoter::READ)]
     public function index(CarRepository $carRepository)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $carArray = $carRepository->findAllByUserId($user->getId());
+        // /** @var User $user */
+        // $user = $this->getUser()
+        $carArray = $carRepository->findAllByUserId($this->user->getId());
         // dd($carArray);
         //Affiche la liste des covoiturages prévu et déjà effectué.
         return $this->render('car/index.html.twig', [
@@ -62,12 +70,10 @@ class CarManagerController extends AbstractController
 
     #[Route('/car/set/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_setDefault", methods: ['POST'])]
     #[IsGranted(CarVoter::UPDATE, subject: 'car')]
-    public function setUsedCar(int $id, CarManagerService $carManager, CarRepository $carRep): Response
+    public function setUsedCar(Car $car, CarManagerService $carManager): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        /** @var Car $car */
-        $car = $carRep->find($id);
 
         $carManager->FinalizeSetDefaultCar($user, $car);
 
