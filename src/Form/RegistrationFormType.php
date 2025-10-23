@@ -169,7 +169,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'placeholder' => 'Choisir son type de profil',
                 'label' => 'Choisir son profil',
-                'consraints' => [
+                'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez choisir un type de profil.'
                     ]),

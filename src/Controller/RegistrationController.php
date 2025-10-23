@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Security\Voter\RegistrationVoter;
 use App\Services\GlobalStatService;
 use App\Services\JWTService;
 use App\Services\SendEmailService;
@@ -16,12 +17,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RegistrationController extends AbstractController
 {
     public function __construct(private EmailVerifier $emailVerifier, private GlobalStatService $globalStat) {}
 
     #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
+    #[IsGranted(RegistrationVoter::VIEW)]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
