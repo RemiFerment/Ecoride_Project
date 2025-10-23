@@ -43,7 +43,7 @@ final class CarpoolVoter extends Voter
                 if (!$subject instanceof \App\Entity\Carpooling) {
                     return false;
                 }
-                $subject->getCreatedBy()->getId() === $user->getId();
+                return $subject->getCreatedBy()->getId() === $user->getId();
             case self::START:
                 if (!$subject instanceof \App\Entity\Carpooling) {
                     return false;

@@ -15,7 +15,7 @@
 	{{carpooling.startdate | date('H\\hi')}}
 	est terminé. Veuillez cliquer sur le lien pour noter et donner votre avis sur ce trajet :
 </p>
-<a href="{{absolute_url(path('app_review',{'user_id':contributor.id, 'carpool_id':carpooling.id}))}}">Noter votre course</a>
+<a href="{{absolute_url(path('app_review',{'user_id':contributor.id, 'carpooling_id':carpooling.id}))}}">Noter votre course</a>
 <p></p>
 <hr>
 <p>Bonne journée à vous, l'équipe ÉCORIDE.</p>

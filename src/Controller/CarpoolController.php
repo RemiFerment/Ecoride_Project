@@ -101,6 +101,7 @@ class CarpoolController extends AbstractController
     {
         $allParticipation = $participationRep->findBy(['carpooling' => $carpooling]);
         $carpoolReviews = $userReviewRepository->findBy(['carpooling' => $carpooling]);
+        // dd($carpooling);
         return $this->render('carpool/detail.html.twig', [
             'carpool' => $carpooling,
             'allParticipation' => $allParticipation,

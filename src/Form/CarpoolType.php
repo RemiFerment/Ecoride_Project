@@ -4,28 +4,31 @@ namespace App\Form;
 
 use App\Entity\Carpooling;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class CarpoolType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('start_date', null, [
-                'widget' => 'single_text',
+            ->add('start_date', DateTimeType::class, [
                 'label' => 'Jour de départ',
+                'widget' => 'single_text', // ensures native <input type="datetime-local">
+                'with_seconds' => false,   // removes seconds
                 'attr' => [
-                    'min' => (new \DateTime())->format('Y-m-d'),
+                    // 'min' => (new \DateTime('+2 hours'))->format('Y-m-d\TH:i'),
                 ],
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\GreaterThanOrEqual([
-                        'value' => (new \DateTime())->format('Y-m-d'),
-                        'message' => 'La date de départ doit être aujourd\'hui ou une date future.',
-                    ]),
+                    // new GreaterThanOrEqual([
+                    //     'value' => new \DateTime('+2 hours'),
+                    //     'message' => "La date de départ doit être aujourd'hui ou une date future.",
+                    // ]),
                 ],
-            ],)
+            ])
             ->add('start_place', options: [
                 'label' => 'Ville de départ'
             ])
