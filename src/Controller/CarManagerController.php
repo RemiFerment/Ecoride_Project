@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Car;
 use App\Entity\User;
 use App\Form\CarType;
-use App\Repository\CarpoolingRepository;
 use App\Repository\CarRepository;
 use App\Security\Voter\CarVoter;
 use App\Services\CarManagerService;
@@ -18,6 +17,7 @@ use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
+#[Route('/car')]
 class CarManagerController extends AbstractController
 {
     private ?User $user;
@@ -27,27 +27,22 @@ class CarManagerController extends AbstractController
         $this->user = $this->security->getUser();
     }
 
-    #[Route('/car', name: 'app_car_index', methods: ['GET'])]
+    #[Route('', name: 'app_car_index', methods: ['GET'])]
     #[IsGranted(CarVoter::READ)]
-    public function index(CarRepository $carRepository)
+    public function index(CarRepository $carRepository): Response
     {
-        // /** @var User $user */
-        // $user = $this->getUser()
         $carArray = $carRepository->findAllByUserId($this->user->getId());
-        // dd($carArray);
+
         //Affiche la liste des covoiturages prévu et déjà effectué.
         return $this->render('car/index.html.twig', [
             'cars' => $carArray ?? null
         ]);
     }
 
-    #[Route('/car/add', name: 'app_car_add', methods: ['GET', 'POST'])]
+    #[Route('/add', name: 'app_car_add', methods: ['GET', 'POST'])]
     #[IsGranted(CarVoter::CREATE)]
-    public function createCar(Request $request, CarManagerService $carManager): ?Response
+    public function createCar(Request $request, CarManagerService $carManager): Response
     {
-
-        /** @var User $user  */
-        $user = $this->getUser();
         $car = new Car();
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
@@ -56,7 +51,7 @@ class CarManagerController extends AbstractController
             /** @var Car $car */
             $car = $form->getData();
 
-            $carManager->FinalizeCreate($user, $car);
+            $carManager->FinalizeCreate($this->user, $car);
 
             $this->addFlash('success', 'Votre voiture à bien été ajouté !');
             return $this->redirectToRoute('app_car_index');
@@ -68,14 +63,11 @@ class CarManagerController extends AbstractController
         ]);
     }
 
-    #[Route('/car/set/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_setDefault", methods: ['POST'])]
+    #[Route('/set/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_setDefault", methods: ['POST'])]
     #[IsGranted(CarVoter::UPDATE, subject: 'car')]
     public function setUsedCar(Car $car, CarManagerService $carManager): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $carManager->FinalizeSetDefaultCar($user, $car);
+        $carManager->FinalizeSetDefaultCar($this->user, $car);
 
         $this->addFlash(
             'success',
@@ -84,20 +76,17 @@ class CarManagerController extends AbstractController
         return $this->redirectToRoute('app_car_index');
     }
 
-    #[Route('/car/delete/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_delete", methods: ['DELETE'])]
+    #[Route('/delete/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_delete", methods: ['DELETE'])]
     #[IsGranted(CarVoter::DELETE, subject: 'car')]
-    public function deleteCar(Car $car, CarManagerService $carManager, CarRepository $carRep, CarpoolingRepository $carpoolingRepository, int $id): Response
+    public function deleteCar(Car $car, CarManagerService $carManager, CarRepository $carRep): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
+        $carManager->FinalizeDeletion($this->user, $car);
 
-        $carManager->FinalizeDelation($user, $car);
+        $allUserCar = $carRep->findAllByUserId($this->user->getId());
 
-        $allUserCar = $carRep->findAllByUserId($user->getId());
+        $newCar = $this->user->getCurrentCar() === null && count($allUserCar) > 0 ? $allUserCar[0] : null;
 
-        $newCar = $user->getCurrentCar() === null && count($allUserCar) > 0 ? $allUserCar[0] : null;
-
-        $carManager->FinalizeSetDefaultCar($user, $newCar);
+        $carManager->FinalizeSetDefaultCar($this->user, $newCar);
 
         $this->addFlash(
             'success',
@@ -107,15 +96,10 @@ class CarManagerController extends AbstractController
         return $this->redirectToRoute('app_car_index');
     }
 
-    #[Route('/car/edit/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_edit", methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', requirements: ['id' => Requirement::DIGITS], name: "app_car_edit", methods: ['GET', 'POST'])]
     #[IsGranted(CarVoter::UPDATE, subject: 'car')]
-    public function editCar(Car $car, Request $request, CarManagerService $carManager, CarRepository $carRep, int $id): Response
+    public function editCar(Car $car, Request $request, CarManagerService $carManager): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        /** @var Car $car */
-        $car = $carRep->find($id);
-
         $form = $this->createForm(CarType::class, $car, options: ['edit' => true]);
         $form->handleRequest($request);
 
@@ -123,14 +107,13 @@ class CarManagerController extends AbstractController
             /** @var Car $car */
             $car = $form->getData();
 
-            $carManager->FinalizeCreate($user, $car, edit: true);
+            $carManager->FinalizeCreate($this->user, $car, edit: true);
 
             $this->addFlash('success', 'Votre voiture à bien été modifiée !');
             return $this->redirectToRoute('app_car_index');
         }
 
         return $this->render('car/add.html.twig', [
-            'user' => $user ?? null,
             'edit' => true,
             'form' => $form->createView()
         ]);

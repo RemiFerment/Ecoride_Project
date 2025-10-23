@@ -31,7 +31,7 @@ final class CarManagerService
         return $this;
     }
 
-    public function FinalizeDelation(User $user, Car $car): static
+    public function FinalizeDeletion(User $user, Car $car): static
     {
         $car->setUserId(null);
         $user->setCurrentCar(null);
