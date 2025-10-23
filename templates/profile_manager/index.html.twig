@@ -101,7 +101,8 @@
 									'ROLE_PASSAGER': 'Passager',
 									'ROLE_DRIVER': 'Chauffeur',
 									'ROLE_ADMIN': 'Administrateur',
-									'ROLE_USER': 'Utilisateur'
+									'ROLE_USER': 'Utilisateur',
+									'ROLE_MODERATOR': 'Modérateur'
 								} %}
 									{% for role in user.roles %}
 										{{ labels[role]|default('') }}

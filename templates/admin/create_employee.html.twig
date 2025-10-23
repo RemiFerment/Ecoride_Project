@@ -1,0 +1,44 @@
+{# templates/admin/create_employee.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un compte modérateur
+{% endblock %}
+
+{% block body %}
+	{% set f = employeeForm %}
+
+	<div class="container mt-4">
+		<h1 class="mb-3">Créer un compte modérateur</h1>
+
+		{{ form_start(f, {'attr': {'novalidate': 'novalidate'}}) }}
+
+		<div class="card shadow-sm ecoride-container">
+			<div class="card-body">
+				{{ form_errors(f) }}
+
+				<div class="row">
+					<div class="col-md-6">
+						{{ form_row(f.email) }}
+						{{ form_row(f.username) }}
+						{{ form_row(f.plainPassword) }}
+						<small class="form-text text-muted">
+							Mot de passe : au moins 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial.
+						</small>
+					</div>
+
+					<div class="col-md-6">
+						{{ form_row(f.first_name) }}
+						{{ form_row(f.last_name) }}
+					</div>
+				</div>
+
+				<div class="mt-3 d-flex flex-column align-items-center gap-2">
+					<button type="submit" class="btn btn-success">Ajouter le compte modérateur</button>
+					<a href="#" class="ecoride-link" onclick="history.back(); return false;">Retour</a>
+				</div>
+			</div>
+		</div>
+
+		{{ form_end(f) }}
+	</div>
+{% endblock %}
