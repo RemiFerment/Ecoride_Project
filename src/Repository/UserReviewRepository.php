@@ -35,8 +35,12 @@ class UserReviewRepository extends ServiceEntityRepository
     public function findByLowGrade(): array
     {
         return $this->createQueryBuilder('u')
+            ->join('u.review', 'r')
+            ->addSelect('r')
             ->andWhere('u.gradeGiven < :grade')
             ->setParameter('grade', 3)
+            ->andWhere('r.statut IN (:statuses)')
+            ->setParameter('statuses', ['TO_BE_CHECKED', 'CHECKED'])
             ->orderBy('u.id', 'ASC')
             ->getQuery()
             ->getResult();

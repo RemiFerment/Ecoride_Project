@@ -1,0 +1,40 @@
+<div class="card w-100 oxanium">
+	<div class="card-header text-center fs-4">
+		<div>
+			Trajet proposé par
+			<a href="{{path('app_driver_details', {id: review.carpooling.createdby.id})}}" class="ecoride-link">{{review.carpooling.createdby.username}}</a>
+		</div>
+		<div>
+			{{ review.carpooling.startplace }}
+			→
+			{{review.carpooling.endplace}}
+			du
+			{{review.carpooling.startDate|date("d/m/Y") }}
+			à
+			{{review.carpooling.startDate|date("H:i") }}
+		</div>
+	</div>
+	<ul class="list-group list-group-flush">
+		<li class="list-group-item text-center">
+			Litige de
+			<a href=" {{path('app_driver_details', {id: review.user.id})}}" class="ecoride-link">{{ review.user.username }}</a>
+		</li>
+		<li class="list-group-item text-center">Avis déposé : "<em>
+				{{ review.review.comment }}
+			</em>
+			"</li>
+		<li class="list-group-item text-center">Note donnée :
+			{{ review.gradegiven }}
+			/ 5
+			<i class="bi bi-star-fill"></i>
+		</li>
+		<li class="list-group-item text-center">
+			<a href="mailto:{{review.user.email}}" class="btn btn-primary">Contacter le plaignant</a>
+			<a href="mailto:{{review.carpooling.createdby.email}}" class="btn btn-primary">Contacter le conducteur</a>
+		</li>
+		<li class="list-group-item text-center">
+			<a href="{{path('app_conflict_refunded',{id:review.id})}}" class="btn btn-success">Rembourser le plaignant</a>
+			<a href="{{path('app_conflict_dismiss',{id:review.id})}}" class="btn btn-danger">Classer le litige sans suite</a>
+		</li>
+	</ul>
+</div>

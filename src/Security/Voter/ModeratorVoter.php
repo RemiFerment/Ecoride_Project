@@ -7,27 +7,32 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-final class ReviewCheckerVoter extends Voter
+final class ModeratorVoter extends Voter
 {
     public const CHECK = 'REVIEW_CHECK';
+    public const CONFLICT = 'CONFLICT';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return $attribute === self::CHECK
-            && $subject instanceof \App\Entity\Review;
+        return in_array($attribute, [self::CHECK, self::CONFLICT])
+            && ($subject instanceof \App\Entity\Review || $subject instanceof \App\Entity\UserReview);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        // if the user is anonymous, do not grant access
+
         if (!$user instanceof User) {
             return false;
         }
 
-        return $user->hasRole('ROLE_MODERATOR') && $attribute === self::CHECK && $subject->getStatut() === 'TO_BE_CHECKED';
+        switch ($attribute) {
+            case self::CHECK:
+                return $user->hasRole('ROLE_MODERATOR') && $subject->getStatut() === 'TO_BE_CHECKED';
+            case self::CONFLICT:
+                return $user->hasRole('ROLE_MODERATOR') && !in_array($subject->getStatut(), ['REFUNDED', 'DISMISS']);
+                break;
+        }
 
         return false;
     }
