@@ -1,14 +1,16 @@
 {% extends 'base.html.twig' %}
 {% set photoBase64 = driver.photo|to_base64 %}
 
-{% block title %}Détails du conducteur
+{% block title %}Détails de
+	{{driver.username}}
 {% endblock %}
 
 {% block body %}
 	<div class="container my-4">
 		<div class="card">
 			<div class="card-header">
-				<h1 class="mb-0">Profil du conducteur</h1>
+				<h1 class="mb-0">Profil de
+					{{driver.username}}</h1>
 			</div>
 			<div class="card-body">
 				<div class="row">
@@ -34,6 +36,12 @@
 								<th>Pseudonyme</th>
 								<td>{{ driver.username }}</td>
 							</tr>
+							{% if is_granted('ROLE_MODERATOR') %}
+								<tr>
+									<th>Adresse email</th>
+									<td>{{ driver.email }}</td>
+								</tr>
+							{% endif %}
 							<tr>
 								<th>Note</th>
 								<td>
@@ -42,36 +50,40 @@
 							</tr>
 						</table>
 					</div>
-
-					<div class="col-md-5">
-						<h3>Préférences</h3>
-						{% if preference %}
-							<table class="table">
-								<tr>
-									<th>Fumeur</th>
-									<td>{{ preference.isNoSmoking ? 'Non' : 'Oui' }}</td>
-								</tr>
-								<tr>
-									<th>Animaux acceptés</th>
-									<td>{{ preference.isNoAnimals ? 'Non' : 'Oui' }}</td>
-								</tr>
-								<tr>
-									<th>Musique</th>
-									<td>{{ preference.isNoMusic ? 'Non' : 'Oui' }}</td>
-								</tr>
-								<tr>
-									<th>Discussion</th>
-									<td>{{ preference.isTalkative ? 'Non' : 'Oui' }}</td>
-								</tr>
-							</table>
-						{% else %}
-							<p>Aucune préférence enregistrée</p>
-						{% endif %}
+					{% if driver.hasrole('ROLE_DRIVER') %}
+						<div class="col-md-5">
+							<h3>Préférences</h3>
+							{% if preference %}
+								<table class="table">
+									<tr>
+										<th>Fumeur</th>
+										<td>{{ preference.isNoSmoking ? 'Non' : 'Oui' }}</td>
+									</tr>
+									<tr>
+										<th>Animaux acceptés</th>
+										<td>{{ preference.isNoAnimals ? 'Non' : 'Oui' }}</td>
+									</tr>
+									<tr>
+										<th>Musique</th>
+										<td>{{ preference.isNoMusic ? 'Non' : 'Oui' }}</td>
+									</tr>
+									<tr>
+										<th>Discussion</th>
+										<td>{{ preference.isTalkative ? 'Non' : 'Oui' }}</td>
+									</tr>
+								</table>
+							{% else %}
+								<p>Aucune préférence enregistrée</p>
+							{% endif %}
+						</div>
 					</div>
-				</div>
+				{% endif %}
+
 
 				<div class="mt-4">
-					<a href="{{ app.request.headers.get('referer')|default(path('home')) }}" class="btn btn-secondary">Retour</a>
+					<a href="{{ app.request.headers.get('referer')|default(path('home')) }}" class="btn btn-danger">
+						<i class="bi bi-arrow-left-short"></i>
+						Retour</a>
 				</div>
 			</div>
 		</div>

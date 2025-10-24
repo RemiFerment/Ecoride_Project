@@ -85,12 +85,16 @@
 									Mon profil
 								</a>
 							</li>
-							<li class="nav-item">
-								<a href="{{ path(name = 'app_carpool_index') }}" class="nav-link oxanium {{ app.current_route == 'app_carpool_index' ? 'active' : '' }} oxanium" type="button" id="connexionButton">
-									<i class="bi bi-map-fill"></i>
-									Mes trajets
-								</a>
-							</li>
+
+							{% if is_granted('ROLE_DRIVER') or is_granted('ROLE_PASSAGER') %}
+								<li class="nav-item">
+									<a href="{{ path(name = 'app_carpool_index') }}" class="nav-link oxanium {{ app.current_route == 'app_carpool_index' ? 'active' : '' }} oxanium" type="button" id="connexionButton">
+										<i class="bi bi-map-fill"></i>
+										Mes trajets
+									</a>
+								</li>
+							{% endif %}
+
 							{% if is_granted('ROLE_DRIVER') %}
 								<li class="nav-item">
 									<a href="{{ path(name = 'app_car_index') }}" class="nav-link oxanium {{ app.current_route == 'app_car_index' ? 'active' : '' }} oxanium" type="button" id="connexionButton">
@@ -100,12 +104,21 @@
 								</li>
 							{% endif %}
 						{% endif %}
+						{% if is_granted("ROLE_MODERATOR") %}
+							<hr>
+							<li class="nav-item">
+								<a href="{{ path(name = 'app_moderator') }}" class="nav-link oxanium {{ app.current_route == 'app_moderator' ? 'active' : '' }} oxanium" type="button" id="connexionButton">
+									<i class="bi bi-clipboard-check"></i>
+									Tableau de bord - Modérateur
+								</a>
+							</li>
+						{% endif %}
 						{% if is_granted("ROLE_ADMIN") %}
 							<hr>
 							<li class="nav-item">
 								<a href="{{ path(name = 'app_admin_dashboard') }}" class="nav-link oxanium {{ app.current_route == 'app_admin_dashboard' ? 'active' : '' }} oxanium" type="button" id="connexionButton">
 									<i class="bi bi-motherboard-fill"></i>
-									Tableau de bord
+									Tableau de bord - Administrateur
 								</a>
 							</li>
 						{% endif %}
