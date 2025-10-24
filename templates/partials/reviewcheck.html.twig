@@ -1,0 +1,34 @@
+<div class="card w-100 oxanium">
+	<div class="card-header text-center fs-4">Avis posté par
+		<a href=" {{path('app_driver_details', {id: review.user.id})}}" class="ecoride-link">{{ review.user.username }}</a>
+	</div>
+	<ul class="list-group list-group-flush">
+		<li class="list-group-item text-center fs-5">Avis : "
+			<em>{{ review.review.comment }}</em>
+			"</li>
+		<li class="list-group-item text-center">Note donnée :
+			{{ review.gradegiven }}
+			/ 5
+			<i class="bi bi-star-fill"></i>
+		</li>
+		<li class="list-group-item text-center">
+			<div>
+				Trajet proposé par
+				<a href="{{path('app_driver_details', {id: review.carpooling.createdby.id})}}" class="ecoride-link">{{review.carpooling.createdby.username}}</a>
+			</div>
+			<div>
+				{{ review.carpooling.startplace }}
+				→
+				{{review.carpooling.endplace}}
+				du
+				{{review.carpooling.startDate|date("d/m/Y") }}
+				à
+				{{review.carpooling.startDate|date("H:i") }}
+			</div>
+		</li>
+		<li class="list-group-item text-center">
+			<a href="{{path('app_review_validated', {id:review.review.id})}}" class="btn btn-success">Valider</a>
+			<a href="{{path('app_review_dismiss', {id:review.review.id})}}" class="btn btn-danger">Rejeter</a>
+		</li>
+	</ul>
+</div>

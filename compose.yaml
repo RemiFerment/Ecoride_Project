@@ -14,37 +14,37 @@ services:
     volumes:
       - db-data:/var/lib/mysql # <-- volume nommé (plus rapide/stable que bind)
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: app
-    working_dir: /var/www/html
-    ports:
-      - "8080:80"
-    environment:
-      DATABASE_URL: "mysql://defaultUser:MySq%40root170520@db:3306/ecoride_project?serverVersion=8.4&charset=utf8mb4"
-      APP_ENV: dev
-      APP_DEBUG: 1
-      MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
-    volumes:
-      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf:ro
-      - ./:/var/www/html:delegated # <- enlève :ro
-      - symfony-cache:/var/www/html/var/cache
-      - symfony-logs:/var/www/html/var/log
-      - symfony-sessions:/var/www/html/var/sessions
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: app
+  #   working_dir: /var/www/html
+  #   ports:
+  #     - "8080:80"
+  #   environment:
+  #     DATABASE_URL: "mysql://defaultUser:MySq%40root170520@db:3306/ecoride_project?serverVersion=8.4&charset=utf8mb4"
+  #     APP_ENV: dev
+  #     APP_DEBUG: 1
+  #     MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
+  #   volumes:
+  #     - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+  #     - ./:/var/www/html:delegated # <- enlève :ro
+  #     - symfony-cache:/var/www/html/var/cache
+  #     - symfony-logs:/var/www/html/var/log
+  #     - symfony-sessions:/var/www/html/var/sessions
 
-    tmpfs:
-      - /tmp
-    depends_on:
-      - db
-      - mongodb
-    command: >
-      bash -lc "
-        mkdir -p var/cache var/log var/sessions &&
-        chown -R www-data:www-data var/cache var/log var/sessions &&
-        exec apache2-foreground
-      "
+  #   tmpfs:
+  #     - /tmp
+  #   depends_on:
+  #     - db
+  #     - mongodb
+  #   command: >
+  #     bash -lc "
+  #       mkdir -p var/cache var/log var/sessions &&
+  #       chown -R www-data:www-data var/cache var/log var/sessions &&
+  #       exec apache2-foreground
+  #     "
 
   phpma:
     image: phpmyadmin:latest
@@ -98,6 +98,7 @@ volumes:
   symfony-sessions:
 
   ###> doctrine/mongodb-odm-bundle ###
-  mongodb_data: ###< doctrine/mongodb-odm-bundle ###
+  mongodb_data:
+    ###< doctrine/mongodb-odm-bundle ###
 
 
