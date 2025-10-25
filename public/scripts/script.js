@@ -1,5 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
     const buttons = document.querySelectorAll(".load-btn");
+    const modal = document.getElementById('confirmModal');
+    const confirmButton = document.getElementById('confirmModalButton');
+    const titleModal = document.getElementById('confirmModalLabel');
+    const bodyModal = document.getElementById('confirmModalBody');
+
+
+
+    modal.addEventListener('show.bs.modal', function (e) {
+        const triggerButton = e.relatedTarget;
+
+        const link = triggerButton.getAttribute('data-url');
+
+        const title = triggerButton.getAttribute('data-title') || 'Action à confirmer';
+
+        const body = triggerButton.getAttribute('data-body') || 'Êtes-vous sûr de vouloir continuer cette action ?';
+
+        titleModal.textContent = title;
+        bodyModal.textContent = body;
+
+        confirmButton.setAttribute('href', link);
+    });
 
     buttons.forEach((btn) => {
         btn.addEventListener("click", (e) => {
@@ -13,11 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (btn.type === "submit") {
                 const form = btn.closest("form"); // récupère le form parent
                 if (form && !form.checkValidity()) {
-                    // Form invalide → on stoppe le submit
+                    // Form invalide -> on stoppe le submit
                     e.preventDefault();
                     e.stopPropagation();
-                    form.classList.add("was-validated"); // si tu utilises Bootstrap validation
-                    return; // on ne lance pas le spinner
+                    form.classList.add("was-validated");
+                    return; // on sort de la fonction
                 }
             }
 
