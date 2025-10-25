@@ -114,7 +114,7 @@ class CarpoolingRepository extends ServiceEntityRepository
         }
         //Filter using maximum price if not null
         if ($maxPrice !== null) {
-            $qb->andWhere('c.price_per_seat <= :maxPrice')
+            $qb->andWhere('c.price_per_person <= :maxPrice')
                 ->setParameter('maxPrice', $maxPrice);
         }
 

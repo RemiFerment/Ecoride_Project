@@ -8,6 +8,7 @@ use App\Form\SearchCarpoolType;
 use App\Repository\CarpoolingRepository;
 use App\Repository\ParticipationRepository;
 use App\Services\GeolocationService;
+use App\Services\SearchFilterPreferenceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ final class SearchCarpoolController extends AbstractController
 {
 
     #[Route('', name: 'app_search_carpool', methods: ['GET', 'POST'])]
-    public function index(Request $request, CarpoolingRepository $carpoolingRep, GeolocationService $gs): Response
+    public function index(Request $request, CarpoolingRepository $carpoolingRep, GeolocationService $gs, SearchFilterPreferenceService $searchFilterPreferenceService): Response
     {
         $searchResults = [];
 
@@ -36,7 +37,16 @@ final class SearchCarpoolController extends AbstractController
                 startPlace: $gs->getOfficialCityName($form->getData()['startPlace']),
                 endPlace: $gs->getOfficialCityName($form->getData()['endPlace']),
                 date: new DateTimeImmutable(($form->getData()['startDateTime'])->format('Y-m-d')),
-                user: $this->getUser()
+                user: $this->getUser(),
+                minGrade: $form->get('filter_grade')->getData(),
+                maxPrice: $form->get('filter_price')->getData()
+            );
+            $preferences = $form->get('filter_preferences')->getData();
+
+            $searchResults = $searchFilterPreferenceService->PreferenceFilter(
+                filterSmoking: in_array('smoker_allowed', $preferences),
+                filterAnimals: in_array('animals_allowed', $preferences),
+                carpoolings: $searchResults
             );
         }
         return $this->render(

@@ -15,16 +15,13 @@ class UserPreferences
     private ?string $userId = null;
 
     #[ODM\Field(type: "bool")]
-    private bool $noSmoking = false;
+    private bool $smokingAllowed = false;
 
     #[ODM\Field(type: "bool")]
-    private bool $noAnimals = false;
+    private bool $animalsAllowed = false;
 
-    #[ODM\Field(type: "bool")]
-    private bool $noMusic = false;
-
-    #[ODM\Field(type: "bool")]
-    private bool $talkative = true;
+    #[ODM\Field(type: "string")]
+    private ?string $customPreferences = '';
 
 
     public function getId(): ?string
@@ -49,47 +46,39 @@ class UserPreferences
         return $this;
     }
 
-    public function isNoSmoking(): bool
+    public function isSmokingAllowed(): bool
     {
-        return $this->noSmoking;
+        return $this->smokingAllowed;
     }
 
-    public function setNoSmoking(bool $noSmoking): self
+    public function setSmokingAllowed(bool $smokingAllowed): static
     {
-        $this->noSmoking = $noSmoking;
+        $this->smokingAllowed = $smokingAllowed;
         return $this;
     }
 
-    public function isNoAnimals(): bool
+    public function isAnimalsAllowed(): bool
     {
-        return $this->noAnimals;
+        return $this->animalsAllowed;
     }
 
-    public function setNoAnimals(bool $noAnimals): self
+    public function setAnimalsAllowed(bool $animalsAllowed): static
     {
-        $this->noAnimals = $noAnimals;
+        $this->animalsAllowed = $animalsAllowed;
         return $this;
     }
 
-    public function isNoMusic(): bool
+    public function getCustomPreferences(): ?string
     {
-        return $this->noMusic;
+        if ($this->customPreferences === null) {
+            return '';
+        }
+        return $this->customPreferences;
     }
 
-    public function setNoMusic(bool $noMusic): self
+    public function setCustomPreferences(?string $customPreferences): static
     {
-        $this->noMusic = $noMusic;
-        return $this;
-    }
-
-    public function isTalkative(): bool
-    {
-        return $this->talkative;
-    }
-
-    public function setTalkative(bool $talkative): self
-    {
-        $this->talkative = $talkative;
+        $this->customPreferences = $customPreferences ?? '';
         return $this;
     }
 }
