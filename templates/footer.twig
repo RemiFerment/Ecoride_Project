@@ -1,8 +1,8 @@
 {% set user = app.user %}
 <footer class="footer ecoride-container text-center mt-auto py-3" role="contentinfo">
 	<nav class="footer-nav d-flex align-items-center justify-content-center gap-3 flex-wrap p-3" aria-label="Footer links">
-		<a href="#" class="ecoride-link">Mentions légales</a>
-		<a href="#" class="ecoride-link">Contact</a>
+		<a href="{{path('app_legislation')}}" class="ecoride-link">Mentions légales</a>
+		<a href="{{path('app_contact')}}" class="ecoride-link">Contact</a>
 		<a href="mailto:ecoride@project.com" class="ecoride-link">ecoride@project.com</a>
 	</nav>
 
