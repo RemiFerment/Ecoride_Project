@@ -21,10 +21,14 @@
 		<h1>Zone de test</h1>
 		<br><hr><br>
 		<div class="d-flex">
-			{% for car in cars %}
-				{% include 'partials/car/card.car.html.twig' with { 'car': car } %}
-			{% endfor %}
+			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{ path('home') }} data-body="Êtes-vous sûr de vouloir retourner à la page d'accueil ?">
+				Home
+			</button>
+			<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{ path('app_contact') }} data-title="Confirmer la navigation" data-body="Êtes-vous sûr de vouloir aller à la page de contact ?">
+				Contact
+			</button>
+
 		</div>
 	</div>
-
+	{% include 'partials/__modal.html.twig' %}
 {% endblock %}
