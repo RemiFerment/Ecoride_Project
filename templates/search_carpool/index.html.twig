@@ -30,8 +30,8 @@
 	<hr>
 	<div class="row g-4 mb-5 justify-content-center w-100">
 
-		<div class="col-2">
-			<h2 class="viga-regular text-center mb-3 fs-4">Filtres :</h4>
+		<div class="col-md-4 col-sm-12">
+			<h2 class="viga-regular text-center mb-3 fs-4">Filtres :</h2>
 			<div class="card">
 				<ul class="list-group list-group-flush mt-3">
 					<h3 class="oxanium text-center fs-5">Note minimum :</h3>
@@ -48,7 +48,7 @@
 			</div>
 		</div>
 		{{ form_end(form) }}
-		<div class="col-10">
+		<div class="col-md-8 col-sm-12">
 			{% if isSubmit %}
 				<h2 class="viga-regular text-center mb-3 fs-4">Résultat de la recherche :</h2>
 				{% if searchResults is empty %}

@@ -6,19 +6,20 @@
 		<div class="container justify-content-center">
 			<div class="row text-center my-4 justify-content-center">
 
-				<div class="col-lg">
-					{% if photoBase64 is not null %}
-						<img src="data:image/png;base64,{{ photoBase64|e }}" class="profile-img" alt="Image de profil">
-					{% else %}
-						<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut" class="profile-img">
-					{% endif %}
-					<div class="">
-						<a href="{{ path('app_driver_details', {id: user.id}) }}" class="fs-5 fw-bold ecoride-link">
-							{{user.username}}
-						</a>
+				<div class="col-12 col-lg-auto d-flex justify-content-center">
+					<div class="d-flex flex-row flex-lg-column align-items-center justify-content-center gap-3">
+						{% if photoBase64 is not null %}
+							<img src="data:image/png;base64,{{ photoBase64|e }}" class="profile-img rounded-circle img-fluid" alt="Image de profil" style="width:64px; height:64px; object-fit:cover;">
+						{% else %}
+							<img src="{{ asset('import/blank-profile.png') }}" alt="Image par défaut" class="profile-img rounded-circle img-fluid" style="width:64px; height:64px; object-fit:cover;">
+						{% endif %}
+						<div class="text-center">
+							<a href="{{ path('app_driver_details', {id: user.id}) }}" class="fs-5 fw-bold ecoride-link d-block">
+								{{ user.username }}
+							</a>
+							<div>Note : {{ user.grade is null ? '--' : user.grade }}/5</div>
+						</div>
 					</div>
-					<div class="">Note :
-						{{user.grade == null ? "--" : user.grade}}/5</div>
 				</div>
 				<div class="col-lg-auto">
 					<div class="row">
