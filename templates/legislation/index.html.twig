@@ -1,0 +1,145 @@
+{# templates/legal/mentions_legales.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales - ÉcoRide
+{% endblock %}
+
+{% block body %}
+	<div class="ecoride-container oxanium my-5 p-4">
+		<h2 class="text-center mb-5 viga-regular">Mentions légales</h2>
+
+		<div
+			class="d-flex flex-column gap-4">
+
+			{# 1. Présentation du site #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					1. Présentation du site
+				</div>
+				<div class="card-body">
+					<p>
+						Le présent site internet
+						<strong>ÉcoRide</strong>
+						est réalisé dans le cadre d'un
+						<strong>projet étudiant fictif</strong>
+						de développement web. Il n'a pas vocation à être exploité commercialement.
+					</p>
+				</div>
+			</div>
+
+			{# 2. Éditeur du site #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					2. Éditeur du site
+				</div>
+				<div class="card-body">
+					<p>
+						<strong>Nom du projet :</strong>
+						ÉcoRide<br>
+						<strong>Nature :</strong>
+						Projet scolaire fictif<br>
+						<strong>Responsable de la publication :</strong>
+						Rémi Ferment<br>
+						<strong>Adresse :</strong>
+						123 rue du Développement Durable, 75000 Paris<br>
+						<strong>Email :</strong>
+						<a href="mailto:ecoride@project.com" class="ecoride-link">ecoride@project.com</a>
+					</p>
+				</div>
+			</div>
+
+			{# 3. Hébergement #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					3. Hébergement
+				</div>
+				<div class="card-body">
+					<p>
+						Le site est hébergé sur la plateforme
+						<strong>Heroku</strong>
+						(Salesforce, Inc.)<br>
+						Adresse : Salesforce Tower, 415 Mission Street, 3rd Floor, San Francisco, CA 94105, États-Unis.
+					</p>
+				</div>
+			</div>
+
+			{# 4. Données personnelles #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					4. Données personnelles
+				</div>
+				<div class="card-body">
+					<p>
+						Dans le cadre de ce projet, des données personnelles peuvent être simulées à des fins de démonstration : prénom, email, mot de passe, et préférences utilisateur.
+					</p>
+					<p>
+						Aucune donnée réelle n'est collectée ni transmise, dans le respect du
+						<strong>Règlement Général sur la Protection des Données (RGPD)</strong>.
+					</p>
+				</div>
+			</div>
+
+			{# 5. Cookies #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					5. Cookies
+				</div>
+				<div class="card-body">
+					<p>
+						Ce site utilise des cookies techniques nécessaires à son bon fonctionnement. Aucun suivi publicitaire n'est réalisé.
+					</p>
+				</div>
+			</div>
+
+			{# 6. Propriété intellectuelle #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					6. Propriété intellectuelle
+				</div>
+				<div class="card-body">
+					<p>
+						Les visuels, logos et éléments graphiques d'ÉcoRide ont été
+						<strong>générés à l'aide d'outils d'intelligence artificielle</strong>
+						dans le cadre du projet.
+					</p>
+					<p>
+						Leur utilisation et reproduction sont libres, dans la mesure où il s'agit d'un projet fictif à but non lucratif.
+					</p>
+				</div>
+			</div>
+
+			{# 7. Limitation de responsabilité #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					7. Limitation de responsabilité
+				</div>
+				<div class="card-body">
+					<p>
+						Ce site étant un
+						<strong>prototype de projet étudiant</strong>,aucune garantie de disponibilité ou de fiabilité du service n'est assurée.
+					</p>
+				</div>
+			</div>
+
+			{# 8. Droit applicable #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					8. Droit applicable
+				</div>
+				<div class="card-body">
+					<p>
+						Le présent site est soumis au
+						<strong>droit français</strong>.Ces mentions légales sont fournies à titre purement démonstratif.
+					</p>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="text-center mt-5">
+			<a href="{{ path('home') }}" class="btn btn-secondary">
+				Retour à l'accueil
+			</a>
+		</div>
+	</div>
+{% endblock %}

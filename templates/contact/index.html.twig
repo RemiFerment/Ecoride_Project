@@ -1,0 +1,59 @@
+{# templates/legal/contact.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact - ÉcoRide
+{% endblock %}
+
+{% block body %}
+	<div class="ecoride-container oxanium my-5 p-4">
+		<h2 class="text-center mb-5 viga-regular">Contact</h2>
+
+		<div
+			class="d-flex flex-column gap-4">
+
+			{# 1. Informations de contact #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					Nous contacter
+				</div>
+				<div class="card-body">
+					<p>
+						Pour toute question, suggestion ou demande d'information concernant le projet fictif
+						<strong>ÉcoRide</strong>, vous pouvez nous écrire à l'adresse suivante :
+					</p>
+					<p class="mb-2">
+						<i class="bi bi-envelope-at-fill"></i>
+						<strong>Email :</strong>
+						<a href="mailto:ecoride@project.com" class="ecoride-link">ecoride@project.com</a>
+					</p>
+					<p>
+						<i class="bi bi-telephone-fill"></i>
+						<strong>Téléphone :</strong>
+						+33 1 23 45 67 89
+					</p>
+				</div>
+			</div>
+
+			{# 2. Informations complémentaires #}
+			<div class="card shadow-sm">
+				<div class="card-header bg-secondary text-white">
+					À propos de ce contact
+				</div>
+				<div class="card-body">
+					<p>
+						Ce formulaire de contact est mis en place dans le cadre d'un
+						<strong>projet étudiant fictif</strong>
+						réalisé à des fins pédagogiques. Les informations de contact fournies sont également fictives et ne doivent pas être utilisées à des fins réelles.
+					</p>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="text-center mt-5">
+			<a href="{{ path('home') }}" class="btn btn-secondary">
+				Retour à l'accueil
+			</a>
+		</div>
+	</div>
+{% endblock %}
