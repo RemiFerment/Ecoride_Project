@@ -8,7 +8,10 @@
 			<div class="modal-body" id="confirmModalBody"></div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<a id="confirmModalButton" href="#" class="btn btn-danger">Confirmer</a>
+				<form id="confirmModalForm">
+					<input type="hidden" name="_method" id="confirmModalMethod">
+					<button type="submit" id="confirmModalButton" class="btn btn-danger">Confirmer</button>
+				</form>
 			</div>
 		</div>
 	</div>
