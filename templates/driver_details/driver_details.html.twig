@@ -57,19 +57,15 @@
 								<table class="table">
 									<tr>
 										<th>Fumeur</th>
-										<td>{{ preference.isNoSmoking ? 'Non' : 'Oui' }}</td>
+										<td>{{ preference.smokingAllowed ? 'Oui' : 'Non' }}</td>
 									</tr>
 									<tr>
 										<th>Animaux acceptés</th>
-										<td>{{ preference.isNoAnimals ? 'Non' : 'Oui' }}</td>
+										<td>{{ preference.animalsAllowed ? 'Oui' : 'Non' }}</td>
 									</tr>
 									<tr>
-										<th>Musique</th>
-										<td>{{ preference.isNoMusic ? 'Non' : 'Oui' }}</td>
-									</tr>
-									<tr>
-										<th>Discussion</th>
-										<td>{{ preference.isTalkative ? 'Non' : 'Oui' }}</td>
+										<th>Préférences personnalisées</th>
+										<td>{{ preference.customPreferences ? preference.customPreferences : 'Aucune préférence enregistrée' }}</td>
 									</tr>
 								</table>
 							{% else %}

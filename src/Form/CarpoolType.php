@@ -17,16 +17,16 @@ class CarpoolType extends AbstractType
         $builder
             ->add('start_date', DateTimeType::class, [
                 'label' => 'Jour de départ',
-                'widget' => 'single_text', // ensures native <input type="datetime-local">
-                'with_seconds' => false,   // removes seconds
+                'widget' => 'single_text',
+                'with_seconds' => false,
                 'attr' => [
-                    // 'min' => (new \DateTime('+2 hours'))->format('Y-m-d\TH:i'),
+                    'min' => (new \DateTime('+2 hours'))->format('Y-m-d\TH:i'),
                 ],
                 'constraints' => [
-                    // new GreaterThanOrEqual([
-                    //     'value' => new \DateTime('+2 hours'),
-                    //     'message' => "La date de départ doit être aujourd'hui ou une date future.",
-                    // ]),
+                    new GreaterThanOrEqual([
+                        'value' => new \DateTime('+2 hours'),
+                        'message' => "La date de départ doit être aujourd'hui ou une date future.",
+                    ]),
                 ],
             ])
             ->add('start_place', options: [

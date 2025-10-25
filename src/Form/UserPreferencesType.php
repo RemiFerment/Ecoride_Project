@@ -7,47 +7,34 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class UserPreferencesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('noSmoking', ChoiceType::class, [
+            ->add('smokingAllowed', ChoiceType::class, [
                 'choices' => [
                     'Oui' => true,
                     'Non' => false,
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'Interdiction de fumer',
+                'label' => 'Fumeur accepté',
             ])
-            ->add('noAnimals', ChoiceType::class, [
+            ->add('animalsAllowed', ChoiceType::class, [
                 'choices' => [
                     'Oui' => true,
                     'Non' => false,
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'Pas d\'animaux',
+                'label' => 'Aniamaux acceptés',
             ])
-            ->add('noMusic', ChoiceType::class, [
-                'choices' => [
-                    'Oui' => true,
-                    'Non' => false,
-                ],
-                'expanded' => true,
-                'multiple' => false,
-                'label' => 'Pas de musique',
-            ])
-            ->add('talkative', ChoiceType::class, [
-                'choices' => [
-                    'Silencieux' => false,
-                    'Bavard' => true,
-                ],
-                'expanded' => true,
-                'multiple' => false,
-                'label' => 'Bavard',
+            ->add('customPreferences', TextareaType::class, [
+                'label' => 'Préférences personnalisées',
+                'required' => false,
             ])
         ;
     }

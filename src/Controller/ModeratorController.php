@@ -20,8 +20,6 @@ final class ModeratorController extends AbstractController
     #[IsGranted('ROLE_MODERATOR')]
     public function index(ReviewRepository $reviewRepository, UserReviewRepository $userReviewRepository): Response
     {
-        //dashboard dans laquelle il y a deux choix : Un pour vérifié les avis, un pour gérer les 
-        //Donc ici, il faut juste que je récupère le nombre d'avis à checker + le nombre d'avis dont la note est inférieur à 3
         $reviewAmount = count($reviewRepository->findByToBeChecked());
         $lowGradeAmount = count($userReviewRepository->findByLowGrade());
 

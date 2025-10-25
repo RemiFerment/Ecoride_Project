@@ -6,7 +6,7 @@
 {% block body %}
 	<div class="oxanium d-flex justify-content-center">
 		<div class="p-2">
-			<h3 class="viga-regular text-center mb-3">Rechercher un covoiturage</h3>
+			<h1 class="viga-regular text-center mb-3 fs-3">Rechercher un covoiturage</h3>
 			<hr>
 			{{ form_start(form) }}
 			<div class="row">
@@ -25,22 +25,45 @@
 					</button>
 				</div>
 			</div>
-			{{ form_end(form) }}
 		</div>
 	</div>
 	<hr>
-	{% if isSubmit %}
-		<h4 class="viga-regular text-center mb-3">Résultat de la recherche :</h4>
-		{% if searchResults is empty %}
-			<h5 class="text-center">Aucun trajet n'est disponible pour
-				{{cities.startPlace}}
-				<i class="bi bi-arrow-right"></i>
-				{{cities.endPlace}}</h5>
-		{% endif %}
+	<div class="row g-4 mb-5 justify-content-center w-100">
 
-		{% for carpool in searchResults %}
-			{% include 'partials/card.search.carpool.html.twig' %}
-		{% endfor %}
-	{% endif %}
+		<div class="col-2">
+			<h2 class="viga-regular text-center mb-3 fs-4">Filtres :</h4>
+			<div class="card">
+				<ul class="list-group list-group-flush mt-3">
+					<h3 class="oxanium text-center fs-5">Note minimum :</h3>
+					{{form_row(form.filter_grade,attr = {'class': 'form-control text-center list-group-item oxanium'})}}
+					<h3 class="oxanium text-center fs-5 mt-3">Prix maximum (Écopièces) :</h3>
+					{{form_row(form.filter_price,attr = {'class': 'form-control text-center list-group-item oxanium'})}}
+				</ul>
+			</div>
+			<div class="card mt-4">
+				<ul class="list-group list-group-flush mt-3">
+					<h3 class="oxanium text-center fs-5">Préférences :</h3>
+					{{form_row(form.filter_preferences,attr = {'class': 'form-control text-center list-group-item oxanium'})}}
+				</ul>
+			</div>
+		</div>
+		{{ form_end(form) }}
+		<div class="col-10">
+			{% if isSubmit %}
+				<h2 class="viga-regular text-center mb-3 fs-4">Résultat de la recherche :</h2>
+				{% if searchResults is empty %}
+					<h3 class="text-center fs-5">Aucun trajet n'est disponible pour
+						{{cities.startPlace}}
+						<i class="bi bi-arrow-right"></i>
+						{{cities.endPlace}}
+						(modifier les filtres)</h3>
+				{% endif %}
+
+				{% for carpool in searchResults %}
+					{% include 'partials/card.search.carpool.html.twig' %}
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
 
 {% endblock %}
