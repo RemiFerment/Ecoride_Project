@@ -54,9 +54,8 @@
 		<form action="{{ path(name = 'app_car_setDefault', parameters = {id: car.id} ) }}" method="post">
 			<button type="submit" class="btn btn-success {{user.currentCar != null and user.currentCar.id == car.id ? " d-none" : " "}}">Utiliser</button>
 		</form>
-		<form action="{{ path(name = 'app_car_delete', parameters = {id: car.id} ) }}" method="POST" class="d-inline">
-			<input type="hidden" name="_method" value="DELETE">
-			<button type="submit" class="btn btn-danger">Supprimer</button>
-		</form>
+		<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{ path(name = 'app_car_delete', parameters = {id: car.id} ) }} data-title="Confirmation de suppression" data-body="Êtes-vous sûr de vouloir supprimer cette voiture ? Cette action est irréversible." data-method="DELETE">
+			Supprimer
+		</button>
 	</div>
 </div>

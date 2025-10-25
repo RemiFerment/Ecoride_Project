@@ -27,8 +27,12 @@
 			</div>
 		</li>
 		<li class="list-group-item text-center">
-			<a href="{{path('app_review_validated', {id:review.review.id})}}" class="btn btn-success">Valider</a>
-			<a href="{{path('app_review_dismiss', {id:review.review.id})}}" class="btn btn-danger">Rejeter</a>
+			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{path('app_review_validated', {id:review.review.id} )}} data-title="Confirmation de validation" data-body="Confirmez vous la validation de cette avis?">
+				Valider
+			</button>
+			<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{path('app_review_dismiss', {id:review.review.id} )}} data-title="Confirmation de validation" data-body="Confirmez vous la validation de cette avis?">
+				Rejeter
+			</button>
 		</li>
 	</ul>
 </div>

@@ -33,8 +33,12 @@
 			<a href="mailto:{{review.carpooling.createdby.email}}" class="btn btn-primary">Contacter le conducteur</a>
 		</li>
 		<li class="list-group-item text-center">
-			<a href="{{path('app_conflict_refunded',{id:review.id})}}" class="btn btn-success">Rembourser le plaignant</a>
-			<a href="{{path('app_conflict_dismiss',{id:review.id})}}" class="btn btn-danger">Classer le litige sans suite</a>
+			<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{path('app_conflict_refunded', {id:review.review.id} )}} data-title="Confirmation de validation" data-body="Confirmez vous la validation de cette avis?">
+				Rembourser le plaignant
+			</button>
+			<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{path('app_conflict_dismiss', {id:review.review.id} )}} data-title="Confirmation de validation" data-body="Confirmez vous la validation de cette avis?">
+				Classer le litige sans suite
+			</button>
 		</li>
 	</ul>
 </div>

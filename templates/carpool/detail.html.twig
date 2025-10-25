@@ -19,24 +19,19 @@
 			<div class="row p-3 justify-content-center">
 				<div class="col-auto">
 					{% if carpool.statut == 'ONLINE' and carpool.isLaunchable %}
-						<form action="{{ path('app_carpool_launch', {id: carpool.id}) }}" method="POST">
-							<button class="load-btn btn btn-primary" data-loading-text="Démarrage..." type="submit">
-								<i class="bi bi-play-fill"></i>
-								<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
-								<span class="btn-text">Démarrer le covoiturage</span>
-							</button>
-						</form>
-
+						<button type="button" data-loading-text="Démarrage..." class="load-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{ path('app_carpool_launch', {id: carpool.id} ) }} data-title="Confirmation de validation" data-body="Confirmez vous la validation de cette avis?" data-method="POST">
+							<i class="bi bi-play-fill"></i>
+							<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+							<span class='btn-text'>Démarrer le covoiturage</span>
+						</button>
 
 					{% endif %}
 					{% if carpool.statut == 'IN_PROGRESS' %}
-						<form action="{{path('app_carpool_finalize', {id:carpool.id})}}" method="post">
-							<button class='load-btn btn btn-success' href='' data-loading-text='Chargement...' type="submit">
-								<span class='spinner-border spinner-border-sm ms-2 d-none' role='status' aria-hidden='true'></span>
-								<i class="bi bi-house-check"></i>
-								<span class='btn-text'>Finaliser le covoiturage</span>
-							</button>
-						</form>
+						<button type="button" data-loading-text="Chargement..." class='load-btn btn btn-success' data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{path('app_carpool_finalize', {id:carpool.id} )}} data-title="Confirmation de validation" data-body="Confirmez vous la validation de cette avis?" data-method="POST">
+							<span class='spinner-border spinner-border-sm ms-2 d-none' role='status' aria-hidden='true'></span>
+							<i class="bi bi-house-check"></i>
+							<span class='btn-text'>Démarrer le covoiturage</span>
+						</button>
 					{% endif %}
 					{% if carpool.statut == 'DONE' %}
 						<a class="btn btn-success disabled">
