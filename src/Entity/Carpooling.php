@@ -65,10 +65,10 @@ class Carpooling
     private Collection $participations;
 
     #[ORM\Column(length: 255)]
-    private ?string $startAdress = null;
+    private ?string $start_adress = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $endAdress = null;
+    private ?string $end_adress = null;
 
     public function __construct()
     {
@@ -221,24 +221,24 @@ class Carpooling
     }
     public function getStartAdress(): ?string
     {
-        return $this->startAdress;
+        return $this->start_adress;
     }
 
-    public function setStartAdress(string $startAdress): static
+    public function setStartAdress(string $start_adress): static
     {
-        $this->startAdress = $startAdress;
+        $this->start_adress = $start_adress;
 
         return $this;
     }
 
     public function getEndAdress(): ?string
     {
-        return $this->endAdress;
+        return $this->end_adress;
     }
 
-    public function setEndAdress(string $endAdress): static
+    public function setEndAdress(string $end_adress): static
     {
-        $this->endAdress = $endAdress;
+        $this->end_adress = $end_adress;
 
         return $this;
     }

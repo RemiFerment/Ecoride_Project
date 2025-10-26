@@ -17,9 +17,6 @@ class Review
     #[ORM\Column(type: Types::TEXT)]
     private ?string $comment = null;
 
-    #[ORM\Column]
-    private ?string $role_id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
 
@@ -36,18 +33,6 @@ class Review
     public function setComment(string $comment): static
     {
         $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getRoleId(): ?string
-    {
-        return $this->role_id;
-    }
-
-    public function setRoleId(string $role_id): static
-    {
-        $this->role_id = $role_id;
 
         return $this;
     }
