@@ -33,7 +33,7 @@ class CarpoolType extends AbstractType
                 'label' => 'Ville de départ'
             ])
             ->add('end_place', options: [
-                'label' => 'Ville d\'arrivé'
+                'label' => 'Ville d\'arrivée'
             ])
             ->add('available_seat', options: [
                 'label' => 'Nombre de siège',
@@ -52,11 +52,11 @@ class CarpoolType extends AbstractType
             ->add('price_per_person', options: [
                 'label' => 'Prix de la place (en Écopièce)',
                 'attr' => [
-                    'min' => 0,
+                    'min' => 2,
                 ],
                 'constraints' => [
                     new \Symfony\Component\Validator\Constraints\GreaterThanOrEqual([
-                        'value' => 0,
+                        'value' => 2,
                         'message' => 'Le prix doit être supérieur ou égal à {{ compared_value }}.',
                     ]),
                 ],

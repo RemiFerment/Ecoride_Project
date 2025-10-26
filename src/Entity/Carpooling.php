@@ -38,7 +38,7 @@ class Carpooling
 
     #[ORM\Column(length: 255)]
     #[CityCheck()]
-    #[NotBlank()]
+    #[NotBlank(message: "Le lieu de destination ne peut pas être vide.")]
     private ?string $end_place = null;
 
     #[ORM\Column(length: 255)]

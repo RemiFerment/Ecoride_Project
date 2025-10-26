@@ -1,0 +1,39 @@
+/* --- Fix Awesomplete input sizing --- */
+.awesomplete {
+    display: block !important;
+    /* replaces inline-block */
+    width: 100% !important;
+    /* match Bootstrap field width */
+    position: relative;
+    /* required for dropdown positioning */
+}
+
+.awesomplete>input {
+    width: 100% !important;
+    /* ensure the input itself fills the form group */
+    box-sizing: border-box;
+    /* prevent overflow */
+}
+
+/* Optional: make the dropdown match Bootstrap */
+.awesomplete>ul {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 2px;
+    padding: 0;
+    list-style: none;
+}
+
+.awesomplete>ul>li {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.awesomplete>ul>li:hover,
+.awesomplete>ul>li[aria-selected="true"] {
+    color: black;
+    background-color: #00f7ff4d;
+}

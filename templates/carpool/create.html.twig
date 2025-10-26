@@ -1,56 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Écoride - Créé un trajet
+{% block title %}Écoride - Créer un trajet
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="module" src="{{ asset('scripts/search_autocomplete.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css">
+	<link rel="stylesheet" href="{{ asset('styles/search_autocomplete.css') }}">
 {% endblock %}
 
 {% block body %}
-	<div class="oxanium mt-5 ecoride-container rounded p-5 container justify-content-center ">
+	<div class="oxanium mt-5 ecoride-container rounded p-4 p-sm-5 container justify-content-center">
 		<h3 class="text-center viga-regular">Créer un trajet :</h3>
 		<hr>
 		<div class="text-center">
 			<h5 class="viga-regular">Véhicule utilisé :{{user.currentCar.marque.name}}
 				{{user.currentCar.model}}
 			</h5>
-			<a href=" {{ path('app_car_index') }} " class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Changer de véhicule</a>
+			<a href="{{ path('app_car_index') }}" class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Changer de véhicule</a>
 		</div>
 		<hr>
 
-		<div class="row px-5 mt-5 mb-1">
-			<div class="col px-2">
-				{{ form_start(form)}}
+		{{ form_start(form)}}
+		<div class="row g-3">
+			<div class="col-12 col-md-6">
 				{{ form_row(form.start_place) }}
 			</div>
-			<div class="col px-2">
+			<div class="col-12 col-md-6">
 				{{ form_row(form.end_place) }}
 			</div>
-		</div>
-		<div class="row px-5 mt-1 mb-3">
-			<div class="col px-2">
+			<div class="col-12 col-md-6">
 				{{ form_row(form.startAdress) }}
 			</div>
-			<div class="col px-2">
+			<div class="col-12 col-md-6">
 				{{ form_row(form.endAdress) }}
 			</div>
-		</div>
-		<div class="row px-5 mt-1 mb-1">
-			<div class="col px-2">
+			<div class="col-12">
 				{{ form_row(form.start_date) }}
 			</div>
-		</div>
-		<div class="row px-5 mt-1 mb-3">
-			<div class="col px-2">
+			<div class="col-12 col-md-6">
 				{{ form_row(form.available_seat) }}
 			</div>
-			<div class="col px-2">
+			<div class="col-12 col-md-6">
 				{{ form_row(form.price_per_person) }}
 			</div>
 		</div>
 
-		<div class="text-center">
+		<div class="text-center mt-4">
 			{{ form_row(form.save) }}
 		</div>
 		{{form_end(form)}}
-		<div class="text-center text-danger fw-bold">
+		<div class="text-center text-danger fw-bold mt-3">
 			Attention, lorsque vous créez un trajet, cela vous coutera 2
 			<i class="bi bi-coin"></i>.
 		</div>
