@@ -23,7 +23,7 @@
 	{% if carpool.statut == 'ONLINE' and carpool.isCancelable %}
 		<div class="col">
 			<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url={{path('app_mycarpool_kick_user',{'carpooling_id':carpool.id,'user_id':participation.user.id} )}} data-title="Confirmation d'expulsion" data-body="Êtes-vous sûr de vouloir expluser {{participation.user.username}}?" data-method="POST">
-				Annuler
+				Expulser
 			</button>
 		</div>
 	{% endif %}

@@ -4,16 +4,12 @@ namespace App\Services;
 
 use Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GeolocationService
 {
 
-    private $params;
-
-    public function __construct(ParameterBagInterface $params)
-    {
-        $this->params = $params;
-    }
+    public function __construct(private HttpClientInterface $client, private ParameterBagInterface $params) {}
     /**
      * Check, with the GeoName API, if a city exist
      */
@@ -113,5 +109,31 @@ class GeolocationService
             'Impossible de récupérer les données : ' . $e->getMessage();
         }
         return null;
+    }
+
+    public function getCitiesFromGeonames(string $query): array
+    {
+        $cities = [];
+        try {
+            $url = "http://api.geonames.org/searchJSON?q=" . urlencode($query) .
+                "&featureClass=P&maxRows=10&username=" . urlencode($this->params->get('api.geoname.username'));
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+            $data = json_decode($response, true);
+
+            if (isset($data['geonames'])) {
+                foreach ($data['geonames'] as $cityData) {
+                    $cities[] = $cityData['name'];
+                }
+            }
+        } catch (Exception $e) {
+            'Impossible de récupérer les données : ' . $e->getMessage();
+        }
+        return array_unique($cities);
     }
 }

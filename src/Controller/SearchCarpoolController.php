@@ -10,6 +10,7 @@ use App\Repository\ParticipationRepository;
 use App\Services\GeolocationService;
 use App\Services\SearchFilterPreferenceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -33,6 +34,7 @@ final class SearchCarpoolController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $searchResults = $carpoolingRep->findBySearchCarpool(
                 startPlace: $gs->getOfficialCityName($form->getData()['startPlace']),
                 endPlace: $gs->getOfficialCityName($form->getData()['endPlace']),
@@ -76,5 +78,17 @@ final class SearchCarpoolController extends AbstractController
             'user' => $this->getUser(),
             'isParticipate' => $isParticipate
         ]);
+    }
+
+    #[Route('/api/cities', name: 'api_cities', methods: ['GET'])]
+    public function getCities(Request $request, GeolocationService $geolocationService): JsonResponse
+    {
+        $query = $request->query->get('q', '');
+        if (strlen($query) < 2) {
+            return $this->json([]);
+        }
+
+        $result = $geolocationService->getCitiesFromGeonames($query);
+        return $this->json($result);
     }
 }
