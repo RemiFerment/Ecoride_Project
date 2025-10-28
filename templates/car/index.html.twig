@@ -2,16 +2,6 @@
 {% block title %}Écoride - Mes voitures
 {% endblock %}
 
-{% block javascripts %}
-	{{ parent() }}
-	<script type="module" src="{{ asset('scripts/search_autocomplete.js') }}"></script>
-{% endblock %}
-
-{% block stylesheets %}
-	{{ parent() }}
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css">
-	<link rel="stylesheet" href="{{ asset('styles/search_autocomplete.css') }}">
-{% endblock %}
 
 {% block body %}
 	<div class="d-flex justify-content-between oxanium mt-5 p-lg-5">
