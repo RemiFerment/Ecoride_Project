@@ -3,17 +3,6 @@
 {% block title %}Écoride - Créer un trajet
 {% endblock %}
 
-{% block javascripts %}
-	{{ parent() }}
-	<script type="module" src="{{ asset('scripts/search_autocomplete.js') }}"></script>
-{% endblock %}
-
-{% block stylesheets %}
-	{{ parent() }}
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css">
-	<link rel="stylesheet" href="{{ asset('styles/search_autocomplete.css') }}">
-{% endblock %}
-
 {% block body %}
 	<div class="oxanium mt-5 ecoride-container rounded p-4 p-sm-5 container justify-content-center">
 		<h3 class="text-center viga-regular">Créer un trajet :</h3>
