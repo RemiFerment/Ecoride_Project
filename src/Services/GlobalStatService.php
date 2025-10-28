@@ -29,6 +29,7 @@ final class GlobalStatService
         $this->dm->createQueryBuilder(GlobalStat::class)
             ->updateOne()
             ->field($param)->inc($amount)
+            ->upsert(true)
             ->getQuery()
             ->execute();
         return $this;
