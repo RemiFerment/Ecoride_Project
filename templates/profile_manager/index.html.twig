@@ -116,12 +116,15 @@
 				</div>
 			</div>
 		</div>
-		{% if is_granted('ROLE_DRIVER') %}
-			<div class="d-flex justify-content-end mt-4">
+		<div class="d-flex justify-content-end mt-4 gap-2 flex-wrap">
+			<a href="{{ path('app_reset_password_no_token') }}" class="btn btn-primary">
+				<i class="bi bi-lock-fill me-2"></i>Modifier le mot de passe
+			</a>
+			{% if is_granted('ROLE_DRIVER') %}
 				<a href="{{ path('app_user_preferences') }}" class="btn btn-primary">
 					<i class="bi bi-gear-fill me-2"></i>Préférences
 				</a>
-			</div>
-		{% endif %}
+			{% endif %}
+		</div>
 	</div>
 {% endblock %}

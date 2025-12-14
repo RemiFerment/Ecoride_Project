@@ -115,8 +115,12 @@ class GeolocationService
     {
         $cities = [];
         try {
-            $url = "http://api.geonames.org/searchJSON?q=" . urlencode($query) .
-                "&featureClass=P&maxRows=10&username=" . urlencode($this->params->get('api.geoname.username'));
+            $url = "http://api.geonames.org/searchJSON?q=" . urlencode($query)
+                . "&featureClass=P"
+                . "&country=FR"
+                . "&maxRows=10"
+                . "&orderby=population"
+                . "&username=" . urlencode($this->params->get('api.geoname.username'));
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
