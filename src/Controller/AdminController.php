@@ -57,4 +57,29 @@ final class AdminController extends AbstractController
             'employeeForm' => $form->createView(),
         ]);
     }
+    #[Route('/user-list', name: 'app_admin_user_list', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function userList(EntityManagerInterface $em): Response
+    {
+        $users = $em->getRepository(User::class)->findAll();
+        return $this->render('admin/user_list.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+    #[Route('/user-delete/{id}', name: 'app_admin_user_delete', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteUser(User $user, EntityManagerInterface $em): Response
+    {
+        if ($this->getUser() === $user) {
+            $this->addFlash('danger', 'Vous ne pouvez pas supprimer votre propre compte.');
+            return $this->redirectToRoute('app_admin_user_list');
+        }
+
+        $em->remove($user);
+        $em->flush();
+
+        $this->addFlash('success', 'L\'utilisateur a été supprimé avec succès.');
+        return $this->redirectToRoute('app_admin_user_list');
+    }
 }

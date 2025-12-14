@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Écoride - Liste des utilisateurs
+{% endblock %}
+
+{% block body %}
+	<h1 class="viga-regular text-center">Liste des utilisateurs</h1>
+	<div class="w-100 ecoride-container rounded d-flex flex-column align-items-center m-2 m-md-3 p-2 p-md-3">
+		{% for user in users %}
+			<div class="card w-100 mb-3">
+				<div class="card-body">
+					<div class="row mb-2">
+						<div class="col-md-3">
+							<small class="text-muted">ID :</small>
+							<span class="mb-0">{{ user.id }}</span>
+						</div>
+						<div class="col-md-3">
+							<small class="text-muted">Nom d'utilisateur :</small>
+							<span class="mb-0">{{ user.username }}</span>
+						</div>
+						<div class="col-md-3">
+							<small class="text-muted">Email :</small>
+							<span class="mb-0">{{ user.email }}</span>
+						</div>
+						<div class="col-md-3">
+							<small class="text-muted">Rôles :</small>
+							<span class="mb-0">{{ user.roles | join(', ') }}</span>
+						</div>
+						<div class="col-md-3 mt-md-3">
+							<form method="post" action="{{ path('app_admin_user_delete', { id: user.id }) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+								<input type="hidden" name="_method" value="DELETE">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+								<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% else %}
+			<div class="alert alert-info w-100 text-center">Aucun utilisateur trouvé.</div>
+		{% endfor %}
+	</div>
+{% endblock %}
