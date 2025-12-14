@@ -28,6 +28,18 @@ class UserReviewRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByChecked(int $carpool_id): array
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.review', 'r')
+            ->addSelect('r')
+            ->andWhere('r.statut = :status')
+            ->setParameter('status', 'CHECKED')
+            ->andWhere('r.carpool = :carpool_id')
+            ->setParameter('carpool_id', $carpool_id)
+            ->getQuery()
+            ->getResult();
+    }
 
     /**
      * @return UserReview[] Returns an array of UserReview objects with gradeGiven < 3
