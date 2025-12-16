@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Document\CarpoolPerDayStat;
+use App\Document\EcopiecePerDayStat;
 use App\Document\GlobalStat;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
@@ -54,5 +56,48 @@ final class GlobalStatService
             ->getQuery();
 
         return $query->getSingleResult()[$param] ?? null;
+    }
+
+    public function addCarpoolStatPerDay(\DateTime $date, int $amount = 1): static
+    {
+        $repo = $this->dm->getRepository(CarpoolPerDayStat::class);
+
+        $day = (clone $date)->setTime(0, 0, 0);
+
+        $stat = $repo->findOneBy(['date' => $day]);
+
+        if (!$stat) {
+            $stat = new CarpoolPerDayStat();
+            $stat->date = $day;
+            $stat->carpoolsLaunch = 0;
+        }
+
+        $stat->carpoolsLaunch += $amount;
+
+        $this->dm->persist($stat);
+        $this->dm->flush();
+
+        return $this;
+    }
+    public function addTransactionStatPerDay(\DateTime $date, int $amount): static
+    {
+        $repo = $this->dm->getRepository(EcopiecePerDayStat::class);
+
+        $day = (clone $date)->setTime(0, 0, 0);
+
+        $stat = $repo->findOneBy(['date' => $day]);
+
+        if (!$stat) {
+            $stat = new EcopiecePerDayStat();
+            $stat->date = $day;
+            $stat->ecopieces = 0;
+        }
+
+        $stat->ecopieces += $amount;
+
+        $this->dm->persist($stat);
+        $this->dm->flush();
+
+        return $this;
     }
 }

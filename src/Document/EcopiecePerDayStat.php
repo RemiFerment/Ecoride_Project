@@ -4,8 +4,8 @@ namespace App\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
-#[ODM\Document(collection: 'CarpoolPerDayStat')]
-class CarpoolPerDayStat
+#[ODM\Document(collection: 'EcopiecePerDayStat')]
+class EcopiecePerDayStat
 {
     #[ODM\Id]
     public ?string $id = null;
@@ -14,5 +14,5 @@ class CarpoolPerDayStat
     public \DateTime $date;
 
     #[ODM\Field(type: 'int')]
-    public int $carpoolsLaunch = 0;
+    public int $ecopieces = 0;
 }

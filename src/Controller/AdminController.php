@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Document\CarpoolPerDayStat;
+use App\Document\EcopiecePerDayStat;
 use App\Entity\User;
 use App\Form\EmployeeType;
 use App\Services\GlobalStatService;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -81,5 +85,53 @@ final class AdminController extends AbstractController
 
         $this->addFlash('success', 'L\'utilisateur a été supprimé avec succès.');
         return $this->redirectToRoute('app_admin_user_list');
+    }
+
+    #[Route('/api/admin/stats/carpools-per-day', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function carpoolsPerDay(DocumentManager $dm): JsonResponse
+    {
+        $collection = $dm->getDocumentCollection(CarpoolPerDayStat::class);
+
+        $data = $collection->aggregate([
+            [
+                '$group' => [
+                    '_id' => [
+                        '$dateToString' => [
+                            'format' => '%Y-%m-%d',
+                            'date' => '$date'
+                        ]
+                    ],
+                    'count' => ['$sum' => '$carpoolsLaunch']
+                ]
+            ],
+            ['$sort' => ['_id' => 1]]
+        ])->toArray();
+
+        return $this->json($data);
+    }
+
+    #[Route('/api/admin/stats/ecopieces-per-day', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function ecopiecesPerDay(DocumentManager $dm): JsonResponse
+    {
+        $collection = $dm->getDocumentCollection(EcopiecePerDayStat::class);
+
+        $data = $collection->aggregate([
+            [
+                '$group' => [
+                    '_id' => [
+                        '$dateToString' => [
+                            'format' => '%Y-%m-%d',
+                            'date' => '$date'
+                        ]
+                    ],
+                    'count' => ['$sum' => '$ecopieces']
+                ]
+            ],
+            ['$sort' => ['_id' => 1]]
+        ])->toArray();
+
+        return $this->json($data);
     }
 }

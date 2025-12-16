@@ -1,4 +1,10 @@
 {% extends 'base.html.twig' %}
+{% block javascripts %}
+	{{ parent() }}
+
+	<script src="{{ asset('scripts/carpoolstat.js') }}?v={{ date().timestamp }}" defer></script>
+	<script src="{{ asset('scripts/ecopiecestat.js') }}?v={{ date().timestamp }}" defer></script>
+{% endblock %}
 
 {% block title %}Écoride - Dashboard
 {% endblock %}
@@ -37,6 +43,8 @@
 				</div>
 			</div>
 		</div>
+		<canvas id="carpoolChart" class="bg-white"></canvas>
+		<canvas id="ecopieceChart" class="bg-white mt-4"></canvas>
 		<h5 class="viga-regular mt-4 mt-md-5">
 			Administration :
 		</h5>

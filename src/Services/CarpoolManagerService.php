@@ -37,7 +37,9 @@ final class CarpoolManagerService
         $this->em->persist($carpool);
         $this->em->flush();
         $this->globalStat->incGlobalStat(GlobalStatService::CARPOOL_STAT)
-            ->incGlobalStat(GlobalStatService::ECOPIECE_STAT, 2);
+            ->incGlobalStat(GlobalStatService::ECOPIECE_STAT, 2)
+            ->AddTransactionStatPerDay((new \DateTime()), 2)
+            ->AddCarpoolStatPerDay((new \DateTime()), 1);
         return $this;
     }
 
@@ -54,7 +56,7 @@ final class CarpoolManagerService
                 $this->mail->send(
                     'contact@ecoride.test',
                     $impactedUser->getEmail(),
-                    'IMPORTANT - Un trajet auquel vous participez a été annulé',
+                    'IMPORTANT - Un trajet auquel vous participez a été annulé!',
                     'cancel_carpool',
                     compact('impactedUser', 'carpooling', 'user')
                 );
@@ -64,8 +66,11 @@ final class CarpoolManagerService
         //On rembourse les pièces utilisées pour créer le trajet.
         $user->addEcopiece(2);
         $this->em->persist($user);
-        $this->globalStat->incGlobalStat(GlobalStatService::CARPOOL_STAT, -1)
-            ->incGlobalStat(GlobalStatService::ECOPIECE_STAT, -2);
+        $this->globalStat
+            ->incGlobalStat(GlobalStatService::CARPOOL_STAT, -1)
+            ->incGlobalStat(GlobalStatService::ECOPIECE_STAT, -2)
+            ->AddTransactionStatPerDay(new \DateTime(), -2)
+            ->AddCarpoolStatPerDay(new \DateTime(), -1);
         $this->em->remove($carpooling);
         $this->em->flush();
         return $this;
