@@ -20,11 +20,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ParticipationController extends AbstractController
 {
-    private User $user;
-
+    private ?User $user;
     public function __construct(private Security $security)
     {
-        $this->user = $security->getUser();
+        $this->user = $this->security->getUser();
     }
 
     #[Route('/carpool/{id}/participate', name: 'app_carpool_participate', requirements: ['id' => '\d+'], methods: ['POST'])]
