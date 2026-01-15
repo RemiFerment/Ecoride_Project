@@ -35,7 +35,7 @@ class UserReviewRepository extends ServiceEntityRepository
             ->addSelect('r')
             ->andWhere('r.statut = :status')
             ->setParameter('status', 'CHECKED')
-            ->andWhere('r.carpool = :carpool_id')
+            ->andWhere('r.carpooling = :carpool_id')
             ->setParameter('carpool_id', $carpool_id)
             ->getQuery()
             ->getResult();

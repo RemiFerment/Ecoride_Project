@@ -21,7 +21,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier, private GlobalStatService $globalStat) {}
+    public function __construct(private GlobalStatService $globalStat) {}
 
     #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
     #[IsGranted(RegistrationVoter::VIEW)]

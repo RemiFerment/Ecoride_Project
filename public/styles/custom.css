@@ -105,7 +105,7 @@ a {
 }
 
 .ecoride-container {
-  background: linear-gradient(126deg, rgb(190, 235, 216), rgb(153, 233, 153) 26%, rgb(201, 232, 109));
+  background: linear-gradient(126deg, #beebd8, #99e999 26%, #c9e86d);
   background-size: 200% 200%;
   background-position: 0% 50%;
   transition: background-position 500ms ease-out;
@@ -187,12 +187,11 @@ a {
 
 .bubble {
   border-radius: 40px 40px 40px 0px;
-  /* défaut (≥ md) */
 }
 
 @media (max-width: 576px) {
-  /* en-dessous du breakpoint sm */
+
   .bubble {
     border-radius: 0px 40px 40px 40px;
   }
-}/*# sourceMappingURL=custom.css.map */
+}

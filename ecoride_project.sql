@@ -129,15 +129,15 @@ VALUES
 
 INSERT INTO car (id, model, registration, power_engine, first_date_registration, color, marque_id, user_id)
 VALUES
-(1, 'Yaris', 'AB-123-CD', 'Electrique', '2020-05-10', 'Blue', 1, 1),
-(2, 'Clio', 'BC-456-DE', 'Essence', '2019-03-05', 'Red', 13, 2),
-(3, 'A3', 'CD-789-EF', 'Diesel', '2021-07-21', 'Black', 8, 4);
+(1, 'Yaris', 'AB-123-CD', 'Electrique', '2020-05-10', 'Bleu', 1, 1),
+(2, 'Clio', 'BC-456-DE', 'Essence', '2019-03-05', 'Rouge', 13, 2),
+(3, 'A3', 'CD-789-EF', 'Diesel', '2021-07-21', 'Noir', 8, 4);
 
 INSERT INTO carpooling (id, start_date, end_date, start_place, end_place, start_address, end_address, statut, available_seat, price_per_person, created_by_id, car_id)
 VALUES
 (1, '2025-10-15 08:00:00', '2025-10-15 11:30:00', 'Paris', 'Lyon', '12 Rue des Lilas, Paris', 'Gare Part-Dieu, Lyon', 'AVAILABLE', 3, 25, 1, 1),
-(2, '2025-10-17 17:00:00', '2025-10-17 20:00:00', 'Lyon', 'Marseille', '8 Avenue de la Gare, Lyon', 'Vieux-Port, Marseille', 'AVAILABLE', 2, 20, 2, 2),
-(3, '2025-10-20 07:30:00', '2025-10-20 10:00:00', 'Toulouse', 'Bordeaux', '22 Boulevard Victor Hugo, Toulouse', 'Place des Quinconces, Bordeaux', 'FULL', 0, 18, 4, 3);
+(2, '2025-10-17 17:00:00', '2025-10-17 20:00:00', 'Lyon', 'Marseille', '8 Avenue de la Gare, Lyon', 'Vieux-Port, Marseille', 'DONE', 2, 20, 2, 2),
+(3, '2025-10-20 07:30:00', '2025-10-20 10:00:00', 'Toulouse', 'Bordeaux', '22 Boulevard Victor Hugo, Toulouse', 'Place des Quinconces, Bordeaux', 'PENDING', 0, 18, 4, 3);
 
 
 INSERT INTO participation (id, user_id, carpooling_id)

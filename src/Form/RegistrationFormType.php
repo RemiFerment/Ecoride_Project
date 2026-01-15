@@ -46,12 +46,9 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Accepter les conditions d\'utilisation'
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'new-password',
-                    //pattern have to : at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special character
                     'pattern' => '(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}',
                 ],
                 'constraints' => [
