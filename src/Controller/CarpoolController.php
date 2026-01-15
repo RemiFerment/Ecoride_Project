@@ -100,7 +100,7 @@ class CarpoolController extends AbstractController
     public function detailsMyCarpool(Carpooling $carpooling, ParticipationRepository $participationRep, UserReviewRepository $userReviewRepository): Response
     {
         $allParticipation = $participationRep->findBy(['carpooling' => $carpooling]);
-        $carpoolReviews = $userReviewRepository->findByChecked($carpooling->getId());
+        $carpoolReviews = $userReviewRepository->findByChecked($carpooling);
         // dd($carpooling);
         return $this->render('carpool/detail.html.twig', [
             'carpool' => $carpooling,

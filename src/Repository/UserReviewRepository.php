@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Carpooling;
 use App\Entity\UserReview;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,18 +29,19 @@ class UserReviewRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    public function findByChecked(int $carpool_id): array
+    public function findByChecked(Carpooling $carpooling): array
     {
         return $this->createQueryBuilder('u')
             ->join('u.review', 'r')
             ->addSelect('r')
             ->andWhere('r.statut = :status')
+            ->andWhere('u.carpooling = :carpooling')
             ->setParameter('status', 'CHECKED')
-            ->andWhere('r.carpooling = :carpool_id')
-            ->setParameter('carpool_id', $carpool_id)
+            ->setParameter('carpooling', $carpooling)
             ->getQuery()
             ->getResult();
     }
+
 
     /**
      * @return UserReview[] Returns an array of UserReview objects with gradeGiven < 3
