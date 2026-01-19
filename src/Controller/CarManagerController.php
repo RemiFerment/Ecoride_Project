@@ -53,7 +53,7 @@ class CarManagerController extends AbstractController
 
             $carManager->FinalizeCreate($this->user, $car);
 
-            $this->addFlash('success', 'Votre voiture à bien été ajouté !');
+            $this->addFlash('success', 'Votre voiture a bien été ajoutée !');
             return $this->redirectToRoute('app_car_index');
         }
 
@@ -109,7 +109,7 @@ class CarManagerController extends AbstractController
 
             $carManager->FinalizeCreate($this->user, $car, edit: true);
 
-            $this->addFlash('success', 'Votre voiture à bien été modifiée !');
+            $this->addFlash('success', 'Votre voiture a bien été modifiée !');
             return $this->redirectToRoute('app_car_index');
         }
 

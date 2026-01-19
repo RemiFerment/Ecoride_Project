@@ -70,7 +70,7 @@ class CarpoolController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $carpool_manager->FinalizeCreation($carpooling, $user);
-            $this->addFlash('success', 'Votre trajet à bien été mise en ligne !');
+            $this->addFlash('success', 'Votre trajet a bien été mis en ligne !');
             return $this->redirectToRoute('app_carpool_index');
         }
 
@@ -90,7 +90,7 @@ class CarpoolController extends AbstractController
 
         $this->addFlash(
             'success',
-            "Le trajet " .  $carpooling->getStartPlace() . " → " . $carpooling->getEndPlace() . " du " . $carpooling->getStartDate()->format('d/m/Y') . " à bien été supprimé ! Des mails ont été envoyés aux utilisateurs concernés."
+            "Le trajet " .  $carpooling->getStartPlace() . " → " . $carpooling->getEndPlace() . " du " . $carpooling->getStartDate()->format('d/m/Y') . " a bien été supprimé ! Des mails ont été envoyés aux utilisateurs concernés."
         );
         return $this->redirectToRoute('app_carpool_index');
     }

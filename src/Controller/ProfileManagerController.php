@@ -38,13 +38,13 @@ final class ProfileManagerController extends AbstractController
                 $em->flush();
                 $this->addFlash(
                     'success',
-                    'La photo a bien été ajouté !'
+                    'La photo a bien été ajoutée !'
                 );
                 return $this->redirectToRoute('app_profile_manager');
             }
             $this->addFlash(
                 'danger',
-                'Un problème est survenue, la photo n\'a pas été ajouté.'
+                'Un problème est survenue, la photo n\'a pas été ajoutée.'
             );
             return $this->redirectToRoute('app_profile_manager');
         }
